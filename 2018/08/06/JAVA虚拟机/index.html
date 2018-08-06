@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="classloader,虚拟机,类加载器,双亲委派模型," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="搬砖，我们是专业的">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="java虚拟机包括：    类加载器：加载类用的    执行引擎：执行java代码用的    运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分 类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（">
+<meta name="keywords" content="classloader,虚拟机,类加载器,双亲委派模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA虚拟机之类加载器">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/JAVA虚拟机/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="搬砖，我们是专业的">
+<meta property="og:description" content="java虚拟机包括：    类加载器：加载类用的    执行引擎：执行java代码用的    运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分 类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T02:08:53.752Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="搬砖，我们是专业的">
+<meta name="twitter:title" content="JAVA虚拟机之类加载器">
+<meta name="twitter:description" content="java虚拟机包括：    类加载器：加载类用的    执行引擎：执行java代码用的    运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分 类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/JAVA虚拟机/"/>
 
 
 
 
 
-  <title>Hexo</title>
+  <title>JAVA虚拟机之类加载器 | Hexo</title>
   
 
 
@@ -143,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,9 +218,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -249,9 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/06/JAVA虚拟机/" itemprop="url">JAVA虚拟机之类加载器</a></h1>
+          <h1 class="post-title" itemprop="name headline">JAVA虚拟机之类加载器</h1>
         
 
         <div class="post-meta">
@@ -321,9 +320,7 @@
       
 
       
-        
-          
-            <p>java虚拟机包括：<br>    类加载器：加载类用的<br>    执行引擎：执行java代码用的<br>    运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分</p>
+        <p>java虚拟机包括：<br>    类加载器：加载类用的<br>    执行引擎：执行java代码用的<br>    运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分</p>
 <p>类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行</p>
 <p>每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（包名+类名）的文件<br>不同的类加载器可以加载相同的(包名+类名)文件</p>
 <p>java类加载器是分层级的，最顶级的类加载器是BootstrapClassLoader，其次的类加载器是ExtClassLoader，最后才是AppClassLoader<br>结构如下所示：<br>–BootstrapClassLoader  加载$JAVA_HOME$/lib/rt.jar下的类<br>—-ExtClassLoader      加载$JAVA_HOME$/lib/ext.jar下的类<br>——AppClassLoader<br>——–URLClassLoader  spring中的类加载器<br>———-WebappClassLoader  在tomcat中部署的每个项目都会创建一个类加载器，以保证加载的相同命名空间（不同项目、不同实现）的加载类不同，以实现隔离项目冲突的目的<br>各个类加载器之间是组合的关系，不是继承的关系</p>
@@ -341,8 +338,6 @@ public static byte[] loadClassBytes(String filePath) throws Exception {
 </code></pre><p>}</p>
 <p>双亲委托模型的弊端：<br>父类加载器无法访问子类加载器的对象。比如父类加载器定义一个接口，同时绑定一个工厂方法，由于接口实现类不在父加载器中，所以无法访问和创建实例</p>
 
-          
-        
       
     </div>
     
@@ -357,134 +352,42 @@ public static byte[] loadClassBytes(String filePath) throws Exception {
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/03/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="menggl">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/03/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-03T21:38:49+08:00">
-                2018-08-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/classloader/" rel="tag"># classloader</a>
           
-            
+            <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
           
-
+            <a href="/tags/类加载器/" rel="tag"># 类加载器</a>
           
+            <a href="/tags/双亲委派模型/" rel="tag"># 双亲委派模型</a>
           
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Hello world</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/03/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -494,10 +397,11 @@ public static byte[] loadClassBytes(String filePath) throws Exception {
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -726,6 +630,10 @@ public static byte[] loadClassBytes(String filePath) throws Exception {
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
