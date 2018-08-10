@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（包名+类名）的">
+<meta name="description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将全限定名(包名+类名)保存起来，也就是说每一个类加载器只能加载一份全限定名的class文件">
 <meta name="keywords" content="虚拟机,类加载器,classloader,双亲委派模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA虚拟机之类加载器">
-<meta property="og:url" content="http://menggl.github.io/2018/08/06/JAVA虚拟机/index.html">
+<meta property="og:url" content="http://menggl.github.io/2018/08/06/JAVA虚拟机之类加载器/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（包名+类名）的">
+<meta property="og:description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将全限定名(包名+类名)保存起来，也就是说每一个类加载器只能加载一份全限定名的class文件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-07T01:36:38.318Z">
+<meta property="og:updated_time" content="2018-08-09T01:32:43.903Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA虚拟机之类加载器">
-<meta name="twitter:description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（包名+类名）的">
+<meta name="twitter:description" content="java虚拟机组成：  类加载器：加载类用的 执行引擎：执行java代码用的 运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分  类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行 每个类加载器将class文件加载完之后，都会将全限定名(包名+类名)保存起来，也就是说每一个类加载器只能加载一份全限定名的class文件">
 
 
 
@@ -120,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://menggl.github.io/2018/08/06/JAVA虚拟机/"/>
+  <link rel="canonical" href="http://menggl.github.io/2018/08/06/JAVA虚拟机之类加载器/"/>
 
 
 
@@ -267,7 +267,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/08/06/JAVA虚拟机/">
+    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/08/06/JAVA虚拟机之类加载器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="menggl">
@@ -361,7 +361,7 @@
 <li>运行时数据区：相当于操作系统内存，保存虚拟机运行时的缓存数据用的，是一块需要优化的部分</li>
 </ul>
 <p>类加载器将java的.class文件按照规范加载到运行时数据区的方法区中，以供执行引擎解释执行</p>
-<p>每个类加载器将class文件加载完之后，都会将(包名+类名)当做一个命名空间保存起来，也就是说每一个类加载器只能加载一份（包名+类名）的文件<br>不同的类加载器可以加载相同的(包名+类名)文件</p>
+<p>每个类加载器将class文件加载完之后，都会将全限定名(包名+类名)保存起来，也就是说每一个类加载器只能加载一份全限定名的class文件<br>不同的类加载器可以加载相同的全限定名文件</p>
 <p>java类加载器是分层级的，最顶级的类加载器是BootstrapClassLoader，其次的类加载器是ExtClassLoader，最后才是AppClassLoader<br>结构如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--BootstrapClassLoader  加载$JAVA_HOME$/lib/rt.jar下的类</span><br><span class="line">----ExtClassLoader      加载$JAVA_HOME$/lib/ext.jar下的类</span><br><span class="line">------AppClassLoader</span><br><span class="line">--------URLClassLoader  spring中的类加载器</span><br><span class="line">----------WebappClassLoader  在tomcat中部署的每个项目都会创建一个类加载器，以保证加载的相同命名空间（不同项目、不同实现）的类加载后不同，以实现隔离项目冲突的目的</span><br></pre></td></tr></table></figure></p>
 <p>各个类加载器之间是组合的关系，不是继承的关系</p>
 <h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><p><strong><font color="red">当一个classLoader想加载一个class文件的时候，首先从当前ClassLoader查找有没有加载过这个class，如果没有加载过就去父加载器里查有没有加载过这个class，最后直到BootstrapClassLoader顶级加载器也没有加载过这个class，才会从顶级加载器开始尝试加载这个class，然后是子加载器，最后直到当前ClassLoader都加载class失败，这个类才是加载失败!</font></strong></p>
@@ -397,7 +397,7 @@
 <p>修改D:\temp目录下的类实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloLoader</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"I am in BootstrapClassLoader!"</span>);</span><br><span class="line">		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span><br><span class="line">		Class&lt;?&gt; helloChildLoaderClazz = Class.forName(<span class="string">"com.test.classloader.HelloChildLoader"</span>, <span class="keyword">false</span>, classLoader);</span><br><span class="line">		<span class="comment">// 这里如果启动类加载器定义了HelloChildLoader的接口，就直接用接口接收就可以了，不用反射调用了</span></span><br><span class="line">		Object helloChildLoader = helloChildLoaderClazz.newInstance();</span><br><span class="line">		Method printMethod = helloChildLoaderClazz.getDeclaredMethod(<span class="string">"print"</span>,<span class="keyword">new</span> Class[]&#123;&#125;);</span><br><span class="line">		printMethod.invoke(helloChildLoader, <span class="keyword">new</span> Object[]&#123;&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>执行main方法运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">I am in BootstrapClassLoader!</span><br><span class="line">this is HelloChildLoader!</span><br></pre></td></tr></table></figure></p>
 <p>上面运行结果表明：</p>
-<font color="red">启动类加载器加载的类中，我们可以通过应用类加载器(通过Thread.currentThread().getContextClassLoader()获取)和应用类要加载的(包名+类名)，我们就可以得到应用类加载器的实例对象</font>
+<font color="red">启动类加载器加载的类中，我们可以通过应用类加载器(通过Thread.currentThread().getContextClassLoader()获取)和要加载应用类的全限定名，我们就可以得到应用类加载器的实例对象</font>
 
 <h5 id="热部署"><a href="#热部署" class="headerlink" title="热部署"></a>热部署</h5><p>自定义一个ClassLoader，用于实现热部署<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String fileName;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.fileName = fileName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> Class&lt;?&gt; findClass(String className) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">		Class&lt;?&gt; clazz = <span class="keyword">this</span>.findLoadedClass(className);</span><br><span class="line">		<span class="comment">// 如果当前类被加载过，就不会重复去加载</span></span><br><span class="line">		<span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				String classFile = getClassFile(className);</span><br><span class="line">				<span class="keyword">byte</span>[] bytes = IOUtils.toByteArray(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(classFile)));</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.defineClass(className, bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> clazz;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> String <span class="title">getClassFile</span><span class="params">(String classFile)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.fileName + <span class="string">"/"</span> + classFile.replaceAll(<span class="string">"[.]"</span>, <span class="string">"/"</span>) + <span class="string">".class"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>定义一个需要热部署的类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoA</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hot</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"OldDemoA is Running!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -450,6 +450,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/07/JAVA虚拟机运行时数据区/" rel="prev" title="JAVA虚拟机之运行时数据区">
+                JAVA虚拟机之运行时数据区 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -522,7 +526,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -544,7 +548,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
