@@ -806,8 +806,8 @@
       
         
           
-          在项目开发过程中，我们想解决浏览器跨域问题，使用了SpringMVC自带的mvc:cors标签进行全局拦截后，我们发现我们自己写的业务拦截器Interceptor会被优先调用到，然后校验失败，跨域请求失败。
-导致这个问题出现的原因是SpringMVC自带的mvc:cors实现跨域，也是使用的Inte
+          在项目开发过程中，我们会遇到浏览器跨域请求资源的场景，跨域的时候有时候还需要携带cookie，我们发现配置上SpringMVC自带的mvc:cors后我们自己写的业务校验拦截器Interceptor还会被调用两次，如果业务拦截器中有校验cookie中字段的逻辑也会校验失败，这样跨域问题就没有解决
+导
           ...
           <!--noindex-->
           <div class="post-button text-center">
