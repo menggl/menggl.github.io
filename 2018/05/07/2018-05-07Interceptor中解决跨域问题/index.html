@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="虚拟机,类加载器,classloader,双亲委派模型," />
+  <meta name="keywords" content="Cors,CrossOrigin,简单跨域,cookie,ajax跨域,spring跨域," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="在项目开发过程中，我们会遇到浏览器跨域请求资源的场景，跨域的时候有时候还需要携带cookie，我们发现配置上SpringMVC自带的mvc:cors后我们自己写的业务校验拦截器Interceptor还会被调用两次，如果业务拦截器中有校验cookie中字段的逻辑也会校验失败，这样跨域问题就没有解决 导致这个问题出现的原因是使用SpringMVC自带的mvc:cors实现跨域，也是使用的Interce">
-<meta name="keywords" content="虚拟机,类加载器,classloader,双亲委派模型">
+<meta name="keywords" content="Cors,CrossOrigin,简单跨域,cookie,ajax跨域,spring跨域">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Interceptor中解决跨域问题">
 <meta property="og:url" content="http://menggl.github.io/2018/05/07/2018-05-07Interceptor中解决跨域问题/index.html">
@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://menggl.github.io/2018/05/07/2018-05-07Interceptor中解决跨域问题/简单跨域请求.png">
 <meta property="og:image" content="http://menggl.github.io/2018/05/07/2018-05-07Interceptor中解决跨域问题/非简单跨域请求OPTIONS请求.png">
 <meta property="og:image" content="http://menggl.github.io/2018/05/07/2018-05-07Interceptor中解决跨域问题/非简单跨域请求GET请求.png">
-<meta property="og:updated_time" content="2018-08-14T07:34:22.838Z">
+<meta property="og:updated_time" content="2018-08-14T07:41:25.443Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Interceptor中解决跨域问题">
 <meta name="twitter:description" content="在项目开发过程中，我们会遇到浏览器跨域请求资源的场景，跨域的时候有时候还需要携带cookie，我们发现配置上SpringMVC自带的mvc:cors后我们自己写的业务校验拦截器Interceptor还会被调用两次，如果业务拦截器中有校验cookie中字段的逻辑也会校验失败，这样跨域问题就没有解决 导致这个问题出现的原因是使用SpringMVC自带的mvc:cors实现跨域，也是使用的Interce">
@@ -406,7 +406,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	ServletServerHttpRequest serverRequest = <span class="keyword">new</span> ServletServerHttpRequest(request);</span><br><span class="line">	logger.debug(serverRequest.getMethod().name());</span><br><span class="line">	<span class="keyword">if</span> (serverRequest != <span class="keyword">null</span> &amp;&amp; serverRequest.getMethod() != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="string">"OPTIONS"</span>.equalsIgnoreCase(serverRequest.getMethod().name())) &#123;</span><br><span class="line">			logger.debug(<span class="string">"OPTIONS请求不进行业务拦截校验！"</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (<span class="string">"/test/setCookies"</span>.equals(request.getServletPath())) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 模拟业务使用cookie中的参数</span></span><br><span class="line">	Cookie[] cookies = request.getCookies();</span><br><span class="line">	String token = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (cookies != <span class="keyword">null</span> &amp;&amp; cookies.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">for</span> (Cookie c : cookies) &#123;</span><br><span class="line">			<span class="keyword">if</span> (c.getName().equals(<span class="string">"token"</span>)) &#123;</span><br><span class="line">				token = c.getValue();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (token == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"参数token不能为空！"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>第三种：使用@CrossOrigin<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/test"</span>)</span><br><span class="line"><span class="meta">@CrossOrigin</span>(origins = &#123; <span class="string">"http://localhost:8080"</span> &#125;, allowCredentials = <span class="string">"true"</span>, maxAge = <span class="number">5</span>, allowedHeaders = &#123; <span class="string">"User-Agent"</span>, <span class="string">"Origin"</span>, <span class="string">"Cache-Control"</span>, <span class="string">"Content-type"</span>, <span class="string">"Date"</span>, <span class="string">"Server"</span>,</span><br><span class="line">		<span class="string">"withCredentials"</span>, <span class="string">"AccessToken"</span>, <span class="string">"X-Custom-Header"</span> &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(name = <span class="string">"/crossDomain"</span>, method = &#123; RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT &#125;)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">testCrossDomain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"success OK!"</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="第三种：使用-CrossOrigin"><a href="#第三种：使用-CrossOrigin" class="headerlink" title="第三种：使用@CrossOrigin"></a>第三种：使用@CrossOrigin</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/test"</span>)</span><br><span class="line"><span class="meta">@CrossOrigin</span>(origins = &#123; <span class="string">"http://localhost:8080"</span> &#125;, allowCredentials = <span class="string">"true"</span>, maxAge = <span class="number">5</span>, allowedHeaders = &#123; <span class="string">"User-Agent"</span>, <span class="string">"Origin"</span>, <span class="string">"Cache-Control"</span>, <span class="string">"Content-type"</span>, <span class="string">"Date"</span>, <span class="string">"Server"</span>,</span><br><span class="line">		<span class="string">"withCredentials"</span>, <span class="string">"AccessToken"</span>, <span class="string">"X-Custom-Header"</span> &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(name = <span class="string">"/crossDomain"</span>, method = &#123; RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT &#125;)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">testCrossDomain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"success OK!"</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>这个对于简单跨域请求是没问题的，对于非简单跨域请求权限校验失败。</p>
 <h2 id="测试demo"><a href="#测试demo" class="headerlink" title="测试demo"></a>测试demo</h2><p>创建web项目：cross-domain1(localhost:8080)和cross-domain2(localhost:8081)</p>
 <p>我们将要从localhost:8080项目下的网页访问localhost:8081项目下的请求</p>
@@ -429,13 +429,17 @@
       
         <div class="post-tags">
           
-            <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
+            <a href="/tags/Cors/" rel="tag"># Cors</a>
           
-            <a href="/tags/类加载器/" rel="tag"># 类加载器</a>
+            <a href="/tags/CrossOrigin/" rel="tag"># CrossOrigin</a>
           
-            <a href="/tags/classloader/" rel="tag"># classloader</a>
+            <a href="/tags/简单跨域/" rel="tag"># 简单跨域</a>
           
-            <a href="/tags/双亲委派模型/" rel="tag"># 双亲委派模型</a>
+            <a href="/tags/cookie/" rel="tag"># cookie</a>
+          
+            <a href="/tags/ajax跨域/" rel="tag"># ajax跨域</a>
+          
+            <a href="/tags/spring跨域/" rel="tag"># spring跨域</a>
           
         </div>
       
@@ -533,7 +537,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -555,7 +559,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -588,7 +592,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单跨域请求"><span class="nav-number">1.</span> <span class="nav-text">简单跨域请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨域解决方案如下："><span class="nav-number">2.</span> <span class="nav-text">跨域解决方案如下：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种：使用CorsFilter"><span class="nav-number">2.1.</span> <span class="nav-text">第一种：使用CorsFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种：使用mvc-cors"><span class="nav-number">2.2.</span> <span class="nav-text">第二种：使用mvc:cors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试demo"><span class="nav-number">3.</span> <span class="nav-text">测试demo</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单跨域请求"><span class="nav-number">1.</span> <span class="nav-text">简单跨域请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨域解决方案如下："><span class="nav-number">2.</span> <span class="nav-text">跨域解决方案如下：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种：使用CorsFilter"><span class="nav-number">2.1.</span> <span class="nav-text">第一种：使用CorsFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种：使用mvc-cors"><span class="nav-number">2.2.</span> <span class="nav-text">第二种：使用mvc:cors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三种：使用-CrossOrigin"><span class="nav-number">2.3.</span> <span class="nav-text">第三种：使用@CrossOrigin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试demo"><span class="nav-number">3.</span> <span class="nav-text">测试demo</span></a></li></ol></div>
             
 
           </div>
