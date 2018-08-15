@@ -16,15 +16,17 @@
   <entry>
     <title><![CDATA[深度替换JavaBean属性的空值]]></title>
     <url>%2F2018%2F08%2F15%2F2018-08-15%E6%B7%B1%E5%BA%A6%E6%9B%BF%E6%8D%A2JavaBean%E5%B1%9E%E6%80%A7%E7%9A%84%E7%A9%BA%E5%80%BC%2F</url>
-    <content type="text"></content>
+    <content type="text"><![CDATA[很多时候我们在提供给第三方调用的接口返回值中经常出现null值，有什么办法可以一次性的将返回对象中所有的null值替换成固定的值呢，这就用到了java中的反射，下面我们来实现一个可以深度替换我们返回JavaBean中值为null的字段为我们给定的值的方法 下面这个PropertyUtil工具类就可以解决深度替换的问题 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125import com.fasterxml.jackson.annotation.JsonIgnore;import org.slf4j.Logger;import org.slf4j.LoggerFactory;import org.springframework.util.ClassUtils;import org.springframework.util.ReflectionUtils;import java.lang.annotation.Annotation;import java.lang.reflect.Field;import java.lang.reflect.Method;import java.lang.reflect.Modifier;import java.util.Arrays;import java.util.Iterator;import java.util.Map;import java.util.Optional;public class PropertyUtil &#123; private static final Logger logger = LoggerFactory.getLogger(PropertyUtil.class); public static &lt;T&gt; void transferNullVal(Object obj, Class&lt;T&gt; clazz, T value) &#123; try &#123; if (obj == null || obj.getClass().isPrimitive() || clazz.isPrimitive()) &#123; return; &#125; if(obj.getClass().isArray())&#123; Object[] objs = (Object[])obj; Optional.ofNullable(objs).map(os-&gt;&#123; Arrays.asList(os).stream().forEach(o-&gt;&#123; transferNullVal(o, clazz, value); &#125;); return os; &#125;); return; &#125;else if(Iterable.class.isAssignableFrom(obj.getClass()))&#123; Iterable&lt;?&gt; iterable = (Iterable&lt;?&gt;)obj; Optional.ofNullable(iterable).map(itr-&gt;&#123; Iterator&lt;?&gt; it = itr.iterator(); while(it.hasNext())&#123; Object ob = it.next(); Optional.ofNullable(ob).map(o-&gt;&#123; transferNullVal(o, clazz, value); return o; &#125;); &#125; return itr; &#125;); return; &#125;else if(Map.class.isAssignableFrom(obj.getClass()))&#123; Map&lt;?,?&gt; map = (Map&lt;?,?&gt;)obj; Optional.ofNullable(map).map(os-&gt;&#123; Optional.ofNullable(os.values()).map(mapVals-&gt;&#123; mapVals.stream().forEach(o-&gt;&#123; transferNullVal(o, clazz, value); &#125;); return mapVals; &#125;); return os; &#125;); return; &#125;else if(ClassUtils.isVisible(obj.getClass(), ClassUtils.getDefaultClassLoader().getParent()))&#123; return; &#125; Field[] fields = obj.getClass().getDeclaredFields(); if (fields == null || fields.length == 0) &#123; return; &#125; for (Field f : fields) &#123; if (f.getType() == clazz) &#123; if (!nullValue(f, obj)) &#123; continue; &#125; if (checkIgnore(f) || checkStaticField(f) || !checkGetMethodPublic(f, obj.getClass())) &#123; continue; &#125; boolean isAccess = f.isAccessible(); ReflectionUtils.makeAccessible(f); ReflectionUtils.setField(f, obj, value); f.setAccessible(isAccess); &#125; else &#123; boolean s = f.isAccessible(); ReflectionUtils.makeAccessible(f); Object val = ReflectionUtils.getField(f, obj); transferNullVal(val, clazz, value); f.setAccessible(s); &#125; &#125; &#125; catch (Exception e) &#123; logger.error("对象属性转换失败！", e); &#125; &#125; private static boolean nullValue(Field f, Object obj) &#123; boolean isAccess = f.isAccessible(); ReflectionUtils.makeAccessible(f); Object val = ReflectionUtils.getField(f, obj); f.setAccessible(isAccess); return val == null; &#125; private static boolean checkIgnore(Field f) &#123; Annotation anno = f.getAnnotation(JsonIgnore.class); return anno != null; &#125; private static boolean checkStaticField(Field f) &#123; return Modifier.isStatic(f.getModifiers()); &#125; private static boolean checkGetMethodPublic(Field f, Class&lt;? extends Object&gt; clazz) &#123; if (f == null) &#123; return false; &#125; String pro = f.getName(); String fuPro = String.valueOf(pro.charAt(0)).toUpperCase() + pro.substring(1); boolean isBool = f.getType() == boolean.class; try &#123; if (!isBool) &#123; String getMethodName = "get" + fuPro; Method getMethod = clazz.getMethod(getMethodName, (Class[]) null); return Modifier.isPublic(getMethod.getModifiers()); &#125; else &#123; String isMethodName = "is" + fuPro; Method isMethod = clazz.getMethod(isMethodName, (Class[]) null); return Modifier.isPublic(isMethod.getModifiers()); &#125; &#125; catch (NoSuchMethodException e) &#123; return false; &#125; &#125;&#125; 测试Demo12345678910111213141516171819202122232425import com.google.gson.Gson;public class Test &#123; public static void main(String[] args) &#123; Person p = new Person(); p.setName("张三"); PropertyUtil.transferNullVal(p, Integer.class, 28); System.out.println(new Gson().toJson(p)); &#125; public static class Person &#123; private String name; private Integer age; public String getName() &#123; return name; &#125; public void setName(String name) &#123; this.name = name; &#125; public Integer getAge() &#123; return age; &#125; public void setAge(Integer age) &#123; this.age = age; &#125; &#125;&#125; 打印结果如下： {“name”:”张三”,”age”:28}]]></content>
       <categories>
         <category>小工具</category>
       </categories>
       <tags>
+        <tag>类加载器</tag>
         <tag>深度替换</tag>
         <tag>属性为空</tag>
         <tag>字段为空</tag>
-        <tag>反射</tag>
+        <tag>Java反射</tag>
+        <tag>ClassUtils</tag>
       </tags>
   </entry>
   <entry>
@@ -51,6 +53,8 @@
         <tag>Filter</tag>
         <tag>Log</tag>
         <tag>响应结果打印</tag>
+        <tag>HttpServletResponseWrapper</tag>
+        <tag>HttpServletRequestWrapper</tag>
       </tags>
   </entry>
   <entry>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Filter,Log,响应结果打印," />
+  <meta name="keywords" content="Filter,Log,响应结果打印,HttpServletResponseWrapper,HttpServletRequestWrapper," />
 
 
 
@@ -80,14 +80,14 @@
 
 
 <meta name="description" content="在实际业务开发中，我们经常需要打印响应结果日志，方便以后问题跟踪和处理，但是我们是不能直接从response的输出流中获取结果，为了解决这个问题，我们可以在拦截器中使用HttpServletResponseWrapper实现类替换HttpServletResponse，将输出的结果保存下来，然后在日志打印的地方直接将结果拿出来打印就可以了 同样，有时候是历史原因导致接口中参数名不是按驼峰规则命名，">
-<meta name="keywords" content="Filter,Log,响应结果打印">
+<meta name="keywords" content="Filter,Log,响应结果打印,HttpServletResponseWrapper,HttpServletRequestWrapper">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Filter实现响应结果打印">
 <meta property="og:url" content="http://menggl.github.io/2018/06/10/2018-06-10Filter实现响应结果打印和请求参数名大小写不敏感/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="在实际业务开发中，我们经常需要打印响应结果日志，方便以后问题跟踪和处理，但是我们是不能直接从response的输出流中获取结果，为了解决这个问题，我们可以在拦截器中使用HttpServletResponseWrapper实现类替换HttpServletResponse，将输出的结果保存下来，然后在日志打印的地方直接将结果拿出来打印就可以了 同样，有时候是历史原因导致接口中参数名不是按驼峰规则命名，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-15T08:58:03.396Z">
+<meta property="og:updated_time" content="2018-08-15T09:01:48.036Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Filter实现响应结果打印">
 <meta name="twitter:description" content="在实际业务开发中，我们经常需要打印响应结果日志，方便以后问题跟踪和处理，但是我们是不能直接从response的输出流中获取结果，为了解决这个问题，我们可以在拦截器中使用HttpServletResponseWrapper实现类替换HttpServletResponse，将输出的结果保存下来，然后在日志打印的地方直接将结果拿出来打印就可以了 同样，有时候是历史原因导致接口中参数名不是按驼峰规则命名，">
@@ -382,6 +382,10 @@
           
             <a href="/tags/响应结果打印/" rel="tag"># 响应结果打印</a>
           
+            <a href="/tags/HttpServletResponseWrapper/" rel="tag"># HttpServletResponseWrapper</a>
+          
+            <a href="/tags/HttpServletRequestWrapper/" rel="tag"># HttpServletRequestWrapper</a>
+          
         </div>
       
 
@@ -491,7 +495,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
