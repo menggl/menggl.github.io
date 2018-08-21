@@ -2,8 +2,8 @@
 <search>
   <entry>
     <title><![CDATA[AKKA的使用及原理剖析]]></title>
-    <url>%2F2018%2F08%2F17%2F2018-0817AKKA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%2F</url>
-    <content type="text"></content>
+    <url>%2F2018%2F08%2F17%2F2018-08-17AKKA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%2F</url>
+    <content type="text"><![CDATA[AKKA是一个在JVM上构建高并发、分布式、有弹性的消息驱动应用的工具集，AKKA中“Actor”只是AKKA工具集中的一部分，它能让我们在编写并发代码时，不用关系低层级的线程和锁。AKKA中其它的工具还包括AKKA Streams和Akka http。尽管AKKA是使用Scala语言编写的，但是它也有Java API 在AKKA中，Actor是最基本的工作单元。Actor是状态和行为的一个容器，它可以创建和监管子Actor。Actor之间都是通过异步进行相互的通讯。这个模型可以有效的保护Actor的内部状态，使其能够实现线程安全，该模型还实现了事件驱动的行为，从而不会阻塞其它的Actor。 类似收发短信，我们需要使用消息来调用Actor，消息发送之后就不可更改。不同的actor所能接收的消息类型是不一样的。actor接收到消息，然后以各种方式对其作出相应，并且还可以发送其它消息，修改自己的状态或行为、创建其它的actor AKKA使用方式 可以将jar包放入Web应用中 可以以微内核的形式使用 使用AKKA的五大好处 易于构建并行和分布式应用，AKKA在设计的时候就采用了异步通讯和分布式架构，并对上层进行了抽象，如Actors，Futures，STM等 可靠性，系统具备自愈能力，在本地和远程都有监护 高性能，在单机情况下，每秒能发送50000000个消息，内存占用小，1GB内存就可以保存2500000个Actors 弹性，无中心，自适应的负载均衡，路由，分区，配置 可扩展，可以使用AKKA扩展包进行扩展 我们看看如何使用 Tell方式调用 创建一个Actor，MessageHandler.java 1234567891011public static class MessageHandler extends AbstractActor &#123; public MessageHandler()&#123; super.getContext().setReceiveTimeout(Duration.create(10, TimeUnit.SECONDS)); &#125; @Override public AbstractActor.Receive createReceive() &#123; return super.receiveBuilder().match(Message.class,message -&gt; &#123; System.out.println("name="+message.getName()+",date="+message.getDate()); &#125;).build(); &#125;&#125; 传递的消息类型定义 12345678910111213141516public static class Message &#123; private String name; private Date date; public String getName() &#123; return name; &#125; public void setName(String name) &#123; this.name = name; &#125; public Date getDate() &#123; return date; &#125; public void setDate(Date date) &#123; this.date = date; &#125;&#125; main调用示例 123456789101112131415161718public static void main(String[] args) &#123; ActorSystem actorSystem = ActorSystem.create("simple1"); ActorRef counter = actorSystem.actorOf(Props.create(MessageHandler.class, new Creator&lt;MessageHandler&gt;() &#123; @Override public MessageHandler create() throws Exception &#123; return new MessageHandler(); &#125; &#125;), "Counter"); Message msg = new Message(); msg.setName("张三来电话了"); msg.setDate(new Date()); counter.tell(msg,ActorRef.noSender()); try &#123; Thread.sleep(10000); &#125; catch (InterruptedException e) &#123; e.printStackTrace(); &#125;&#125; 上面这个是tell的使用方式，没有返回的消息 Ask方式调用下面是使用ask调用，可以得到返回消息信息 MessageHandler对象变更如下 12345678910111213public static class MessageHandler extends AbstractActor &#123; public MessageHandler()&#123; super.getContext().setReceiveTimeout(Duration.create(10, TimeUnit.SECONDS)); &#125; @Override public AbstractActor.Receive createReceive() &#123; return super.receiveBuilder().match(Message.class,this::onMessage).build(); &#125; private void onMessage(Message msg)&#123; System.out.println("name="+msg.getName()+",date="+msg.getDate()); this.sender().tell("success",ActorRef.noSender()); &#125;&#125; main调用变更如下 123456789101112131415161718192021public static void main(String[] args) &#123; try &#123; ActorSystem actorSystem = ActorSystem.create("simple1"); ActorRef counter = actorSystem.actorOf(Props.create(MessageHandler.class, new Creator&lt;MessageHandler&gt;() &#123; @Override public MessageHandler create() throws Exception &#123; return new MessageHandler(); &#125; &#125;), "Counter"); Message msg = new Message(); msg.setName("张三来电话了"); msg.setDate(new Date()); Timeout timeout = new Timeout(5,TimeUnit.SECONDS); Future&lt;Object&gt; future = Patterns.ask(counter,msg,timeout); String result = (String)Await.result(future,timeout.duration()); System.out.println("result="+result); Thread.sleep(10000); &#125; catch (Exception e) &#123; e.printStackTrace(); &#125;&#125; 与spring集成 在spring的配置文件中配置如下bean定义 123&lt;bean id="actorSystem" class="akka.actor.ActorSystem" factory-method="create" scope="singleton"&gt; &lt;constructor-arg value="mgl-actor-system" /&gt;&lt;/bean&gt; 创建SpringExt.java，Actor的Props的提供者，其需要一个可以创建Actor的生产者（SpringActorProducer） 123456789101112131415161718import akka.actor.Extension;import akka.actor.Props;import org.springframework.beans.BeansException;import org.springframework.context.ApplicationContext;import org.springframework.context.ApplicationContextAware;import org.springframework.stereotype.Component;@Component("springExt")public class SpringExt implements Extension,ApplicationContextAware &#123; private ApplicationContext applicationContext; @Override public void setApplicationContext(ApplicationContext applicationContext) throws BeansException &#123; this.applicationContext = applicationContext; &#125; public Props props(String actorBeanName, Object... args)&#123; return Props.create(SpringActorProducer.class,applicationContext,actorBeanName,args); &#125;&#125; 创建SpringActorProducer.java，Actor实例的生产者 1234567891011121314151617181920212223import org.springframework.context.ApplicationContext;import akka.actor.Actor;import akka.actor.IndirectActorProducer;public class SpringActorProducer implements IndirectActorProducer&#123; private final ApplicationContext applicationContext; private final String actorBeanName; private final Object[] args; public SpringActorProducer(ApplicationContext applicationContext,String actorBeanName,Object... args)&#123; this.applicationContext = applicationContext; this.actorBeanName = actorBeanName; this.args = args; &#125; @SuppressWarnings("unchecked") @Override public Class&lt;? extends Actor&gt; actorClass() &#123; return (Class&lt;? extends Actor&gt;)applicationContext.getType(this.actorBeanName); &#125; @Override public Actor produce() &#123; return (Actor)applicationContext.getBean(actorBeanName,args); &#125;&#125; 定义处理消息的Actor对象 1234567891011121314151617181920212223import akka.actor.AbstractActor;import akka.actor.ActorRef;import org.springframework.context.annotation.Scope;import org.springframework.stereotype.Component;import scala.concurrent.duration.Duration;import java.util.concurrent.TimeUnit;@Component("messageService")@Scope("prototype")public class MessageService extends AbstractActor &#123; public MessageService()&#123; getContext().setReceiveTimeout(Duration.create(10, TimeUnit.SECONDS)); &#125; @Override public Receive createReceive() &#123; return receiveBuilder().match(String.class, message -&gt; &#123; onReceive(message); &#125;).build(); &#125; private void onReceive(String message) &#123; System.out.println("message=="+message); &#125;&#125; 调用方法如下 12345678910111213141516171819202122232425import akka.actor.ActorRef;import akka.actor.ActorSystem;import com.mgl.demo.akka.SpringExt;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Controller;import org.springframework.web.bind.annotation.RequestMapping;import org.springframework.web.bind.annotation.ResponseBody;@Controller@RequestMapping("/akka")public class TestController &#123; @Autowired private SpringExt springExt; @Autowired private ActorSystem actorSystem; @RequestMapping("/test") @ResponseBody public String test()&#123; ActorRef actor = actorSystem.actorOf(this.springExt.props("messageService"),"MessageService"+System.nanoTime()); actor.tell("hello zhangsan",ActorRef.noSender()); return "success"; &#125;&#125; 配置扫描器将上面的类都注入到spring容器中 1&lt;context:component-scan base-package="com.mgl.demo" /&gt;]]></content>
       <categories>
         <category>经典</category>
       </categories>
@@ -93,8 +93,8 @@
         <category>经典</category>
       </categories>
       <tags>
-        <tag>分布式锁</tag>
         <tag>zookeeper</tag>
+        <tag>分布式锁</tag>
         <tag>curator</tag>
       </tags>
   </entry>
@@ -106,8 +106,8 @@
         <category>经典</category>
       </categories>
       <tags>
-        <tag>redis</tag>
         <tag>分布式锁</tag>
+        <tag>redis</tag>
       </tags>
   </entry>
   <entry>
@@ -152,6 +152,19 @@
         <tag>类加载器</tag>
         <tag>classloader</tag>
         <tag>双亲委派模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JAVA虚拟机之类加载器]]></title>
+    <url>%2F2018%2F02%2F21%2F2018-02-21idea%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[最近开始使用idea开发工具开发项目，很多配置与eclipse中的配置不一样，特整理一些配置方法 idea配置maven仓库File -&gt; Settings -&gt; 搜索”maven”关键字 -&gt; 将”Always update snapshots”按钮勾选上，将”User settings file”配置好，如下图所示 在当前工作窗口，导入第二个工程 File -&gt; Project structure…(或直接按Ctrl+Alt+Shift+S) -&gt; 选择Modules选项卡 -&gt; 点击”+”按钮添加模块 -&gt; Import Module -&gt; 选择项目文件夹 -&gt; 选择项目类型，之后就可以在Project窗口看到添加的项目了 idea设置自动编译 File -&gt; Settings -&gt; Build… -&gt; Compiler -&gt; 选中Build project automatically 和 compile independent modules in parallel按钮，如下图所示 快速创建一个main方法快捷键： psvm 快速输入System.out.println()快捷键：sout 生成构造器、getter、setter方法 Alt+Insert 自动填充变量名称 Ctrl+Alt+V]]></content>
+      <categories>
+        <category>整理</category>
+      </categories>
+      <tags>
+        <tag>idea</tag>
+        <tag>工具</tag>
+        <tag>配置</tag>
       </tags>
   </entry>
 </search>
