@@ -89,7 +89,20 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/jvm_flow.png">
 <meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/native_method.png">
-<meta property="og:updated_time" content="2018-08-13T12:46:54.051Z">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/方法区.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量池在class文件中的位置.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量池的数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项cp_info数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/不同类型常量项的tag值列表.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项可以分为两种类型.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/int和float的常量项数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项int和float数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项long和double数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项String_info数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项Utf8_info数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项String数据结构.png">
+<meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/jdk7中的字符串常量池.png">
+<meta property="og:updated_time" content="2018-08-28T09:19:28.822Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA虚拟机之运行时数据区">
 <meta name="twitter:description" content="JAVA运行时数据区域(runtime data area)java运行时数据区可以分为6个区域  Java堆 Java虚拟机栈 本地方法栈 方法区 运行时常量池 程序计数器  线程私有的有：  程序计数器 本地方法栈 java虚拟机栈  线程共有的有：  java堆 方法区 运行时常量池   PC程序计数器可以理解为一块较小的内存空间，可以看做是当前线程执行字节码的行号计数器，一个线程分配一小块">
@@ -433,11 +446,51 @@
 <h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><ul>
 <li>保存虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码Class等数据</li>
 <li>jdk6时，字符串常量是保存在方法区中的，jdk7开始，已将其移到堆中了</li>
-<li></li>
+<li>jdk8的方法区被元数据区替代（MetaSpace）<img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/方法区.png">
+注意：这里的类变量是类的静态变量</li>
 </ul>
-<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><p>-Xss // 设置JVM栈的大小<br>-Xms // 初始堆内存大小<br>-Xmx // 最大堆内存大小</p>
+<p>类型的常量池：这里保存的是该class用到的其它常量的有序集合，包括字面量（直接常量）和符号引用（对象引用，非字面量），这个在动态链接中起核心作用（将符号引用解释为直接引用）</p>
+<p>方法信息：方法信息包含该类中的所有方法，每个方法包含下面的信息：方法修饰符、方法返回类型、方法名、方法参数个数/类型/顺序等、方法的字节码、操作数栈和该方法在栈帧中的局部变量区大小、异常表</p>
+<p>方法表：为了提高访问效率，JVM为每个加载的非虚拟类的类型都添加一个方法表，方法表是一组该类及该类父类方法的直接引用。jvm可以通过方法表快速激活实例方法。</p>
+<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h4 id="JAVA字面量（JAVA直接量）"><a href="#JAVA字面量（JAVA直接量）" class="headerlink" title="JAVA字面量（JAVA直接量）"></a>JAVA字面量（JAVA直接量）</h4><p>指的是int，long、double的直接量，比如123,”中国”,’c’,123.01，等具体的数值</p>
+<h4 id="符号引用"><a href="#符号引用" class="headerlink" title="符号引用"></a>符号引用</h4><p>符号引用是一个字符串，我们在代码里引用一个非字面量的东西，不管是变量还是常量，它都只是由一个符号串定义的符号，这个符号串在常量池中，类加载的时候，第一次加载到这个符号时，就会将这个符号引用（字符串）解析成直接引用（指针）</p>
+<h4 id="直接引用"><a href="#直接引用" class="headerlink" title="直接引用"></a>直接引用</h4><ol>
+<li>指向目标的指针，指向对象、类变量、类方法的指针</li>
+<li>相对偏移量，指向实例的变量、方法的指针</li>
+<li>一个可以间接定位到对象的句柄</li>
+</ol>
+<h4 id="class文件中的常量池"><a href="#class文件中的常量池" class="headerlink" title="class文件中的常量池"></a>class文件中的常量池</h4><p>查看class文件中的常量池信息，</p>
+<ol>
+<li><p>使用命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javap -verbose Test.class</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用Notepad++以16进制打开class文件</p>
+</li>
+</ol>
+<p>我们先看看常量池在class文件中的位置<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量池在class文件中的位置.png" title="常量池在class文件中的位置"></p>
+<p>常量池的数据结构是怎么组成的<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量池的数据结构.png" title="常量池的数据结构"></p>
+<p>常量池的数据结构很简单，前面有两个字节表示常量池计数器（constant_pool_count），它记录了常量池中常量项的个数，如果它的数值为10，则后面就会紧跟着9个常量项（cp_info）</p>
+<p>每个常量项的数据结构是什么<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项cp_info数据结构.png" title="常量项cp_info数据结构"><br>下面是不同类型的常量项的tag值<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/不同类型常量项的tag值列表.png" title="不同类型常量项的tag值列表"><br>常量项可以分成两种类型<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项可以分为两种类型.png" title="常量项可以分为两种类型"></p>
+<p>下面是int和float常量项的数据结构</p>
+<p>比如在class中定义了两个变量，并且赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public static int a = 32768;// [-32768,32767]的数据都不放入常量池中</span><br><span class="line">public static float b = 11.2;</span><br></pre></td></tr></table></figure></p>
+<p>在常量池中的数据结构如下<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/int和float的常量项数据结构.png" title="int和float的常量项数据结构"></p>
+<p>我们使用javap -v Test.class来看看常量池中保存的数据<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项int和float数据结构.png" title="常量项int和float数据结构"></p>
+<p>下面是long和double的常量项结构<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项long和double数据结构.png" title="常量项long和double数据结构"></p>
+<p>下面是String的常量项结构<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项String_info数据结构.png"><br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项Utf8_info数据结构.png"><br>CONSTANT_String_info常量项的值为#21指向CONSTANT_Utf8_info常量项里的值<br><img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项String数据结构.png"></p>
+<h4 id="方法区中的运行时常量池"><a href="#方法区中的运行时常量池" class="headerlink" title="方法区中的运行时常量池"></a>方法区中的运行时常量池</h4><p>方法区中的常量池是动态的，可以随时增加或被垃圾回收</p>
+<p>运用比较多的就是String类的intern()方法</p>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	String s1 = <span class="keyword">new</span> String(<span class="string">"1"</span>);</span><br><span class="line">	s1.intern();</span><br><span class="line">	String s2 = <span class="string">"1"</span>;</span><br><span class="line">	System.out.println(s1 == s2);</span><br><span class="line"></span><br><span class="line">	String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);</span><br><span class="line">	s3.intern();</span><br><span class="line">	String s4 = <span class="string">"11"</span>;</span><br><span class="line">	System.out.println(s3 == s4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码在jdk6中运行结果是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p>在jdk7中运行的结果是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<p>jdk6中的常量池是放在永久区中的（Perm区），永久区和堆区是完全分开的，也就是说堆中对象地址永远不可能与Perm区中的对象地址相等</p>
+<p>jdk7中的常量池已经将Perm区移动到堆中了，当调用intern()的时候会做一个操作：常量池中创建一个”11”对象，该对象保存的是s3对象的地址，所以之后使用”11”常量池赋值的时候就是赋的s3对象的引用地址</p>
+<img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/jdk7中的字符串常量池.png">
+<p>下面是jdk8中的常量池<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// s1在常量池中</span></span><br><span class="line">	String s1 = <span class="string">"abcd"</span>;</span><br><span class="line">	<span class="comment">// s2在堆中</span></span><br><span class="line">	String s2 = <span class="keyword">new</span> String(<span class="string">"abcd"</span>);</span><br><span class="line">	System.out.println(s1 == s2);<span class="comment">// 这里肯定是false</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// s3到常量池中找s2对应的字符串的常量对应的地址</span></span><br><span class="line">	String s3 = s2.intern();</span><br><span class="line">	System.out.println(s1 == s3);<span class="comment">// s3找到的是s1常量池的地址,这里是true</span></span><br><span class="line">	System.out.println(s2 == s3);<span class="comment">// s2是堆中的地址，这里的s3是常量池中的地址s1，肯定是false</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 这里的两个1都在常量池中，"11"在常量池中是不存在的</span></span><br><span class="line">	String s4 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);</span><br><span class="line">	<span class="comment">// 在常量池中新增加一个"11"的对象，该对象保存的是s4的引用地址，以后所有使用"11"赋值的字符串变量都使用的是s4的引用地址</span></span><br><span class="line">	s4.intern();</span><br><span class="line">	String s5 = <span class="string">"11"</span>;</span><br><span class="line">	String s6 = <span class="string">"11"</span>;</span><br><span class="line">	System.out.println(s5 == s4);</span><br><span class="line">	System.out.println(s6 == s4);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 这里会创建两个对象，一个在常量池中的"9"(类加载后就存在?)，另一个是在堆中创建的s7对象</span></span><br><span class="line">	String s7 = <span class="keyword">new</span> String(<span class="string">"9"</span>);</span><br><span class="line">	String s8 = s7.intern();<span class="comment">// 这里返回的是常量池中的"9"保存的地址（在类加载完后就存在了?）</span></span><br><span class="line">	String s9 = <span class="string">"9"</span>;<span class="comment">// 这里使用的是常量池中的"9"保存的地址</span></span><br><span class="line">	System.out.println(s7 == s9);<span class="comment">// 一个在堆中，一个在常量池中，false</span></span><br><span class="line">	System.out.println(s8 == s9);<span class="comment">// 这两个都是常量池中"9"保存的引用地址，true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果在代码中就存在的字面量，也就是在class文件中的常量池中的常量，在类加载后就会保存在运行时常量池中，动态创建的字符串,比如String new_ss = new String(“1”)+new String(“1”);”11”不会在常量池中保存，只能调用new_ss.intern()将”11”放入常量池，这时候常量池中”11”对象就保存的是new_ss堆中的引用地址了，以后任何String s1、2、3..=”11”;中的引用地址都是new_ss的堆中地址</p>
+<h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><p>-Xss // 设置JVM栈的大小<br>-Xms // 初始堆内存大小<br>-Xmx // 最大堆内存大小</p>
 <p>-Xmn // 年轻代的内存大小</p>
-<h3 id="虚拟机调优"><a href="#虚拟机调优" class="headerlink" title="虚拟机调优"></a>虚拟机调优</h3>
+<h3 id="虚拟机调优"><a href="#虚拟机调优" class="headerlink" title="虚拟机调优"></a>虚拟机调优</h3><p>参考：<a href="https://blog.csdn.net/wangtaomtk/article/details/52267548" target="_blank" rel="noopener">https://blog.csdn.net/wangtaomtk/article/details/52267548</a></p>
+
       
     </div>
     
@@ -449,7 +502,7 @@
     
       <div>
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>都是私房菜，整理不易，求鼓励，求支持，求生存</div>
+  <div>都是私房菜，整理不易，求鼓励，求支持，求生存！！！</div>
   <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
     <span>打赏</span>
   </button>
@@ -582,7 +635,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -604,7 +657,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -637,7 +690,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA运行时数据区域-runtime-data-area"><span class="nav-number">1.</span> <span class="nav-text">JAVA运行时数据区域(runtime data area)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">PC程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量池"><span class="nav-number">1.6.</span> <span class="nav-text">常量池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置参数"><span class="nav-number">1.7.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机调优"><span class="nav-number">1.8.</span> <span class="nav-text">虚拟机调优</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA运行时数据区域-runtime-data-area"><span class="nav-number">1.</span> <span class="nav-text">JAVA运行时数据区域(runtime data area)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">PC程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量池"><span class="nav-number">1.6.</span> <span class="nav-text">常量池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JAVA字面量（JAVA直接量）"><span class="nav-number">1.6.1.</span> <span class="nav-text">JAVA字面量（JAVA直接量）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#符号引用"><span class="nav-number">1.6.2.</span> <span class="nav-text">符号引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接引用"><span class="nav-number">1.6.3.</span> <span class="nav-text">直接引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class文件中的常量池"><span class="nav-number">1.6.4.</span> <span class="nav-text">class文件中的常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区中的运行时常量池"><span class="nav-number">1.6.5.</span> <span class="nav-text">方法区中的运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置参数"><span class="nav-number">1.7.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机调优"><span class="nav-number">1.8.</span> <span class="nav-text">虚拟机调优</span></a></li></ol></li></ol></div>
             
 
           </div>
