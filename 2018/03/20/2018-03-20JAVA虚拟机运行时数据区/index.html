@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项Utf8_info数据结构.png">
 <meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/常量项String数据结构.png">
 <meta property="og:image" content="http://menggl.github.io/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/jdk7中的字符串常量池.png">
-<meta property="og:updated_time" content="2018-08-28T09:19:28.822Z">
+<meta property="og:updated_time" content="2018-08-30T12:07:46.836Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA虚拟机之运行时数据区">
 <meta name="twitter:description" content="JAVA运行时数据区域(runtime data area)java运行时数据区可以分为6个区域  Java堆 Java虚拟机栈 本地方法栈 方法区 运行时常量池 程序计数器  线程私有的有：  程序计数器 本地方法栈 java虚拟机栈  线程共有的有：  java堆 方法区 运行时常量池   PC程序计数器可以理解为一块较小的内存空间，可以看做是当前线程执行字节码的行号计数器，一个线程分配一小块">
@@ -487,9 +487,158 @@
 <img src="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/jdk7中的字符串常量池.png">
 <p>下面是jdk8中的常量池<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// s1在常量池中</span></span><br><span class="line">	String s1 = <span class="string">"abcd"</span>;</span><br><span class="line">	<span class="comment">// s2在堆中</span></span><br><span class="line">	String s2 = <span class="keyword">new</span> String(<span class="string">"abcd"</span>);</span><br><span class="line">	System.out.println(s1 == s2);<span class="comment">// 这里肯定是false</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// s3到常量池中找s2对应的字符串的常量对应的地址</span></span><br><span class="line">	String s3 = s2.intern();</span><br><span class="line">	System.out.println(s1 == s3);<span class="comment">// s3找到的是s1常量池的地址,这里是true</span></span><br><span class="line">	System.out.println(s2 == s3);<span class="comment">// s2是堆中的地址，这里的s3是常量池中的地址s1，肯定是false</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 这里的两个1都在常量池中，"11"在常量池中是不存在的</span></span><br><span class="line">	String s4 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);</span><br><span class="line">	<span class="comment">// 在常量池中新增加一个"11"的对象，该对象保存的是s4的引用地址，以后所有使用"11"赋值的字符串变量都使用的是s4的引用地址</span></span><br><span class="line">	s4.intern();</span><br><span class="line">	String s5 = <span class="string">"11"</span>;</span><br><span class="line">	String s6 = <span class="string">"11"</span>;</span><br><span class="line">	System.out.println(s5 == s4);</span><br><span class="line">	System.out.println(s6 == s4);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 这里会创建两个对象，一个在常量池中的"9"(类加载后就存在?)，另一个是在堆中创建的s7对象</span></span><br><span class="line">	String s7 = <span class="keyword">new</span> String(<span class="string">"9"</span>);</span><br><span class="line">	String s8 = s7.intern();<span class="comment">// 这里返回的是常量池中的"9"保存的地址（在类加载完后就存在了?）</span></span><br><span class="line">	String s9 = <span class="string">"9"</span>;<span class="comment">// 这里使用的是常量池中的"9"保存的地址</span></span><br><span class="line">	System.out.println(s7 == s9);<span class="comment">// 一个在堆中，一个在常量池中，false</span></span><br><span class="line">	System.out.println(s8 == s9);<span class="comment">// 这两个都是常量池中"9"保存的引用地址，true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>如果在代码中就存在的字面量，也就是在class文件中的常量池中的常量，在类加载后就会保存在运行时常量池中，动态创建的字符串,比如String new_ss = new String(“1”)+new String(“1”);”11”不会在常量池中保存，只能调用new_ss.intern()将”11”放入常量池，这时候常量池中”11”对象就保存的是new_ss堆中的引用地址了，以后任何String s1、2、3..=”11”;中的引用地址都是new_ss的堆中地址</p>
-<h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><p>-Xss // 设置JVM栈的大小<br>-Xms // 初始堆内存大小<br>-Xmx // 最大堆内存大小</p>
+<h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><p>-Xms // 虚拟机初始堆内存大小<br>-Xmx // 虚拟机最大堆内存大小<br>-Xmn // 虚拟机年轻代堆内存大小（1.4及之后版本）</p>
+<p>-Xss // 设置JVM栈的大小</p>
 <p>-Xmn // 年轻代的内存大小</p>
-<h3 id="虚拟机调优"><a href="#虚拟机调优" class="headerlink" title="虚拟机调优"></a>虚拟机调优</h3><p>参考：<a href="https://blog.csdn.net/wangtaomtk/article/details/52267548" target="_blank" rel="noopener">https://blog.csdn.net/wangtaomtk/article/details/52267548</a></p>
+<h3 id="查看虚拟机加载、卸载的class数量、空间及耗费的时间"><a href="#查看虚拟机加载、卸载的class数量、空间及耗费的时间" class="headerlink" title="查看虚拟机加载、卸载的class数量、空间及耗费的时间"></a>查看虚拟机加载、卸载的class数量、空间及耗费的时间</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -class [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Loaded 加载class的数量</li>
+<li>Bytes 所占用空间大小</li>
+<li>Unloaded 未加载class数量</li>
+<li>Bytes 未加载占用空间大小</li>
+<li>Time 加载使用时间</li>
+</ul>
+<h3 id="查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间"><a href="#查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间" class="headerlink" title="查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间"></a>查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -compiler [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Compiled 编译数量</li>
+<li>Failed 编译失败数量</li>
+<li>Invalid 无效数量</li>
+<li>Time 编译耗时</li>
+<li>FailedType 失败类型</li>
+<li>FailedMethod 编译失败的最后一个方法名称</li>
+</ul>
+<h3 id="查看虚拟机内存统计"><a href="#查看虚拟机内存统计" class="headerlink" title="查看虚拟机内存统计"></a>查看虚拟机内存统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gccapacity [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NGCMN 新生代最小容量</li>
+<li>NGCMX 新生代最大容量</li>
+<li>NGC   当前新生代所占容量</li>
+<li>EC    eden区容量大小</li>
+<li>S0C    第一个幸存区容量大小</li>
+<li>S1C    第二个幸存区容量大小</li>
+<li>OGCMN  老年代最小容量大小</li>
+<li>OGCMX  老年代最大容量大小</li>
+<li>OGC    当前老年代大小</li>
+<li>OC     当前老年代大小</li>
+<li>MCMN    MetaSpace最小容量大小</li>
+<li>MCMX    MetaSpace最大容量大小</li>
+<li>MC     当前MetaSpace容量大小</li>
+<li>CCSMN  当前压缩类空间大小</li>
+<li>CCSMX  当前压缩类空间最大容量</li>
+<li>CCSC   当前压缩类使用空间大小</li>
+<li>YGC  年轻代GC次数</li>
+<li>FGC   老年代GC次数</li>
+</ul>
+<h3 id="查看虚拟机垃圾回收统计"><a href="#查看虚拟机垃圾回收统计" class="headerlink" title="查看虚拟机垃圾回收统计"></a>查看虚拟机垃圾回收统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc [进程号]  [间隔时间/毫秒]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>EC  年轻代Eden区的容量</li>
+<li>EU  年轻代Eden区使用大小</li>
+<li>S0C 年轻代第一个survivor区的容量</li>
+<li>S0U 年轻代第一个Survivor区的使用大小</li>
+<li>S1C 年轻代第二个Survivor区的容量</li>
+<li>S1U 年轻代第二个Survivor区的使用大小</li>
+<li>OC  老年代的容量</li>
+<li>OU  老年代的使用大小</li>
+<li>PC  持久代的容量  1.8之后就是MC</li>
+<li>PU  持久代的使用大小 1.8之后就是MU</li>
+<li>CCSC 压缩类空间容量</li>
+<li>CCSU 压缩类空间使用大小</li>
+</ul>
+<ul>
+<li>YGC 从应用程序启动以来年轻代GC的次数</li>
+<li>YGCT 从应用城区启动以来年轻代GC所用时间</li>
+<li>FGC 从应用程序启动以来FullGC的次数</li>
+<li>FGCT 从应用程序启动以来FullGC使用时间</li>
+<li>GCT 从应用程序启动以来GC使用的事件</li>
+</ul>
+<h3 id="新生代的内存统计"><a href="#新生代的内存统计" class="headerlink" title="新生代的内存统计"></a>新生代的内存统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gcnewcapacity [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NGCMN 新生代最小容量</li>
+<li>NGCMX 新生代最大容量</li>
+<li>NGC 当前新生代容量</li>
+<li>EC 当前eden区容量大小</li>
+<li>ECMX 当前eden区最大容量大小</li>
+<li>S0C  第一个幸存区容量大小</li>
+<li>S0CMX 第一个幸存区最大容量大小</li>
+<li>S1C 第二个幸存区容量大小</li>
+<li>S1CMX 第二个幸存区最大容量大小</li>
+<li>YGC 年轻代垃圾回收次数</li>
+<li>FGC 老年代垃圾回收次数</li>
+</ul>
+<h3 id="新生代垃圾回收统计"><a href="#新生代垃圾回收统计" class="headerlink" title="新生代垃圾回收统计"></a>新生代垃圾回收统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gcnew [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>EC eden区的容量</li>
+<li>EU eden区使用大小</li>
+<li>S0C 第一个幸存区的容量</li>
+<li>S0U 第一个幸存区使用大小</li>
+<li>S1C 第二个幸存区容量</li>
+<li>S1U 第二个幸存区使用大小</li>
+<li>TT 对象在新生代存活的次数</li>
+<li>MTT 对象在新生代存活的最大次数</li>
+<li>DSS 期望的幸存区大小</li>
+<li>YGC 年轻代GC次数</li>
+<li>YGCT 年轻代GC消耗时间</li>
+</ul>
+<h3 id="老年代内存统计"><a href="#老年代内存统计" class="headerlink" title="老年代内存统计"></a>老年代内存统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gcoldcapacity [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>OGCMN  老年代最小容量大小</li>
+<li>OGCMX  老年代最大容量大小</li>
+<li>OGC  当前老年代容量大小</li>
+<li>OC  老年代容量大小</li>
+<li>YGC</li>
+<li>FGC</li>
+<li>FGCT</li>
+<li>GCT</li>
+</ul>
+<h3 id="老年代垃圾回收统计"><a href="#老年代垃圾回收统计" class="headerlink" title="老年代垃圾回收统计"></a>老年代垃圾回收统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gcold [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>MC 方法区大小</li>
+<li>MU 方法区使用大小</li>
+<li>OC 老年代大小</li>
+<li>OU 老年代使用大小</li>
+<li>CCSC 压缩类空间大小</li>
+<li>CCSU 压缩类空间使用大小</li>
+<li>YGC</li>
+<li>FGC</li>
+<li>FGCT</li>
+<li>GCT</li>
+</ul>
+<h3 id="元数据空间内存统计"><a href="#元数据空间内存统计" class="headerlink" title="元数据空间内存统计"></a>元数据空间内存统计</h3><ul>
+<li>MCMN 元数据区最小空间大小</li>
+<li>MCMX 元数据区最大空间大小</li>
+<li>MC 当前元数据区空间大小</li>
+<li>CCSMN</li>
+<li>CCSMX</li>
+<li>CCSC</li>
+<li>YGC</li>
+<li>FGC</li>
+<li>FGCT</li>
+<li>GCT</li>
+</ul>
+<h3 id="查看JVM内存使用百分比统计"><a href="#查看JVM内存使用百分比统计" class="headerlink" title="查看JVM内存使用百分比统计"></a>查看JVM内存使用百分比统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gcutil [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>E eden区使用比例</li>
+<li>S0  第一个幸存区使用比例</li>
+<li>S1  第二个幸存区使用比例</li>
+<li>O  老年代使用比例</li>
+<li>M  元数据区使用比例</li>
+<li>CCS 压缩区使用比例</li>
+<li>YGC</li>
+<li>FGC</li>
+<li>FGCT</li>
+<li>GCT</li>
+</ul>
+<h3 id="查看JVM编译方法统计"><a href="#查看JVM编译方法统计" class="headerlink" title="查看JVM编译方法统计"></a>查看JVM编译方法统计</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -printcompilation [进程号]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Compiled 最近编译的方法数量</li>
+<li>Size 最近编译方法的字节码数量</li>
+<li>Type 最近编译方法的编译类型</li>
+<li>Method 方法名标识</li>
+</ul>
+<h3 id="导出堆内存状态"><a href="#导出堆内存状态" class="headerlink" title="导出堆内存状态"></a>导出堆内存状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=[文件名] [进程号]</span><br></pre></td></tr></table></figure>
+<p>分析工具:Memory Analyzer</p>
+<p><a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">http://www.eclipse.org/mat/downloads.php</a></p>
+<p>// 查看对象及数量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -histo [进程号]</span><br></pre></td></tr></table></figure></p>
+<p>参考：<a href="https://blog.csdn.net/wangtaomtk/article/details/52267548" target="_blank" rel="noopener">https://blog.csdn.net/wangtaomtk/article/details/52267548</a></p>
 
       
     </div>
@@ -690,7 +839,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA运行时数据区域-runtime-data-area"><span class="nav-number">1.</span> <span class="nav-text">JAVA运行时数据区域(runtime data area)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">PC程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量池"><span class="nav-number">1.6.</span> <span class="nav-text">常量池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JAVA字面量（JAVA直接量）"><span class="nav-number">1.6.1.</span> <span class="nav-text">JAVA字面量（JAVA直接量）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#符号引用"><span class="nav-number">1.6.2.</span> <span class="nav-text">符号引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接引用"><span class="nav-number">1.6.3.</span> <span class="nav-text">直接引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class文件中的常量池"><span class="nav-number">1.6.4.</span> <span class="nav-text">class文件中的常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区中的运行时常量池"><span class="nav-number">1.6.5.</span> <span class="nav-text">方法区中的运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置参数"><span class="nav-number">1.7.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机调优"><span class="nav-number">1.8.</span> <span class="nav-text">虚拟机调优</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA运行时数据区域-runtime-data-area"><span class="nav-number">1.</span> <span class="nav-text">JAVA运行时数据区域(runtime data area)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">PC程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量池"><span class="nav-number">1.6.</span> <span class="nav-text">常量池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JAVA字面量（JAVA直接量）"><span class="nav-number">1.6.1.</span> <span class="nav-text">JAVA字面量（JAVA直接量）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#符号引用"><span class="nav-number">1.6.2.</span> <span class="nav-text">符号引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接引用"><span class="nav-number">1.6.3.</span> <span class="nav-text">直接引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class文件中的常量池"><span class="nav-number">1.6.4.</span> <span class="nav-text">class文件中的常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区中的运行时常量池"><span class="nav-number">1.6.5.</span> <span class="nav-text">方法区中的运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置参数"><span class="nav-number">1.7.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看虚拟机加载、卸载的class数量、空间及耗费的时间"><span class="nav-number">1.8.</span> <span class="nav-text">查看虚拟机加载、卸载的class数量、空间及耗费的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间"><span class="nav-number">1.9.</span> <span class="nav-text">查看JIT编译过的方法（编译字节码成机器码）数量及耗时时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看虚拟机内存统计"><span class="nav-number">1.10.</span> <span class="nav-text">查看虚拟机内存统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看虚拟机垃圾回收统计"><span class="nav-number">1.11.</span> <span class="nav-text">查看虚拟机垃圾回收统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新生代的内存统计"><span class="nav-number">1.12.</span> <span class="nav-text">新生代的内存统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新生代垃圾回收统计"><span class="nav-number">1.13.</span> <span class="nav-text">新生代垃圾回收统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#老年代内存统计"><span class="nav-number">1.14.</span> <span class="nav-text">老年代内存统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#老年代垃圾回收统计"><span class="nav-number">1.15.</span> <span class="nav-text">老年代垃圾回收统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元数据空间内存统计"><span class="nav-number">1.16.</span> <span class="nav-text">元数据空间内存统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看JVM内存使用百分比统计"><span class="nav-number">1.17.</span> <span class="nav-text">查看JVM内存使用百分比统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看JVM编译方法统计"><span class="nav-number">1.18.</span> <span class="nav-text">查看JVM编译方法统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导出堆内存状态"><span class="nav-number">1.19.</span> <span class="nav-text">导出堆内存状态</span></a></li></ol></li></ol></div>
             
 
           </div>
