@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Collections,Sort,ArrayList," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在软件开发过程中，我们经常会使用到集合类的排序操作，那么java给我们实现的排序到底是如何实现的，我们先看一下ArrayList集合类的排序源码（jdk1.8） Collections测试demo123456ArrayList&amp;lt;Integer&amp;gt; list = new ArrayList&amp;lt;Integer&amp;gt;();Random random = new Random();for">
+<meta name="keywords" content="Collections,Sort,ArrayList">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集合排序源码解析">
+<meta property="og:url" content="http://menggl.github.io/2018/01/12/2018-01-12集合排序源码解析/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在软件开发过程中，我们经常会使用到集合类的排序操作，那么java给我们实现的排序到底是如何实现的，我们先看一下ArrayList集合类的排序源码（jdk1.8） Collections测试demo123456ArrayList&amp;lt;Integer&amp;gt; list = new ArrayList&amp;lt;Integer&amp;gt;();Random random = new Random();for">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-13T12:30:10.089Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="集合排序源码解析">
+<meta name="twitter:description" content="在软件开发过程中，我们经常会使用到集合类的排序操作，那么java给我们实现的排序到底是如何实现的，我们先看一下ArrayList集合类的排序源码（jdk1.8） Collections测试demo123456ArrayList&amp;lt;Integer&amp;gt; list = new ArrayList&amp;lt;Integer&amp;gt;();Random random = new Random();for">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://menggl.github.io/2018/01/12/2018-01-12集合排序源码解析/"/>
+
+
+
+
+
+  <title>集合排序源码解析 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/01/12/2018-01-12集合排序源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="menggl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">集合排序源码解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T12:39:04+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码/" itemprop="url" rel="index">
+                    <span itemprop="name">源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在软件开发过程中，我们经常会使用到集合类的排序操作，那么java给我们实现的排序到底是如何实现的，我们先看一下ArrayList集合类的排序源码（jdk1.8）</p>
+<h3 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h3><p>测试demo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">Random random = <span class="keyword">new</span> Random();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">	list.add(random.nextInt(<span class="number">1000</span>));</span><br><span class="line">&#125;</span><br><span class="line">Collections.sort(list);</span><br></pre></td></tr></table></figure></p>
+<p>Collections.sort(obj)排序实际上是调用了obj自己的sort(null)方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Comparable&lt;? <span class="keyword">super</span> T&gt;&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(List&lt;T&gt; list)</span> </span>&#123;<span class="comment">// Collections中的</span></span><br><span class="line">	list.sort(<span class="keyword">null</span>);<span class="comment">// 调用的是集合自己的排序方法，这里的list就是ArrayList</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ArrayList-sort"><a href="#ArrayList-sort" class="headerlink" title="ArrayList.sort"></a>ArrayList.sort</h3><p>下面我们看看ArrayList.sort(null)是如何处理的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>&#123; <span class="comment">// ArrayList中的</span></span><br><span class="line">	<span class="keyword">final</span> <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line">	Arrays.sort((E[]) elementData, <span class="number">0</span>, size, comparator);<span class="comment">// 调用的是Arrays.sort方法</span></span><br><span class="line">	<span class="keyword">if</span> (modCount != expectedModCount) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">	&#125;</span><br><span class="line">	modCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="LinkedList-sort"><a href="#LinkedList-sort" class="headerlink" title="LinkedList.sort"></a>LinkedList.sort</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; c)</span> </span>&#123; <span class="comment">// List中的方法</span></span><br><span class="line">    Object[] a = <span class="keyword">this</span>.toArray();</span><br><span class="line">    Arrays.sort(a, (Comparator) c);<span class="comment">// 这里也使用到了Arrays.sort()方法</span></span><br><span class="line">    ListIterator&lt;E&gt; i = <span class="keyword">this</span>.listIterator();</span><br><span class="line">    <span class="keyword">for</span> (Object e : a) &#123;</span><br><span class="line">        i.next();</span><br><span class="line">        i.set((E) e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Arrays-sort"><a href="#Arrays-sort" class="headerlink" title="Arrays.sort"></a>Arrays.sort</h3><p>最终用到了Arrays的sort方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(T[] a, <span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex,Comparator&lt;? <span class="keyword">super</span> T&gt; c)</span> </span>&#123;<span class="comment">// Arrays中的</span></span><br><span class="line">	<span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123; </span><br><span class="line">		sort(a, fromIndex, toIndex);<span class="comment">// 如果排序方法为空，使用默认排序</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		rangeCheck(a.length, fromIndex, toIndex);</span><br><span class="line">		<span class="keyword">if</span> (LegacyMergeSort.userRequested)</span><br><span class="line">			legacyMergeSort(a, fromIndex, toIndex, c);</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			TimSort.sort(a, fromIndex, toIndex, c, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Object[] a, <span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span> </span>&#123;<span class="comment">// Arrays中的</span></span><br><span class="line">	rangeCheck(a.length, fromIndex, toIndex);</span><br><span class="line">	<span class="keyword">if</span> (LegacyMergeSort.userRequested)</span><br><span class="line">		legacyMergeSort(a, fromIndex, toIndex);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		ComparableTimSort.sort(a, fromIndex, toIndex, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>);<span class="comment">// 使用ComparableTimeSort.sort进行排序</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用到了一个叫ComparableTimSort的排序工具类，最终是用这个类进行数组的排序操作</p>
+<p>那么我们来看看这个ComparableTimSort这个类是如何实现排序的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Object[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, Object[] work, <span class="keyword">int</span> workBase, <span class="keyword">int</span> workLen)</span> </span>&#123;<span class="comment">// ComparableTimeSort中的</span></span><br><span class="line">	<span class="keyword">assert</span> a != <span class="keyword">null</span> &amp;&amp; lo &gt;= <span class="number">0</span> &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= a.length;</span><br><span class="line">	<span class="keyword">int</span> nRemaining  = hi - lo;<span class="comment">// 要排序数组长度</span></span><br><span class="line">	<span class="keyword">if</span> (nRemaining &lt; <span class="number">2</span>) <span class="comment">// 如果要排序的数组长度小于2，不用排序</span></span><br><span class="line">		<span class="keyword">return</span>;  </span><br><span class="line">	<span class="keyword">if</span> (nRemaining &lt; MIN_MERGE) &#123; <span class="comment">// 如果要排序的数组长度小于32，直接进行排序就可以了</span></span><br><span class="line">		<span class="keyword">int</span> initRunLen = countRunAndMakeAscending(a, lo, hi);</span><br><span class="line">		binarySort(a, lo, hi, lo + initRunLen);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 如果要排序的数组长度大于等于32，使用ComparableTimSort工具进行排序</span></span><br><span class="line">	ComparableTimSort ts = <span class="keyword">new</span> ComparableTimSort(a, work, workBase, workLen);</span><br><span class="line">	<span class="keyword">int</span> minRun = minRunLength(nRemaining);</span><br><span class="line"><span class="comment">/*private static int minRunLength(int n) &#123;// 计算分隔成块的每块大小是多少</span></span><br><span class="line"><span class="comment">	assert n &gt;= 0;</span></span><br><span class="line"><span class="comment">	int r = 0;      // Becomes 1 if any 1 bits are shifted off</span></span><br><span class="line"><span class="comment">	while (n &gt;= MIN_MERGE) &#123;</span></span><br><span class="line"><span class="comment">		r |= (n &amp; 1);</span></span><br><span class="line"><span class="comment">		n &gt;&gt;= 1;</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">	return n + r;</span></span><br><span class="line"><span class="comment">&#125;*/</span></span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">		<span class="keyword">int</span> runLen = countRunAndMakeAscending(a, lo, hi);</span><br><span class="line"><span class="comment">/*private static int countRunAndMakeAscending(Object[] a, int lo, int hi) &#123;</span></span><br><span class="line"><span class="comment">	assert lo &lt; hi;</span></span><br><span class="line"><span class="comment">	int runHi = lo + 1;</span></span><br><span class="line"><span class="comment">	if (runHi == hi)// 如果只有一个数，直接返回1</span></span><br><span class="line"><span class="comment">		return 1;</span></span><br><span class="line"><span class="comment">	if (((Comparable) a[runHi++]).compareTo(a[lo]) &lt; 0) &#123; // 如果后面的数比前面的数小，runHi顺便加一</span></span><br><span class="line"><span class="comment">		while (runHi &lt; hi &amp;&amp; ((Comparable) a[runHi]).compareTo(a[runHi - 1]) &lt; 0)// 如果一直是后面的数比前面的数小的话，这顺序得倒过来</span></span><br><span class="line"><span class="comment">			runHi++;</span></span><br><span class="line"><span class="comment">		reverseRange(a, lo, runHi);// 到现在，runHi的值小于runHi-1的值</span></span><br><span class="line"><span class="comment">	&#125; else &#123;                                              // 如果后面的数比前面的都大，顺序不错，是理想中要排完后的顺序</span></span><br><span class="line"><span class="comment">		while (runHi &lt; hi &amp;&amp; ((Comparable) a[runHi]).compareTo(a[runHi - 1]) &gt;= 0)</span></span><br><span class="line"><span class="comment">			runHi++;</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">	return runHi - lo;// 返回数组前面有多少个已经排好队的数据数量</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">private static void reverseRange(Object[] a, int lo, int hi) &#123;// 顺序正好是倒序，要变成正序</span></span><br><span class="line"><span class="comment">	hi--;// 先对runHi减一</span></span><br><span class="line"><span class="comment">	while (lo &lt; hi) &#123;// 当低位下标小于高位下标时</span></span><br><span class="line"><span class="comment">		Object t = a[lo];// 低下标数保存一下</span></span><br><span class="line"><span class="comment">		a[lo++] = a[hi];// 低下标数设置成高下标数</span></span><br><span class="line"><span class="comment">		a[hi--] = t;// 高下标数设置成低下标数</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">		<span class="keyword">if</span> (runLen &lt; minRun) &#123; <span class="comment">// 如果已经排好队的数量小于每块大小</span></span><br><span class="line">			<span class="keyword">int</span> force = nRemaining &lt;= minRun ? nRemaining : minRun;<span class="comment">// 数组要排序的数量如果小于最小运行数量，就是要排序的数量，否则最小运行数量</span></span><br><span class="line">			binarySort(a, lo, lo + force, lo + runLen);<span class="comment">// 对当前块进行排序</span></span><br><span class="line">			runLen = force;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 将当前块的起始下标和排序的数据数量保存起来</span></span><br><span class="line">		ts.pushRun(lo, runLen);</span><br><span class="line"><span class="comment">/*private void pushRun(int runBase, int runLen) &#123;</span></span><br><span class="line"><span class="comment">	this.runBase[stackSize] = runBase; // 保存块的起始位置</span></span><br><span class="line"><span class="comment">	this.runLen[stackSize] = runLen; // 保存块的大小</span></span><br><span class="line"><span class="comment">	stackSize++; //保存需要归并排序的块的数量</span></span><br><span class="line"><span class="comment">&#125;*/</span></span><br><span class="line">		<span class="comment">// 对多个块进行归并排序</span></span><br><span class="line">		ts.mergeCollapse();</span><br><span class="line">		lo += runLen;<span class="comment">// 起始下标右移到下一块的起始下标位置</span></span><br><span class="line">		nRemaining -= runLen;<span class="comment">// 需要排序的数据数量更新</span></span><br><span class="line">	&#125; <span class="keyword">while</span> (nRemaining != <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">assert</span> lo == hi;</span><br><span class="line">	ts.mergeForceCollapse();</span><br><span class="line">	<span class="keyword">assert</span> ts.stackSize == <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最终使用到了插入排序和归并排序算法</p>
+<p>下面是插入排序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">binarySort</span><span class="params">(Object[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span> start)</span> </span>&#123;<span class="comment">// 对a数组进行排序，最低下标是lo，最高下标是hi，开始排序下标是start</span></span><br><span class="line">	<span class="keyword">assert</span> lo &lt;= start &amp;&amp; start &lt;= hi;</span><br><span class="line">	<span class="keyword">if</span> (start == lo)<span class="comment">// 如果开始排序的下标等于最低下标，将开始下标右移一位</span></span><br><span class="line">		start++;</span><br><span class="line">	<span class="keyword">for</span> ( ; start &lt; hi; start++) &#123;<span class="comment">// 如果开始下标小于最高下标，也就是排序到最高下标的前一位置，这里的hi是要排序数据最大下标加一的值</span></span><br><span class="line">		Comparable pivot = (Comparable) a[start];</span><br><span class="line">		<span class="keyword">int</span> left = lo;<span class="comment">// left是当前数组最低位的下标</span></span><br><span class="line">		<span class="keyword">int</span> right = start;<span class="comment">// right是顺序不对的第一个数下标</span></span><br><span class="line">		<span class="keyword">assert</span> left &lt;= right;</span><br><span class="line">		<span class="keyword">while</span> (left &lt; right) &#123;<span class="comment">// 插入排序开始</span></span><br><span class="line">			<span class="keyword">int</span> mid = (left + right) &gt;&gt;&gt; <span class="number">1</span>;<span class="comment">// 最低位下标和顺序不对的下标除以2，得到中间的一个下标</span></span><br><span class="line">			<span class="keyword">if</span> (pivot.compareTo(a[mid]) &lt; <span class="number">0</span>)<span class="comment">// 如果顺序不对的第一个数比中间下标的数小,高位下标左移,然后再取中间下标进行比较</span></span><br><span class="line">				right = mid;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">				left = mid + <span class="number">1</span>;<span class="comment">// 如果顺序不对的第一个数比中间下标的数大，低位下标右移，然后再自旋取中间下标</span></span><br><span class="line">			<span class="comment">// 直到低位下标与高位下标相等才会跳出循环</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">assert</span> left == right;</span><br><span class="line">		<span class="keyword">int</span> n = start - left;  <span class="comment">// The number of elements to move</span></span><br><span class="line">		<span class="keyword">switch</span> (n) &#123;<span class="comment">// 看看移动的位数多不，如果多就用System.arraycopy进行插入操作中的整体数据右移</span></span><br><span class="line">			<span class="keyword">case</span> <span class="number">2</span>:  a[left + <span class="number">2</span>] = a[left + <span class="number">1</span>];</span><br><span class="line">			<span class="keyword">case</span> <span class="number">1</span>:  a[left + <span class="number">1</span>] = a[left];</span><br><span class="line">					 <span class="keyword">break</span>;</span><br><span class="line">					 <span class="comment">//Object src,  int  srcPos, Object dest, int destPos, int length</span></span><br><span class="line">			<span class="keyword">default</span>: System.arraycopy(a, left, a, left + <span class="number">1</span>, n);</span><br><span class="line">		&#125;</span><br><span class="line">		a[left] = pivot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面是归并排序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 插入排序之后就是归并排序了</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">mergeCollapse</span><span class="params">()</span> </span>&#123;<span class="comment">// ComparableTimSort中的</span></span><br><span class="line">	<span class="keyword">while</span> (stackSize &gt; <span class="number">1</span>) &#123; <span class="comment">// 如果需要归并排序的块的数量大于等于2个才能进行归并排序</span></span><br><span class="line">		<span class="keyword">int</span> n = stackSize - <span class="number">2</span>;<span class="comment">// 找到倒数第二个需要归并排序的块</span></span><br><span class="line">		<span class="keyword">if</span> (n &gt; <span class="number">0</span> &amp;&amp; runLen[n-<span class="number">1</span>] &lt;= runLen[n] + runLen[n+<span class="number">1</span>]) &#123;<span class="comment">// 如果前一个块数量小于等于后两个块数量</span></span><br><span class="line">			<span class="keyword">if</span> (runLen[n - <span class="number">1</span>] &lt; runLen[n + <span class="number">1</span>])<span class="comment">// 如果前一个块需要归并的数量比后一个块需要归并的数量少，从前一个块开始归并，否则还是从当前块开始归并</span></span><br><span class="line">				n--;</span><br><span class="line">			mergeAt(n);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (runLen[n] &lt;= runLen[n + <span class="number">1</span>]) &#123;<span class="comment">// 如果当前块需要归并的数量小于等于后面块需要归并的数量的时候</span></span><br><span class="line">			mergeAt(n);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">break</span>; <span class="comment">// Invariant is established</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">mergeAt</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;<span class="comment">// 这里是归并排序的关键代码</span></span><br><span class="line">	<span class="keyword">assert</span> stackSize &gt;= <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">assert</span> i &gt;= <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">assert</span> i == stackSize - <span class="number">2</span> || i == stackSize - <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> base1 = runBase[i];<span class="comment">// 当前块的初始下标</span></span><br><span class="line">	<span class="keyword">int</span> len1 = runLen[i];<span class="comment">// 当前块的数据数量</span></span><br><span class="line">	<span class="keyword">int</span> base2 = runBase[i + <span class="number">1</span>];<span class="comment">// 下一块的初始下标</span></span><br><span class="line">	<span class="keyword">int</span> len2 = runLen[i + <span class="number">1</span>];<span class="comment">// 下一块的数据数量</span></span><br><span class="line">	<span class="comment">// assert len1 &gt; 0 &amp;&amp; len2 &gt; 0;</span></span><br><span class="line">	<span class="comment">// assert base1 + len1 == base2;</span></span><br><span class="line">	</span><br><span class="line">	runLen[i] = len1 + len2;<span class="comment">// 当前块的数量设置成当前块和下一块的数量</span></span><br><span class="line">	<span class="keyword">if</span> (i == stackSize - <span class="number">3</span>) &#123;<span class="comment">// 如果当前块是处理的前一个块数据，基本上不会有这种情况吧</span></span><br><span class="line">		runBase[i + <span class="number">1</span>] = runBase[i + <span class="number">2</span>];</span><br><span class="line">		runLen[i + <span class="number">1</span>] = runLen[i + <span class="number">2</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	stackSize--;<span class="comment">// 要归并块的数量缩减为1</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 计算第一块中有多少个比第二块第一个数据小的数据数量</span></span><br><span class="line">	<span class="keyword">int</span> k = gallopRight((Comparable&lt;Object&gt;) a[base2], a, base1, len1, <span class="number">0</span>);</span><br><span class="line">	<span class="comment">// assert k &gt;= 0;</span></span><br><span class="line">	base1 += k;<span class="comment">// 第一块数据的下标右移K个位置</span></span><br><span class="line">	len1 -= k;<span class="comment">// 第一块数据的需要排序的长度重新计算</span></span><br><span class="line">	<span class="keyword">if</span> (len1 == <span class="number">0</span>)<span class="comment">// 如果都比第二块数据的第一个数小，那么len1计算出来就是0，就不用排队了，已经排好了</span></span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 找到第二块数据中还有多少个数据比第一块最大数据大，然后把比第一块数据小的需要重新排队，需要重新排队的数量</span></span><br><span class="line">	len2 = gallopLeft((Comparable&lt;Object&gt;) a[base1 + len1 - <span class="number">1</span>], a, base2, len2, len2 - <span class="number">1</span>);</span><br><span class="line">	<span class="comment">// assert len2 &gt;= 0;</span></span><br><span class="line">	<span class="keyword">if</span> (len2 == <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">if</span> (len1 &lt;= len2)<span class="comment">// 如果第一块待整理的数据更少一下，使用mergeLo</span></span><br><span class="line">		mergeLo(base1, len1, base2, len2);</span><br><span class="line">	<span class="keyword">else</span>             <span class="comment">// 如果第二块待整理的数据更少一些，使用mergeHi</span></span><br><span class="line">		mergeHi(base1, len1, base2, len2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>归并排序中用到了两个驰骋算法，一个是gallopRight，另一个是gallopLeft，其实这两个算法实现原理是一样的，完全可以去掉一个</p>
+<p>gallopRight<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a[25] a 0 25 0</span></span><br><span class="line"><span class="comment">// 给定一个数据，看看数组中所有比这个数据小的数量(hint=0)，或者所有比这个数据大的偏移量(hint&gt;0)，这个方法与gallopLeft一样的效果啊</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gallopRight</span><span class="params">(Comparable&lt;Object&gt; key, Object[] a, <span class="keyword">int</span> base, <span class="keyword">int</span> len, <span class="keyword">int</span> hint)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// assert len &gt; 0 &amp;&amp; hint &gt;= 0 &amp;&amp; hint &lt; len;</span></span><br><span class="line">	<span class="keyword">int</span> ofs = <span class="number">1</span>;<span class="comment">// 这个ofs是个啥意思？</span></span><br><span class="line">	<span class="keyword">int</span> lastOfs = <span class="number">0</span>;<span class="comment">// 上一个ofs啥意思？</span></span><br><span class="line">	<span class="keyword">if</span> (key.compareTo(a[base + hint]) &lt; <span class="number">0</span>) &#123; <span class="comment">// 从数组右边找比给定数据大的数据下标，这个时候hint为数组最后那个下标，hint &gt; 0</span></span><br><span class="line">		<span class="keyword">int</span> maxOfs = hint + <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span> (ofs &lt; maxOfs &amp;&amp; key.compareTo(a[base + hint - ofs]) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">			lastOfs = ofs;</span><br><span class="line">			ofs = (ofs &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span> (ofs &lt;= <span class="number">0</span>)   </span><br><span class="line">				ofs = maxOfs;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ofs &gt; maxOfs)</span><br><span class="line">			ofs = maxOfs;</span><br><span class="line">		<span class="keyword">int</span> tmp = lastOfs;</span><br><span class="line">		lastOfs = hint - ofs; </span><br><span class="line">		ofs = hint - tmp;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; <span class="comment">// 从数组左边找比给定数据小的数据个数,hint=0</span></span><br><span class="line">		<span class="keyword">int</span> maxOfs = len - hint;<span class="comment">// 设定一个最大的限制下标</span></span><br><span class="line">		<span class="keyword">while</span> (ofs &lt; maxOfs &amp;&amp; key.compareTo(a[base + hint + ofs]) &gt;= <span class="number">0</span>) &#123; <span class="comment">// 既然第一个数比给定的数小，继续比较第二个数</span></span><br><span class="line">			lastOfs = ofs;<span class="comment">// 记录上次的lastOfs，用于确定哪个下标是最后那个比给定数据小的</span></span><br><span class="line">			ofs = (ofs &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;<span class="comment">//  疯狂向右移动，看看是不是都比给定数据小</span></span><br><span class="line">			<span class="keyword">if</span> (ofs &lt;= <span class="number">0</span>)   <span class="comment">// 不能超过int最大值，估计到不了最大值吧，这个循环也就最多能疯狂向后移动32次，就超过int最大值了</span></span><br><span class="line">				ofs = maxOfs;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ofs &gt; maxOfs)<span class="comment">// 看看移动的是不是太过了，都超出数组最大值就不好了，重新归位到数组最大值</span></span><br><span class="line">			ofs = maxOfs;</span><br><span class="line">		lastOfs += hint;<span class="comment">// 上一个比给定数据小的下标加上偏移</span></span><br><span class="line">		ofs += hint;<span class="comment">// 这一个跟给定数据比较却比给定数据大的下标</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// assert -1 &lt;= lastOfs &amp;&amp; lastOfs &lt; ofs &amp;&amp; ofs &lt;= len;</span></span><br><span class="line">	lastOfs++;<span class="comment">// 确定了的比给定数据小的数组下标再往右小小移动一位</span></span><br><span class="line">	<span class="keyword">while</span> (lastOfs &lt; ofs) &#123;</span><br><span class="line">		<span class="keyword">int</span> m = lastOfs + ((ofs - lastOfs) &gt;&gt;&gt; <span class="number">1</span>);<span class="comment">// 取中间数，看看中间数是比给定的数小还是大</span></span><br><span class="line">		<span class="keyword">if</span> (key.compareTo(a[base + m]) &lt; <span class="number">0</span>) <span class="comment">// 如果中间数比给定的数据大，就把中间数往左移动（通过将ofs移动到中间数，再重新求中间数的方法）</span></span><br><span class="line">			ofs = m;</span><br><span class="line">		<span class="keyword">else</span>                 <span class="comment">// 如果中间数比给定的数据小，那就把中间数往右移动（通过将左边的lastOfs+1，再求中间数的方法）</span></span><br><span class="line">			lastOfs = m + <span class="number">1</span>;  </span><br><span class="line">		<span class="comment">// 直到左边数和右边数相等才会退出循环</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">assert</span> lastOfs == ofs;    <span class="comment">// so a[b + ofs - 1] &lt;= key &lt; a[b + ofs]  求的的ofs是所有比给定数据小的数量</span></span><br><span class="line">	<span class="keyword">return</span> ofs; <span class="comment">// 这里返回的是有多少个比给定的数据小</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>gallopLeft<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// len2 = gallopLeft((Comparable&lt;Object&gt;) a[base1 + len1 - 1], a, base2, len2, len2 - 1);</span></span><br><span class="line"><span class="comment">// 给定一个数据，看看数组中所有比这个数据小的数量(hint=0)，或者所有比这个数据大的偏移量(hint&gt;0),这个方法与gallopRight一样的效果啊</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gallopLeft</span><span class="params">(Comparable&lt;Object&gt; key, Object[] a,<span class="keyword">int</span> base, <span class="keyword">int</span> len, <span class="keyword">int</span> hint)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// assert len &gt; 0 &amp;&amp; hint &gt;= 0 &amp;&amp; hint &lt; len;</span></span><br><span class="line">	<span class="keyword">int</span> lastOfs = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> ofs = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">if</span> (key.compareTo(a[base + hint]) &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果数组中的数据比给定数据小，就找左边的所有比给定数据小的数量</span></span><br><span class="line">		<span class="keyword">int</span> maxOfs = len - hint;</span><br><span class="line">		<span class="keyword">while</span> (ofs &lt; maxOfs &amp;&amp; key.compareTo(a[base + hint + ofs]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">			lastOfs = ofs;</span><br><span class="line">			ofs = (ofs &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span> (ofs &lt;= <span class="number">0</span>)   <span class="comment">// int overflow</span></span><br><span class="line">				ofs = maxOfs;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ofs &gt; maxOfs)</span><br><span class="line">			ofs = maxOfs;</span><br><span class="line">		lastOfs += hint;</span><br><span class="line">		ofs += hint;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; <span class="comment">// 如果给定的数据比数组中的最右边的数据小，那正好，开始狂奔吧</span></span><br><span class="line">		<span class="keyword">final</span> <span class="keyword">int</span> maxOfs = hint + <span class="number">1</span>;<span class="comment">// 这里等于第二块的数组长度</span></span><br><span class="line">		<span class="keyword">while</span> (ofs &lt; maxOfs &amp;&amp; key.compareTo(a[base + hint - ofs]) &lt;= <span class="number">0</span>) &#123;<span class="comment">// 不超过第二块数组长度的情况下，从第二块数组倒数第二个数开始比较，如果比给定的数据大的话，就可以向左狂奔了，ofs起始是0</span></span><br><span class="line">			lastOfs = ofs;<span class="comment">// 记录上次狂奔成功的向左便宜量</span></span><br><span class="line">			ofs = (ofs &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span> (ofs &lt;= <span class="number">0</span>)   </span><br><span class="line">				ofs = maxOfs;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ofs &gt; maxOfs) <span class="comment">// 如果偏移量都超过数组长度了，那就设置偏移量为数组长度</span></span><br><span class="line">			ofs = maxOfs;</span><br><span class="line">		<span class="keyword">int</span> tmp = lastOfs;</span><br><span class="line">		lastOfs = hint - ofs;<span class="comment">// 这里不使用偏移量，只使用下标，所以还是计算出对应的下标值吧</span></span><br><span class="line">		ofs = hint - tmp;<span class="comment">// 计算最右边的比给定数据大的下标</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">assert</span> -<span class="number">1</span> &lt;= lastOfs &amp;&amp; lastOfs &lt; ofs &amp;&amp; ofs &lt;= len;</span><br><span class="line">	lastOfs++;</span><br><span class="line">	<span class="keyword">while</span> (lastOfs &lt; ofs) &#123;</span><br><span class="line">		<span class="keyword">int</span> m = lastOfs + ((ofs - lastOfs) &gt;&gt;&gt; <span class="number">1</span>);<span class="comment">// 左边比给定数据小的下标，和右边比给定数据大的下标求中间下标</span></span><br><span class="line">		<span class="keyword">if</span> (key.compareTo(a[base + m]) &gt; <span class="number">0</span>) <span class="comment">// 如果中间下标数据比给定数据小，那么左边下标就向右移动到中间下标位置再加1</span></span><br><span class="line">			lastOfs = m + <span class="number">1</span>;  </span><br><span class="line">		<span class="keyword">else</span>                                <span class="comment">// 如果中间下标数据比给定数据大，那么右边下标就移动到中间下边位置</span></span><br><span class="line">			ofs = m;          </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">assert</span> lastOfs == ofs;    <span class="comment">// so a[base + ofs - 1] &lt; key &lt;= a[base + ofs]</span></span><br><span class="line">	<span class="keyword">return</span> ofs;<span class="comment">// 这里的ofs是比给定的数据大的那个数据的偏移量，也就是说还有ofs个数据等着排序</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>驰骋过后，就是将两个插入排序完成的块进行归并排序了，归并排序中也用到了驰骋算法。。。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第二块待整理的数据更少一些，使用下面的方法整理</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">mergeHi</span><span class="params">(<span class="keyword">int</span> base1, <span class="keyword">int</span> len1, <span class="keyword">int</span> base2, <span class="keyword">int</span> len2)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// assert len1 &gt; 0 &amp;&amp; len2 &gt; 0 &amp;&amp; base1 + len1 == base2;</span></span><br><span class="line">	Object[] a = <span class="keyword">this</span>.a; </span><br><span class="line">	Object[] tmp = ensureCapacity(len2);</span><br><span class="line">	<span class="keyword">int</span> tmpBase = <span class="keyword">this</span>.tmpBase;</span><br><span class="line">	System.arraycopy(a, base2, tmp, tmpBase, len2);<span class="comment">// 将第二块待整理的数据都拷贝到临时数组里面</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> cursor1 = base1 + len1 - <span class="number">1</span>;  <span class="comment">// 第一块待整理数据的最大下标</span></span><br><span class="line">	<span class="keyword">int</span> cursor2 = tmpBase + len2 - <span class="number">1</span>; <span class="comment">// 临时表数据的最大下标</span></span><br><span class="line">	<span class="keyword">int</span> dest = base2 + len2 - <span class="number">1</span>;     <span class="comment">// 要存放最大数据的下标，最大数据肯定要放到第二块的最大下标那个地方</span></span><br><span class="line">	a[dest--] = a[cursor1--]; <span class="comment">// 前面我们已经知道了第一块数据的最后那个数据比第二块待整理的那个数据大（否则还会继续向左驰骋），那么就将第一块数据的最大数据摆放在第二块待整理的那个最大下标那</span></span><br><span class="line">	<span class="keyword">if</span> (--len1 == <span class="number">0</span>) &#123;<span class="comment">// 如果把第一块最大下标放到第二块最大下标那后，第一块数据都整理完了，那么只需将第二块的数据从第一块最大数据下标开始放置就可以了</span></span><br><span class="line">		System.arraycopy(tmp, tmpBase, a, dest - (len2 - <span class="number">1</span>), len2);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (len2 == <span class="number">1</span>) &#123; <span class="comment">// 如果第二块待整理的数据只有一个，我们事先知道第一块待整理的数据的第一个数据比第二块的第一个数据大（否则还会向右继续驰骋），我们只需将这个数据放到第一块数据上，然后将第一块待整理的数据都放到这个数据右边就可以了</span></span><br><span class="line">		dest -= len1; <span class="comment">// 当前dest应该就在第二块那唯一的数据下标上了 </span></span><br><span class="line">		cursor1 -= len1;<span class="comment">// 第一块的最大下标已经减一了</span></span><br><span class="line">		System.arraycopy(a, cursor1 + <span class="number">1</span>, a, dest + <span class="number">1</span>, len1);</span><br><span class="line">		a[dest] = tmp[cursor2];<span class="comment">// 将第二块唯一的数据放到第一块数据的首位置</span></span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> minGallop = <span class="keyword">this</span>.minGallop;  <span class="comment">// 设置一个驰骋的阀值</span></span><br><span class="line">outer:</span><br><span class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> count1 = <span class="number">0</span>; </span><br><span class="line">		<span class="keyword">int</span> count2 = <span class="number">0</span>; </span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">assert</span> len1 &gt; <span class="number">0</span> &amp;&amp; len2 &gt; <span class="number">1</span>;</span><br><span class="line">			<span class="comment">// 第一块，第二块数据一块比较，拿出最大的数据来放到原数组a中的最后那个待排序的下标那</span></span><br><span class="line">			<span class="keyword">if</span> (((Comparable) tmp[cursor2]).compareTo(a[cursor1]) &lt; <span class="number">0</span>) &#123; </span><br><span class="line">				a[dest--] = a[cursor1--];</span><br><span class="line">				count1++;</span><br><span class="line">				count2 = <span class="number">0</span>;</span><br><span class="line">				<span class="keyword">if</span> (--len1 == <span class="number">0</span>)<span class="comment">// 如果有一个块数据没有了，那就表明排序完成了</span></span><br><span class="line">					<span class="keyword">break</span> outer;</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				a[dest--] = tmp[cursor2--];</span><br><span class="line">				count2++;</span><br><span class="line">				count1 = <span class="number">0</span>;</span><br><span class="line">				<span class="keyword">if</span> (--len2 == <span class="number">1</span>)<span class="comment">// 如果有一个块数据没有了，那就表明排序完成了</span></span><br><span class="line">					<span class="keyword">break</span> outer;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">while</span> ((count1 | count2) &lt; minGallop);<span class="comment">// 如果一段连续时间内都在某一块上拿最大的数据，次数大于等于7就可以尝试驰骋的方案了</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 下面开始进行驰骋</span></span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">assert</span> len1 &gt; <span class="number">0</span> &amp;&amp; len2 &gt; <span class="number">1</span>;</span><br><span class="line">			count1 = len1 - gallopRight((Comparable) tmp[cursor2], a, base1, len1, len1 - <span class="number">1</span>);<span class="comment">// 找到比第二块中最大数据都大的最左那个大数据偏移量</span></span><br><span class="line">			<span class="keyword">if</span> (count1 != <span class="number">0</span>) &#123;<span class="comment">// 如果待排序的数量不等于0</span></span><br><span class="line">				dest -= count1; </span><br><span class="line">				cursor1 -= count1;</span><br><span class="line">				len1 -= count1;</span><br><span class="line">				System.arraycopy(a, cursor1 + <span class="number">1</span>, a, dest + <span class="number">1</span>, count1);</span><br><span class="line">				<span class="keyword">if</span> (len1 == <span class="number">0</span>)</span><br><span class="line">					<span class="keyword">break</span> outer;</span><br><span class="line">			&#125;</span><br><span class="line">			a[dest--] = tmp[cursor2--];</span><br><span class="line">			<span class="keyword">if</span> (--len2 == <span class="number">1</span>)</span><br><span class="line">				<span class="keyword">break</span> outer;</span><br><span class="line">			count2 = len2 - gallopLeft((Comparable) a[cursor1], tmp, tmpBase, len2, len2 - <span class="number">1</span>);<span class="comment">// 找到比第一块最大数据还大的第二块数据的偏移量</span></span><br><span class="line">			<span class="keyword">if</span> (count2 != <span class="number">0</span>) &#123;</span><br><span class="line">				dest -= count2;</span><br><span class="line">				cursor2 -= count2;</span><br><span class="line">				len2 -= count2;</span><br><span class="line">				System.arraycopy(tmp, cursor2 + <span class="number">1</span>, a, dest + <span class="number">1</span>, count2);</span><br><span class="line">				<span class="keyword">if</span> (len2 &lt;= <span class="number">1</span>)</span><br><span class="line">					<span class="keyword">break</span> outer; <span class="comment">// len2 == 1 || len2 == 0</span></span><br><span class="line">			&#125;</span><br><span class="line">			a[dest--] = a[cursor1--];</span><br><span class="line">			<span class="keyword">if</span> (--len1 == <span class="number">0</span>)</span><br><span class="line">				<span class="keyword">break</span> outer;</span><br><span class="line">			minGallop--;</span><br><span class="line">		&#125; <span class="keyword">while</span> (count1 &gt;= MIN_GALLOP | count2 &gt;= MIN_GALLOP);<span class="comment">// 如果驰骋的数量不达标，还是继续老老实实的进行归并排序吧</span></span><br><span class="line">		<span class="keyword">if</span> (minGallop &lt; <span class="number">0</span>)</span><br><span class="line">			minGallop = <span class="number">0</span>;</span><br><span class="line">		minGallop += <span class="number">2</span>;  <span class="comment">// Penalize for leaving gallop mode</span></span><br><span class="line">	&#125;  <span class="comment">// End of "outer" loop</span></span><br><span class="line">	<span class="keyword">this</span>.minGallop = minGallop &lt; <span class="number">1</span> ? <span class="number">1</span> : minGallop;  <span class="comment">// Write back to field</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (len2 == <span class="number">1</span>) &#123; <span class="comment">// 如果第二块还剩一个数据，就把第一块数据的所有待排序数据右移一位，将第二块剩下的唯一一个数据放到第一块待排序的第一个位置上，因为调用mergeHi之前已经驰骋过了，第二块第一个待排序的数据肯定比第一块第一个待排序的数据小</span></span><br><span class="line">		<span class="keyword">assert</span> len1 &gt; <span class="number">0</span>;</span><br><span class="line">		dest -= len1;</span><br><span class="line">		cursor1 -= len1;</span><br><span class="line">		System.arraycopy(a, cursor1 + <span class="number">1</span>, a, dest + <span class="number">1</span>, len1);</span><br><span class="line">		a[dest] = tmp[cursor2];  <span class="comment">// Move first elt of run2 to front of merge</span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (len2 == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">			<span class="string">"Comparison method violates its general contract!"</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;<span class="comment">// 退出循环的时候第一块都排序完了，将第二块的临时数据都搬到没排序的位置上就可以了</span></span><br><span class="line">		<span class="keyword">assert</span> len1 == <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">assert</span> len2 &gt; <span class="number">0</span>;</span><br><span class="line">		System.arraycopy(tmp, tmpBase, a, dest - (len2 - <span class="number">1</span>), len2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">Random random = <span class="keyword">new</span> Random();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr[i] = random.nextInt(<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(org.apache.commons.lang3.StringUtils.join(arr,<span class="string">','</span>));</span><br><span class="line"><span class="keyword">int</span> temp;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    temp = arr[i];</span><br><span class="line">    loop2:<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (temp &lt; arr[j]) &#123;<span class="comment">// 从左往右找，第一个比它大的数，比它小的或相等的都忽略</span></span><br><span class="line">            System.arraycopy(arr, j, arr, j + <span class="number">1</span>, i - j);<span class="comment">// 将比它大的数据都右移一位</span></span><br><span class="line">            arr[j] = temp;<span class="comment">// 将当前数放到这个比它大的数的位置上</span></span><br><span class="line">            <span class="keyword">break</span> loop2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(org.apache.commons.lang3.StringUtils.join(arr,<span class="string">','</span>));</span><br></pre></td></tr></table></figure>
+<p>最坏复杂度：1+2+3+…+N-1 = N^2/2 , 所以最坏复杂度是O(N^2)<br>最好情况下复杂度：都已经排好序了，O(N)</p>
+<h3 id="选择排序-直接选择排序"><a href="#选择排序-直接选择排序" class="headerlink" title="选择排序-直接选择排序"></a>选择排序-直接选择排序</h3><h3 id="选择排序-堆排序"><a href="#选择排序-堆排序" class="headerlink" title="选择排序-堆排序"></a>选择排序-堆排序</h3><h3 id="冒泡法排序"><a href="#冒泡法排序" class="headerlink" title="冒泡法排序"></a>冒泡法排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">Random random = <span class="keyword">new</span> Random();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr[i] = random.nextInt(<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(org.apache.commons.lang3.StringUtils.join(arr,<span class="string">','</span>));</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;<span class="comment">// 这里的关键点是要冒泡几次，length-1次</span></span><br><span class="line">    <span class="keyword">int</span> dest = arr.length - i - <span class="number">1</span>;<span class="comment">// 每次冒泡的目的地是哪，length-i-1,第一次冒泡目的地是length-1,第二次目的地就是length-2</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dest; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">            arr[j] ^= arr[j + <span class="number">1</span>];</span><br><span class="line">            arr[j + <span class="number">1</span>] ^= arr[j];</span><br><span class="line">            arr[j] ^= arr[j + <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最佳情况时间复杂度：1+2+3+…+N-1 = N^2/2 时间复杂度是O(N^2)</p>
+<p>改进后的冒泡法排序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">Random random = <span class="keyword">new</span> Random();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    arr[i] = random.nextInt(<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(org.apache.commons.lang3.StringUtils.join(arr,<span class="string">','</span>));</span><br><span class="line"><span class="keyword">boolean</span> doSwap;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;<span class="comment">// 这里的关键点是要冒泡几次，length-1次</span></span><br><span class="line">	doSwap = <span class="keyword">false</span>;</span><br><span class="line">	<span class="keyword">int</span> dest = arr.length - i - <span class="number">1</span>;<span class="comment">// 每次冒泡的目的地是哪，length-i-1,第一次冒泡目的地是length-1,第二次目的地就是length-2</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dest; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">            arr[j] ^= arr[j + <span class="number">1</span>];</span><br><span class="line">            arr[j + <span class="number">1</span>] ^= arr[j];</span><br><span class="line">            arr[j] ^= arr[j + <span class="number">1</span>];</span><br><span class="line">			doSwap = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">if</span>(!doSwap)&#123;</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>改进后的最佳时间复杂度为：O(N)</p>
+<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><h3 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h3><h3 id="分配排序"><a href="#分配排序" class="headerlink" title="分配排序"></a>分配排序</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>都是私房菜，整理不易，求鼓励，求支持，求生存！！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/webzfbgetmsgimg.jpg" alt="menggl 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Collections/" rel="tag"># Collections</a>
+          
+            <a href="/tags/Sort/" rel="tag"># Sort</a>
+          
+            <a href="/tags/ArrayList/" rel="tag"># ArrayList</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/11/2018-01-11Linux下的常用命令/" rel="next" title="Linux下的常用命令">
+                <i class="fa fa-chevron-left"></i> Linux下的常用命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/21/2018-02-21idea工具的使用/" rel="prev" title="idea工具的使用">
+                idea工具的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">menggl</p>
+              <p class="site-description motion-element" itemprop="description">专注源码伍拾年</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Collections"><span class="nav-number">1.</span> <span class="nav-text">Collections</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList-sort"><span class="nav-number">2.</span> <span class="nav-text">ArrayList.sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList-sort"><span class="nav-number">3.</span> <span class="nav-text">LinkedList.sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arrays-sort"><span class="nav-number">4.</span> <span class="nav-text">Arrays.sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入排序"><span class="nav-number">5.</span> <span class="nav-text">插入排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择排序-直接选择排序"><span class="nav-number">6.</span> <span class="nav-text">选择排序-直接选择排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择排序-堆排序"><span class="nav-number">7.</span> <span class="nav-text">选择排序-堆排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冒泡法排序"><span class="nav-number">8.</span> <span class="nav-text">冒泡法排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快速排序"><span class="nav-number">9.</span> <span class="nav-text">快速排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#归并排序"><span class="nav-number">10.</span> <span class="nav-text">归并排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分配排序"><span class="nav-number">11.</span> <span class="nav-text">分配排序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">menggl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
