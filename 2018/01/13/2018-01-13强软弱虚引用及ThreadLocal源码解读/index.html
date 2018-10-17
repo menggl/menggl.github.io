@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="强软弱虚引用及ThreadLocal源码解读">
 <meta property="og:url" content="http://menggl.github.io/2018/01/13/2018-01-13强软弱虚引用及ThreadLocal源码解读/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="枫树林">
 <meta property="og:description" content="Java中的各种引用强引用：StrongReference强引用是我们最常使用的引用类型，如果对象是一个强引用，则垃圾回收器不会在它的生命周期中对它进行垃圾回收 软引用：SoftReference如果一个对象只有一个软引用，没有强引用存在，那么在内存不足时，不管这个对象的生命周期，就会将该对象进行垃圾回收 弱引用：WeekReferce只具有弱引用的对象拥有更短的生命周期，如果垃圾回收过程中，发现">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-18T10:43:46.223Z">
@@ -126,7 +126,7 @@
 
 
 
-  <title>强软弱虚引用及ThreadLocal源码解读 | Hexo</title>
+  <title>强软弱虚引用及ThreadLocal源码解读 | 枫树林</title>
   
 
 
@@ -156,7 +156,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">枫树林</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -276,7 +276,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="枫树林">
     </span>
 
     
@@ -381,7 +381,7 @@
     
       <div>
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>都是私房菜，整理不易，求鼓励，求支持，求生存！！！</div>
+  <div>求鼓励，求支持</div>
   <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
     <span>打赏</span>
   </button>
@@ -506,7 +506,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">menggl</p>
-              <p class="site-description motion-element" itemprop="description">专注源码伍拾年</p>
+              <p class="site-description motion-element" itemprop="description">以身为棋，胜天半子</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -516,7 +516,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -527,7 +527,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -538,7 +538,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-count">79</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
