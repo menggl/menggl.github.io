@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elasticsearch," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="��װElasticSearch ���ذ�װ�� 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  ��ѹ��װ��  ������ű�123elasticsearch-6.4.2/bin/elasticsearch// ��̨��elasticsearch-6.4.2">
+<meta name="keywords" content="elasticsearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch��������">
+<meta property="og:url" content="http://menggl.github.io/2018/01/11/2018-10-30ElasticSearch技术整理/index.html">
+<meta property="og:site_name" content="枫树林">
+<meta property="og:description" content="��װElasticSearch ���ذ�װ�� 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  ��ѹ��װ��  ������ű�123elasticsearch-6.4.2/bin/elasticsearch// ��̨��elasticsearch-6.4.2">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-05T10:06:45.929Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch��������">
+<meta name="twitter:description" content="��װElasticSearch ���ذ�װ�� 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  ��ѹ��װ��  ������ű�123elasticsearch-6.4.2/bin/elasticsearch// ��̨��elasticsearch-6.4.2">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://menggl.github.io/2018/01/11/2018-10-30ElasticSearch技术整理/"/>
+
+
+
+
+
+  <title>ElasticSearch�������� | 枫树林</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">枫树林</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/01/11/2018-10-30ElasticSearch技术整理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="menggl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="枫树林">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch��������</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-11T12:39:04+08:00">
+                2018-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/����/" itemprop="url" rel="index">
+                    <span itemprop="name">����</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="��װElasticSearch"><a href="#��װElasticSearch" class="headerlink" title="��װElasticSearch"></a>��װElasticSearch</h3><ol>
+<li><p>���ذ�װ��</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget <span class="string">"https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>��ѹ��װ��</p>
+</li>
+<li>������ű�<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-<span class="number">6.4</span>.2/bin/elasticsearch</span><br><span class="line"><span class="comment">// ��̨��</span></span><br><span class="line">elasticsearch-<span class="number">6.4</span>.2/bin/elasticsearch -d</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>��ʱ�����root�û������л��������û������ٽ�����</p>
+<ol start="4">
+<li>��ɹ���鿴<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@DaKeTomcat bin]# curl localhost:9200</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"Xb4f3KL"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"_-Q26WbATGe7NJ-XTLVImQ"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"6.4.2"</span>,</span><br><span class="line">    <span class="string">"build_flavor"</span> : <span class="string">"default"</span>,</span><br><span class="line">    <span class="string">"build_type"</span> : <span class="string">"tar"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"04711c2"</span>,</span><br><span class="line">    <span class="string">"build_date"</span> : <span class="string">"2018-09-26T13:34:09.098244Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="keyword">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"7.4.0"</span>,</span><br><span class="line">    <span class="string">"minimum_wire_compatibility_version"</span> : <span class="string">"5.6.0"</span>,</span><br><span class="line">    <span class="string">"minimum_index_compatibility_version"</span> : <span class="string">"5.0.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="elasticsearch��ز�������"><a href="#elasticsearch��ز�������" class="headerlink" title="elasticsearch��ز�������"></a>elasticsearch��ز�������</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"># ���Ⱪ¶��host��0.0.0.0ʱ��¶��ȫ��</span><br><span class="line">network.host: <span class="number">192.168</span>.0.144</span><br><span class="line"># ��Ⱥ�еĽڵ����ƣ�ͬһ��Ⱥ��ÿ���ڵ������Ӧ�ò�һ�£������ֽڵ�ͱ��Ͻڵ��Ŀ��</span><br><span class="line">node.name: evaluate-platform1</span><br><span class="line"></span><br><span class="line"># �Ƿ���Գ�Ϊ���ڵ�</span><br><span class="line">node.master: <span class="keyword">true</span></span><br><span class="line"># �Ƿ���Գ�Ϊ���ݽڵ�</span><br><span class="line">node.data: <span class="keyword">true</span></span><br><span class="line"># ���ڵ�ѡ�ٵ�ʱ�����ٵ����ڵ������Ϊ�˷�ֹ���ѣ�������ó��ܽ����/2+1��</span><br><span class="line">discovery.zen.minimum_master_nodes: <span class="number">1</span></span><br><span class="line"># ��Ⱥ��IP���ϣ���ָ���˿ڣ�Ĭ��Ϊ9300����["192.168.1.101","192.168.1.102"]���˴�Ҳ����дΪhostname����ʽ��ע��ֲ�ʽ��Ⱥ</span><br><span class="line">discovery.zen.ping.unicast.hosts: [<span class="string">"192.168.0.142:9300"</span>, <span class="string">"192.168.0.247:9300"</span>]</span><br><span class="line"># ��Ⱥ�е����ƣ������޸ģ���Ϊ�Ͱ汾�ಥģʽ�µ�ͬһ��������ͬ�ļ�Ⱥ���ƻ��Զ�����ͬһ��Ⱥ�У����������������������������ݻ���</span><br><span class="line">cluster.name: jzg-evaluate-platform-test</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ���Ⱪ¶�Ķ˿ں�</span><br><span class="line">http.port: <span class="number">9200</span></span><br><span class="line"># Ĭ�ϵ�����·��</span><br><span class="line">path.data: /usr/local/elasticsearch/data</span><br><span class="line"># Ĭ�ϵ���־·��</span><br><span class="line">path.logs: /usr/local/elasticsearch/logs</span><br><span class="line"># �Ƿ���Գ�ΪԤ����ڵ㣨��Ҫ����Ժ��������ʱ��ĸ��ؾ��⣩��Ҳ������Ϊ��client�ڵ㣬�������ۺϲ�����Ļ��������ͽڵ���Զഴ��һЩ</span><br><span class="line">node.ingest: <span class="keyword">false</span></span><br><span class="line"># ��ǰ����Ŀ¼���Ա����ٸ��ڵ㹲��</span><br><span class="line">node.max_local_storage_nodes: <span class="number">1</span></span><br><span class="line"># ��ʱ���ڴ�����ѡ����true��false������ȷ���û���es-jvm�����õ�ES_HEAP_SIZE�����ڴ����ʹ��һ�����϶��ֲ����</span><br><span class="line">bootstrap.memory_lock: <span class="keyword">true</span></span><br><span class="line"># ����������</span><br><span class="line">http.cors.enabled: <span class="keyword">true</span></span><br><span class="line">http.cors.allow-origin: <span class="string">"*"</span></span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Add custom attributes to the node:</span><br><span class="line">#</span><br><span class="line">#node.attr.rack: r1</span><br><span class="line">#</span><br><span class="line">#</span><br><span class="line"># Make sure that the heap size is set to about half the memory available</span><br><span class="line"># on the system and that the owner of the process is allowed to use this</span><br><span class="line"># limit.</span><br><span class="line">#</span><br><span class="line"># Elasticsearch performs poorly when the system is swapping the memory.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Network -----------------------------------</span><br><span class="line">#</span><br><span class="line"># For more information, consult the network module documentation.</span><br><span class="line">#</span><br><span class="line"># --------------------------------- Discovery ----------------------------------</span><br><span class="line"># ���ڵ�ѡ�ٳ�ʱʱ������</span><br><span class="line">#discovery.zen.ping_timeout</span><br><span class="line">#</span><br><span class="line"># For more information, consult the zen discovery module documentation.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Gateway -----------------------------------</span><br><span class="line"># ���ؿ�����N���ڵ���֮��Żָ���Ⱥ�е����ݣ���������Ϊ��Ⱥ�ڵ�������һ������</span><br><span class="line">#gateway.recover_after_nodes: 3</span><br><span class="line">#</span><br><span class="line"># For more information, consult the gateway module documentation.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Various -----------------------------------</span><br><span class="line">#ѡ��Ϊtrue��false��ɾ������ʱ�Ƿ���Ҫ��ʽ����</span><br><span class="line">#action.destructive_requires_name: true</span><br><span class="line"># �ر��Զ����ֽڵ�</span><br><span class="line"># ����ģʽ��ȫ��Ҳ��Ч������ȱ����������������һ���µĻ����Ļ�������Ҫÿ���ڵ��϶��������ò�����Ч</span><br><span class="line">#discovery.zen.ping.multicast.enabled</span><br></pre></td></tr></table></figure>
+<p>�����ճ���������ô����ʱ�򣬷������е�������ǰ���Զ������#ע�ͷ�</p>
+<p>�ڸ�Ŀ¼�£������ļ�.vimrc<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.vimrc</span><br><span class="line"># д����������ú󣬱��漴��</span><br><span class="line">set paste</span><br></pre></td></tr></table></figure></p>
+<h3 id="����ܱ���"><a href="#����ܱ���" class="headerlink" title="����ܱ���"></a>����ܱ���</h3><h4 id="�쳣����һ"><a href="#�쳣����һ" class="headerlink" title="�쳣����һ"></a>�쳣����һ</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>]: max file descriptors [<span class="number">4096</span>] <span class="keyword">for</span> elasticsearch process is too low, increase to at least [<span class="number">65536</span>]</span><br><span class="line">[<span class="number">2</span>]: memory locking requested <span class="keyword">for</span> elasticsearch process but memory is not locked</span><br><span class="line">[<span class="number">3</span>]: max number of threads [<span class="number">3885</span>] <span class="keyword">for</span> user [es] is too low, increase to at least [<span class="number">4096</span>]</span><br><span class="line">[<span class="number">4</span>]: max virtual memory areas vm.max_map_count [<span class="number">65530</span>] is too low, increase to at least [<span class="number">262144</span>]</span><br></pre></td></tr></table></figure>
+<h5 id="��һ���쳣���l�����������̫С"><a href="#��һ���쳣���l�����������̫С" class="headerlink" title="��һ���쳣���ļ�����������̫С"></a>��һ���쳣���ļ�����������̫С</h5><ol>
+<li>�л���root�û�</li>
+<li><p>�鿴Ӳ������</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Hn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>�޸������ļ�</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// �鿴unix�汾��ulimit -a��,2.6�汾���ں�Ĭ������/etc/security/limits.d/90-nproc.conf�����ûḲ��/etc/security/limits.conf������</span></span><br><span class="line">vi /etc/security/limits.conf</span><br><span class="line"><span class="comment">// ������������,�ֱ�����elasticsearch����û��������Ӳ�������ļ�������</span></span><br><span class="line">[�û���] soft nofile <span class="number">65536</span></span><br><span class="line">[�û���] hard nofile <span class="number">65536</span></span><br><span class="line">����</span><br><span class="line">[�û���] - nofile <span class="number">65536</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>��½elasticsearch�û��ٴβ鿴Ӳ������<code>ulimit -Hn</code>�����ִ�4096���65536�ˣ��鿴����������<code>ulimit -u</code>�������4096</p>
+</li>
+</ol>
+<h5 id="�ڶ����쳣"><a href="#�ڶ����쳣" class="headerlink" title="�ڶ����쳣"></a>�ڶ����쳣</h5><p>�޸�/etc/security/limits.conf������memlock������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/security/limits.conf </span><br><span class="line"># ������������</span><br><span class="line">[�û���]  -  memlock  unlimited</span><br></pre></td></tr></table></figure></p>
+<h5 id="�������쳣-�u������߳������޸�"><a href="#�������쳣-�u������߳������޸�" class="headerlink" title="�������쳣 �û������߳������޸�"></a>�������쳣 �û������߳������޸�</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/security/limits.d/<span class="number">90</span>-nproc.conf</span><br><span class="line"><span class="comment">// �����������ã��޸��û������Ľ���������</span></span><br><span class="line">[�û���] soft nproc <span class="number">4096</span></span><br><span class="line">[�û���] hard nproc <span class="number">4096</span></span><br><span class="line">����</span><br><span class="line">[�û���] - nproc <span class="number">4096</span></span><br></pre></td></tr></table></figure>
+<h5 id="���ĸ��쳣"><a href="#���ĸ��쳣" class="headerlink" title="���ĸ��쳣"></a>���ĸ��쳣</h5><p>���̿���ӵ�е�VMA�������ڴ����򣩵�������</p>
+<p>�����ڴ�������һ�������������ַ�ռ������ڽ��̵����������У�ÿ�����������ڴ���ӳ���ļ������ӵ������ڴ棬����ѿռ��ʱ����Щ���򶼽���������</p>
+<p>�������ֵ�����ƽ���ӵ�е�VMA������������һ������ӵ�е�MVA�������п��ܵ���Ӧ�ó��������Ϊ�����̴ﵽ��VMA���������ޣ�����ֻ���������ڴ���������ں˽���ʹ�ã�����ϵͳ���׳��ڴ治��Ĵ���</p>
+<p>�����Ĳ���ϵͳ��NORMAL���򣬽�ռ���������ڴ棬��ô�������ֵ���԰����ͷ��ڴ���ں���</p>
+<ol>
+<li>ʹ������������޸�VMA������<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w vm.max_map_count=<span class="number">262144</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>�鿴�����Ƿ���Ч<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -a|grep vm.max_map_count</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>�����޸������ļ�<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysctl.conf</span><br><span class="line"><span class="comment">//������������</span></span><br><span class="line">vm.max_map_count = <span class="number">655360</span></span><br><span class="line"><span class="comment">// ���ִ��ˢ�£�ʹ������Ч</span></span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="ֱ��ʹ��"><a href="#ֱ��ʹ��" class="headerlink" title="ֱ��ʹ��"></a>ֱ��ʹ��</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo -e "\nelastic         -       nofile          65538" &gt;&gt; /etc/security/limits.conf   #��Ӧ�����һ������</span><br><span class="line">echo -e "\nelastic         -       memlock         unlimited" &gt;&gt; /etc/security/limits.conf   #��Ӧ����ڶ�������</span><br><span class="line">echo -e "\nelastic         -       nproc         2048" &gt;&gt; /etc/security/limits.d/90-nproc.conf   #��Ӧ�������������</span><br><span class="line">echo -e "\nvm.max_map_count=262144" &gt;&gt; /etc/sysctl.conf &amp;&amp; sysctl -p &amp;&amp; sysctl -w vm.max_map_count=262144 #��Ӧ�������������</span><br></pre></td></tr></table></figure>
+<p>ʹ��sudo����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">es ���� sudoers �ļ��С����½������档</span><br></pre></td></tr></table></figure></p>
+<p>�л���root�û�<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sudoers</span><br><span class="line">��</span><br><span class="line">root    ALL=(ALL)       ALL  </span><br><span class="line">���������������ã�NOPASSWD��ʾ��sudo������ʱ������������</span><br><span class="line">User_Alias SYSADMINS = elasticsearch,app</span><br><span class="line">SYSADMINS       ALL=(ALL)       NOPASSWD: ALL</span><br><span class="line">#es      ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure></p>
+<h4 id="�쳣�����"><a href="#�쳣�����" class="headerlink" title="�쳣�����"></a>�쳣�����</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> <span class="number">2018</span>-<span class="number">10</span>-<span class="number">31</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">54</span>,<span class="number">531</span> main ERROR No Log4j <span class="number">2</span> configuration file found. <span class="function">Using <span class="keyword">default</span> <span class="title">configuration</span> <span class="params">(logging only errors to the console)</span>, or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https:<span class="comment">//logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2</span></span></span><br><span class="line"><span class="function">SettingsException[Failed to load settings from [elasticsearch.yml]]</span>; nested: ParsingException[Failed to parse object: expecting token of type [START_OBJECT] but found [VALUE_STRING]];</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromStream(Settings.java:<span class="number">1192</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromPath(Settings.java:<span class="number">1165</span>)</span><br><span class="line">	at org.elasticsearch.node.InternalSettingsPreparer.prepareEnvironment(InternalSettingsPreparer.java:<span class="number">100</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.createEnv(EnvironmentAwareCommand.java:<span class="number">95</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:<span class="number">86</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.main(Command.java:<span class="number">90</span>)</span><br><span class="line">	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:<span class="number">93</span>)</span><br><span class="line">	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:<span class="number">86</span>)</span><br><span class="line">Caused by: ParsingException[Failed to parse object: expecting token of type [START_OBJECT] but found [VALUE_STRING]]</span><br><span class="line">	at org.elasticsearch.common.xcontent.XContentParserUtils.ensureExpectedToken(XContentParserUtils.java:<span class="number">78</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings.fromXContent(Settings.java:<span class="number">672</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings.access$<span class="number">500</span>(Settings.java:<span class="number">84</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromStream(Settings.java:<span class="number">1188</span>)</span><br></pre></td></tr></table></figure>
+<p>��������elasticsearch.yml�����ļ��ĸ�ʽ������</p>
+<p>����ȷ��ð��ǰ��û�пո�ð�ź���ֻ��һ���ո�</p>
+<h4 id="��ʱ����m��"><a href="#��ʱ����m��" class="headerlink" title="��ʱ����ɱ��!"></a>��ʱ��<code>��ɱ��!</code></h4><p>�ڴ治�㣬��Ҫ��./bin/elasticsearch��������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ES_JAVA_OPTS=<span class="string">"-Xms1g -Xmx1g"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="ElasticSearch-Head��װ"><a href="#ElasticSearch-Head��װ" class="headerlink" title="ElasticSearch Head��װ"></a>ElasticSearch Head��װ</h3><p>�Դ�6.x�汾֮��head������Ϊһ�������װʹ����</p>
+<ol>
+<li><p>��ȡ��װ��</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//github.com/mobz/elasticsearch-head/archive/master.zip</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>��ѹmaster.zip</p>
+</li>
+<li>����head���Ŀ¼elasticsearch-head-master<br>������Ҫ��װnode����<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/node</span><br><span class="line">cd /usr/local/node</span><br><span class="line">wget https:<span class="comment">//npm.taobao.org/mirrors/node/latest-v9.x/node-v9.0.0-linux-x64.tar.gz</span></span><br><span class="line">tar -zxf node-v9.0.0-linux-x64.tar.gz</span><br><span class="line"># ����������</span><br><span class="line">ln -s /usr/local/node/node-v9.0.0-linux-x64/bin/npm /usr/local/bin/npm</span><br><span class="line">ln -s /usr/local/node/node-v9.0.0-linux-x64/bin/node /usr/local/bin/node</span><br><span class="line"># �鿴npm�汾��</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>��װ��node���Ϳ���ʹ��npm��װelasticsearch-head��</p>
+<p>ִ������İ�װ����<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br><span class="line"># install ִ��ʧ���ˣ�ʹ�����������</span><br><span class="line"># npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
+<p>npm install��ʱ�򱨴�����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! errno <span class="number">1</span></span><br><span class="line">npm ERR! phantomjs-prebuilt@<span class="number">2.1</span>.16 install: `node install.js`</span><br><span class="line">npm ERR! Exit status <span class="number">1</span></span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! Failed at the phantomjs-prebuilt@<span class="number">2.1</span>.16 install script.</span><br><span class="line">npm ERR! This is probably not a problem with npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of <span class="keyword">this</span> run can be found in:</span><br><span class="line">npm ERR!     /root/.npm/_logs/<span class="number">2018</span>-<span class="number">11</span>-<span class="number">01</span>T02_21_15_504Z-debug.log</span><br></pre></td></tr></table></figure></p>
+<p>����ûɶӰ��</p>
+<p>������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm run start</span><br><span class="line"># ��̨��</span><br><span class="line">nohup npm start &amp;</span><br></pre></td></tr></table></figure></p>
+<ol start="4">
+<li>����<a href="http://localhost:9100" target="_blank" rel="noopener">http://localhost:9100</a></li>
+</ol>
+<p>�������Ӳ���9200����Ҫ���ÿ���</p>
+<p>��elasticsearch.yml��������������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.cors.enabled: <span class="keyword">true</span></span><br><span class="line">http.cors.allow-origin: <span class="string">"*"</span></span><br></pre></td></tr></table></figure></p>
+<p>����elasticsearch֮��Ϳ��Է�����<br></p>
+<h3 id="�������ɾ����ѯ�Y���"><a href="#�������ɾ����ѯ�Y���" class="headerlink" title="�������ɾ����ѯ�Ȳ���"></a>�������ɾ����ѯ�Ȳ���</h3><p>һ��indexֻ������һ��type</p>
+<h4 id="��������"><a href="#��������" class="headerlink" title="��������"></a>��������</h4><ul>
+<li>text �ǽṹ�����ַ�����������ŵȣ���ѯʱʹ�õ�Ĭ�ϵķִ�����ѯ��Ĭ�ϵ�text�ֶ��ǲ��ܷ��鼰����ģ�Ҫ����ʵ�ַ��鼰���򣬿�����ֶε�fielddata=true�����ܻ�ܲ�</li>
+<li>keyword �ṹ�����ַ��������ֻ��š����ֶεĲ�ѯ��ֵ�Ȳ�ѯ����ʹ�÷ִʲ�ѯ��Ĭ��������ǿ��Է���������</li>
+<li>number���ͣ���long��integer��short��byte��double��float��half_float��scaled_float��������</li>
+<li>date��ʱ�����ͣ������ö���ʱ���ʽ��ʹ��ʾ��”format”: “yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis”</li>
+<li>boolean false��ֵ��false, “false”, “off”, “no”, “0”, “” (empty string), 0, 0.0��true��ֵ�У�����ֵ����trueֵ</li>
+<li>������������ֵ�������ͣ��������Ͳ���ר��ָ��type������</li>
+</ul>
+<p>�ַ�������: [ “one”, “two” ]</p>
+<p>�������飺[ 1, 2 ]</p>
+<p>���������飺[ 1, [ 2, 3 ]] �ȼ���[ 1, 2, 3 ]</p>
+<p>�������飺[ { “name”: “Mary”, “age”: 12 }, { “name”: “John”, “age”: 10 }]</p>
+<ul>
+<li>������������֮�������ͣ�<em>object</em>  ���ڵ���json����</li>
+<li>������������֮Ƕ�����ͣ�<em>nested</em> ����json����</li>
+<li>����λ�����ͣ�_geo_point_ ���ھ�γ������</li>
+<li>������״���ͣ�_geo_shape_ ���������ڶ���εĸ�����״</li>
+<li>�ض�����֮ipv4�� _ip_  ����ipv4����</li>
+<li>�ض�����֮Completion���ͣ�<em>completion</em> �ṩ�Զ���ȫ����</li>
+<li>�ض�����֮token count���ͣ�_token_count_ ����ͳ�����˱�ǵ��ֶε�index��Ŀ����ֵ��һֱ���ӣ�������Ϊ��������������</li>
+<li>�ض�����֮mapper-murmur3��ͨ�����������ͨ��<em>murmur3</em>������index��hashֵ</li>
+<li>�ض�����֮�������ͣ����ò��mapper-attachments����֧��<em>attachments</em>����������Microsoft Office��ʽ��Open Document��ʽ��ePub��Html��</li>
+</ul>
+<h4 id="�ִ���"><a href="#�ִ���" class="headerlink" title="�ִ���"></a>�ִ���</h4><ol>
+<li>standard�ִ���<br>Ӣ�ĵĴ���������ͬ��StopAnalyzer��֧�����Ĳ��õķ����ǵ��ֲ�֣����Ὣ�ʻ㵥Ԫת��Сд��ʽ����ȥ����ͣ�ôʺͱ�����</li>
+<li>simple�ִ���<br>����ǿ��WhiteSpaceAnalyzer�����Ȼ�ͨ������ĸ�ַ����ָ��ı���Ϣ��Ȼ�󽫴ʻ㵥Ԫת��Сд��ʽ���÷ִ�����ȥ�����������͵��ַ�</li>
+<li>WhiteSpace�ִ���<br>������ȥ���ո񣬶��ַ�û��ת��Сд����֧�����ģ����Ҳ�������ɵĴʻ㵥Ԫ���������淶������</li>
+<li>Stop�ִ���<br>StopAnalyzer����ǿ��SimpleAnalyzer�ִ�������SimpleAnalyzer������������ȥ��Ӣ���еĳ��õ��ʣ���the��a����Ҳ���Ը����Լ�����Ҫ��ӳ��ôʣ���֧������</li>
+<li>keyword�ִ���<br>KeywordAnalyzer�ִ����Ὣ�������뵱��һ�������Ĵʻ㵥Ԫ�������������͵��ı����������ͼ���������������룬��ַ���ı���Ϣʹ�ùؼ��ʷִ���������������ǳ�����ͺ���</li>
+<li>language�ִ���<br>һ�����ڽ������������ı��ķ������ļ��ϣ�����û������</li>
+<li></li>
+</ol>
+<h4 id="���IK�ִ���"><a href="#���IK�ִ���" class="headerlink" title="���IK�ִ���"></a>���IK�ִ���</h4><p>ik�ִ�����github��ַ<code>https://github.com/medcl/elasticsearch-analysis-ik</code></p>
+<p>���������github�еİ汾̫�Ͼ��ˣ������´�����Ϣ����Ϊʹ�������ַ�еİ�װ��<code>https://github.com/medcl/elasticsearch-analysis-ik/releases</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.IllegalArgumentException: Plugin [analysis-ik] was built <span class="keyword">for</span> Elasticsearch version <span class="number">6.3</span>.0 but version <span class="number">6.4</span>.2 is running</span><br><span class="line">	at org.elasticsearch.plugins.PluginsService.verifyCompatibility(PluginsService.java:<span class="number">339</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.loadPluginInfo(InstallPluginCommand.java:<span class="number">717</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.installPlugin(InstallPluginCommand.java:<span class="number">792</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.install(InstallPluginCommand.java:<span class="number">775</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.execute(InstallPluginCommand.java:<span class="number">231</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.execute(InstallPluginCommand.java:<span class="number">216</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:<span class="number">86</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.MultiCommand.execute(MultiCommand.java:<span class="number">77</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.main(Command.java:<span class="number">90</span>)</span><br><span class="line">	at org.elasticsearch.plugins.PluginCli.main(PluginCli.java:<span class="number">47</span>)</span><br></pre></td></tr></table></figure></p>
+<p>��������İ�װ����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/elasticsearch-plugin install https:<span class="comment">//github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.4.2/elasticsearch-analysis-ik-6.4.2.zip</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="�鿴��A����״̬"><a href="#�鿴��A����״̬" class="headerlink" title="�鿴��Ⱥ����״̬"></a>�鿴��Ⱥ����״̬</h4><p>GET<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cluster/health?pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>status״ֵ̬��</p>
+<ul>
+<li>green  ��ʾ����Ƭ�͸��Ʒ�Ƭ���Ѿ����Թ�����</li>
+<li>yellow ��ʾ����Ƭ�Ѿ����Թ����ˣ����Ǹ��Ʒ�Ƭ��û��ȫ������    </li>
+<li>red    ��ʾ����Ƭ�����ã���Ҫ�ָ���ſɼ���ʹ��</li>
+</ul>
+<p>���ԶԾ����������index�⣩���н�����ѯ</p>
+<p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cluster/health/customer,customer2?pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>���ؽ��<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"red"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">true</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>���Ը��Ӳ�����ʽ�����������<br>level=indices, shards, cluster</p>
+<ul>
+<li>level=indices���ؽ��</li>
+</ul>
+<p>GET <a href="http://192.168.0.144:9200/_cluster/health?level=indices&amp;pretty" target="_blank" rel="noopener">http://192.168.0.144:9200/_cluster/health?level=indices&amp;pretty</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="string">"indices"</span>: &#123;</span><br><span class="line">    <span class="string">"accounts2"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"accounts"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>level=shards���ؽ������</li>
+</ul>
+<p>GET <a href="http://192.168.0.144:9200/_cluster/health?level=shards&amp;pretty" target="_blank" rel="noopener">http://192.168.0.144:9200/_cluster/health?level=shards&amp;pretty</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="string">"indices"</span>: &#123;</span><br><span class="line">    <span class="string">"accounts2"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"shards"</span>: &#123;</span><br><span class="line">        <span class="string">"0"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"1"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"2"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"accounts"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"shards"</span>: &#123;</span><br><span class="line">        <span class="string">"0"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"1"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"2"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"3"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"4"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="�������"><a href="#�������" class="headerlink" title="�������"></a>�������</h4><p>PUT����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/customer</span></span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ<br>{“acknowledged”:true,”shards_acknowledged”:true,”index”:”customer”}</p>
+<h4 id="ɾ������"><a href="#ɾ������" class="headerlink" title="ɾ������"></a>ɾ������</h4><p>DELETE����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/customer</span></span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ<br>{“acknowledged”:true}</p>
+<h4 id="�������������"><a href="#�������������" class="headerlink" title="�������������"></a>�������������</h4><p>PUT����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"mappings"</span>: &#123;</span><br><span class="line">		<span class="string">"person"</span>: &#123;</span><br><span class="line">			<span class="string">"properties"</span>: &#123;</span><br><span class="line">				<span class="string">"user_name"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">					<span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span>,</span><br><span class="line">					<span class="string">"search_analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="string">"balance"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"double"</span></span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="string">"desc"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">					<span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span>,</span><br><span class="line">					<span class="string">"search_analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"settings"</span> : &#123;</span><br><span class="line">		<span class="string">"number_of_shards"</span> : <span class="number">3</span>,</span><br><span class="line">		<span class="string">"number_of_replicas"</span> : <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>����number_of_shards��ʾ��ǰ�����ķ�Ƭ������Ĭ�Ϸ�Ƭ������5<br>number_of_replicas��ʾ��ǰ���з�Ƭ�ĸ�����Ƭ������Ĭ����1</p>
+<h4 id="�޸�����������"><a href="#�޸�����������" class="headerlink" title="�޸�����������"></a>�޸�����������</h4><p>PUT����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_settings</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">"number_of_replicas"</span> : <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>�����޸ĸ��Ʒ�Ƭ�����������ǲ����޸�����Ƭ������</p>
+<h4 id="��������index��type�����ݽu"><a href="#��������index��type�����ݽu" class="headerlink" title="��������index��type�����ݽṹ"></a>��������index��type�����ݽṹ</h4><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// �����µ�����type�ṹ</span></span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_mapping     </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ĳ��type���ݽṹ</span></span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_mapping/person </span></span><br><span class="line">��</span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/person/_mapping</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="�������е�����"><a href="#�������е�����" class="headerlink" title="�������е�����"></a>�������е�����</h4><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cat/indices?v&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="�����������"><a href="#�����������" class="headerlink" title="�����������"></a>�����������</h4><p>PUT����<br>//���id��1������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>:<span class="string">"����"</span>,</span><br><span class="line">	<span class="string">"balance"</span>:<span class="number">100.0</span>,</span><br><span class="line">	<span class="string">"desc"</span>:<span class="string">"�����Ǹ������"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"accounts"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"person"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"result"</span> : <span class="string">"created"</span>,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"_seq_no"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"_primary_term"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ע�⣺�����elasticsearch�Լ�����id����Ϊ���ǲ�֪���Ǵ�����һ���ĵ������޸���һ��id��ͬ���ĵ�</p>
+<p>���������һ�����ݣ��������޸�ָ��id�����ݣ���Ҫ��url�������/_create���߼��ϲ���op_type=create</p>
+<p>������demo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_create?pretty&amp;pretty</span></span><br><span class="line">����</span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty&amp;op_type=create</span></span><br></pre></td></tr></table></figure></p>
+<p>������ص�״̬����409����ʾ�Ѿ���һ��id��1�����ݣ������������201����ʾ�������ݳɹ�</p>
+<h4 id="����޸��j�ʱ�I汾�l���"><a href="#����޸��j�ʱ�I汾�l���" class="headerlink" title="����޸��ĵ�ʱ�İ汾�ſ���"></a>����޸��ĵ�ʱ�İ汾�ſ���</h4><h5 id="�ڲ��汾��"><a href="#�ڲ��汾��" class="headerlink" title="�ڲ��汾��"></a>�ڲ��汾��</h5><p>���޸�ĳ������ʱ�����ǲ����������̻߳���̶����޸ģ�ʹ���ֹ�����ʽʵ�֣�����ʵ�ַ�ʽ��������url������ϰ汾��version=1</p>
+<p>PUT����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?version=1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>: <span class="string">"����"</span>,</span><br><span class="line">	<span class="string">"balance"</span>: <span class="number">100</span>,</span><br><span class="line">	<span class="string">"desc"</span>: <span class="string">"�����Ǹ������1"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>����汾����Ԥ�ڰ汾��һ�£��򷵻�״̬����200�������һ�£��򷵻�״̬����409</p>
+<h5 id="�ⲿ�汾����"><a href="#�ⲿ�汾����" class="headerlink" title="�ⲿ�汾����"></a>�ⲿ�汾����</h5><p>���ǿ���ʹ���ⲿ�汾����Ȩ�ޣ���������ݿ�����Ѿ����汾Ȩ�޿��ƺ��ˣ�Ҫͬ����elasticsearch���棬����Ҫʹ���ⲿ�汾�������ƶ���̴߳����ݿ���elasticsearchͬ��ʱ�ĳ�ͻ����</p>
+<p>PUT����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?version=10&amp;version_type=external</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>: <span class="string">"����"</span>,</span><br><span class="line">	<span class="string">"balance"</span>: <span class="number">100</span>,</span><br><span class="line">	<span class="string">"desc"</span>: <span class="string">"�����Ǹ������2"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>���ָ�����ⲿ�汾�Ų����ڵ�ǰ�İ汾�ţ��ͻ�ִ��ʧ�ܣ�����409�����룬���С�ڵ�ǰָ���İ汾�ţ��ͻ᷵��200������</p>
+<h4 id="����id��1����Ϣ"><a href="#����id��1����Ϣ" class="headerlink" title="����id��1����Ϣ"></a>����id��1����Ϣ</h4><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"accounts"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"person"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"found"</span> : <span class="keyword">true</span>,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"user_name"</span> : <span class="string">"����"</span>,</span><br><span class="line">    <span class="string">"balance"</span> : <span class="number">100.0</span>,</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"�����Ǹ������"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="������ѯ"><a href="#������ѯ" class="headerlink" title="������ѯ"></a>������ѯ</h4><h5 id="��ѯ�j��Ƿ����"><a href="#��ѯ�j��Ƿ����" class="headerlink" title="��ѯ�ĵ��Ƿ����"></a>��ѯ�ĵ��Ƿ����</h5><p>�������ĵ��ľ������ݲ�����Ȥ��ֻ��Ҫ֪���ĵ��Ƿ���ڣ���ô��ʹ��HEAD����Ϳ����ˣ�����ĵ����ڣ����ص�http code����200������ĵ������ڣ��ͷ��ش�����404</p>
+<p>HEAD����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="��ѯtype��������"><a href="#��ѯtype��������" class="headerlink" title="��ѯtype��������"></a>��ѯtype��������</h5><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="�����ֶ��ϲ�ѯ"><a href="#�����ֶ��ϲ�ѯ" class="headerlink" title="�����ֶ��ϲ�ѯ"></a>�����ֶ��ϲ�ѯ</h5><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?q=user_name:����&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>����</p>
+<p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">		<span class="string">"match"</span> : &#123;</span><br><span class="line">			<span class="string">"user_name"</span> : <span class="string">"����"</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="����ֶ��ϲ�ѯ"><a href="#����ֶ��ϲ�ѯ" class="headerlink" title="����ֶ��ϲ�ѯ"></a>����ֶ��ϲ�ѯ</h5><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?q=�й�&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>����<br>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"multi_match"</span> : &#123;</span><br><span class="line">            <span class="string">"query"</span> : <span class="string">"�й�"</span>,</span><br><span class="line">            <span class="string">"fields"</span> : []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>������Ϣ��<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span>: <span class="number">6</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"_shards"</span>: &#123;</span><br><span class="line">    <span class="string">"total"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span>: &#123;</span><br><span class="line">    <span class="string">"total"</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">"max_score"</span>: <span class="number">0.5753642</span>,</span><br><span class="line">    <span class="string">"hits"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span>: <span class="string">"accounts"</span>,</span><br><span class="line">        <span class="string">"_type"</span>: <span class="string">"person"</span>,</span><br><span class="line">        <span class="string">"_id"</span>: <span class="string">"_search&amp;pretty"</span>,</span><br><span class="line">        <span class="string">"_score"</span>: <span class="number">0.5753642</span>,</span><br><span class="line">        <span class="string">"_source"</span>: &#123;</span><br><span class="line">          <span class="string">"query"</span>: &#123;</span><br><span class="line">            <span class="string">"multi_match"</span>: &#123;</span><br><span class="line">              <span class="string">"query"</span>: <span class="string">"�й�"</span>,</span><br><span class="line">              <span class="string">"fields"</span>: []</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span>: <span class="string">"accounts"</span>,</span><br><span class="line">        <span class="string">"_type"</span>: <span class="string">"person"</span>,</span><br><span class="line">        <span class="string">"_id"</span>: <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span>: <span class="number">0.2876821</span>,</span><br><span class="line">        <span class="string">"_source"</span>: &#123;</span><br><span class="line">          <span class="string">"user_name"</span>: <span class="string">"����"</span>,</span><br><span class="line">          <span class="string">"balance"</span>: <span class="number">110</span>,</span><br><span class="line">          <span class="string">"desc"</span>: <span class="string">"�����Ǹ��й���"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>multi_match ��match����Ϊ�ڶ���ֶ�������ͬ������һ�����fieldsָ����Щ�ֶΣ����ָ���ֶ�Ϊ�����飬��ʾ��ѯ�����ֶΣ���queryָ��Ҫƥ����ҵ��ַ���</li>
+</ul>
+<h4 id="�����������ƺ��ֶ�����"><a href="#�����������ƺ��ֶ�����" class="headerlink" title="�����������ƺ��ֶ�����"></a>�����������ƺ��ֶ�����</h4><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?_source=user_name,balance</span></span><br></pre></td></tr></table></figure></p>
+<p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">		<span class="string">"match"</span> : &#123;</span><br><span class="line">			<span class="string">"desc"</span> : <span class="string">"�й�"</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"size"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">"from"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">"_source"</span>: [ <span class="string">"user_name"</span> , <span class="string">"balance"</span> ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>size����������<br>from���ӵڼ�����ʼ����<br>_source��������Ϣ���ֶ�</p>
+<h4 id="����Ҫ����Ԫ������Ϣ"><a href="#����Ҫ����Ԫ������Ϣ" class="headerlink" title="����Ҫ����Ԫ������Ϣ"></a>����Ҫ����Ԫ������Ϣ</h4><p>GET����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_source</span></span><br></pre></td></tr></table></figure></p>
+<p>POST����</p>
+<p>_source�ǿ��Ա����õģ���������֮����Щ���ܲ�����ʹ��</p>
+<ul>
+<li>update api:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-update.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-update.html</a></li>
+<li><u>highlighting</u>��<a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3/search-request-highlighting.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/2.3/search-request-highlighting.html</a></li>
+<li>�����ؽ����޸�mapping�Լ��ִʡ���������</li>
+<li>debug��ѯ���߾ۺ����</li>
+<li>�����Զ��޸�</li>
+</ul>
+<h4 id="��Χ��ѯ"><a href="#��Χ��ѯ" class="headerlink" title="��Χ��ѯ"></a>��Χ��ѯ</h4><p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"filter"</span>: [&#123;</span><br><span class="line">				<span class="string">"range"</span>: &#123;</span><br><span class="line">					<span class="string">"balance"</span>: &#123;</span><br><span class="line">						<span class="string">"gte"</span>:  <span class="number">110</span>,</span><br><span class="line">						<span class="string">"lt"</span>:   <span class="number">200</span></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="���Ҷ����ȷֵ"><a href="#���Ҷ����ȷֵ" class="headerlink" title="���Ҷ����ȷֵ"></a>���Ҷ����ȷֵ</h4><p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"filter"</span>: [&#123;</span><br><span class="line">				<span class="string">"terms"</span>: &#123;</span><br><span class="line">					<span class="string">"balance"</span>: [<span class="number">100</span>,<span class="number">110</span>]</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="AND��ѯ"><a href="#AND��ѯ" class="headerlink" title="AND��ѯ"></a>AND��ѯ</h4><p>POST ����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"must"</span>: [</span><br><span class="line">				<span class="comment">// &#123;"terms": &#123;"balance": [100,110]&#125;&#125;</span></span><br><span class="line">				&#123;<span class="string">"match"</span>: &#123;<span class="string">"desc"</span>:<span class="string">"�й�"</span>&#125;&#125;,</span><br><span class="line">				&#123;<span class="string">"match"</span>: &#123;<span class="string">"user_name"</span>: <span class="string">"����"</span>&#125;&#125;</span><br><span class="line">			]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="OR��ѯ"><a href="#OR��ѯ" class="headerlink" title="OR��ѯ"></a>OR��ѯ</h4><p>�����ؼ����м��һ���ո񣬾ͱ�ʾor��ѯ</p>
+<p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"match"</span> : &#123;</span><br><span class="line">            <span class="string">"desc"</span> : <span class="string">"�й� ����"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="���¼��ֲ�����"><a href="#���¼��ֲ�����" class="headerlink" title="���¼��ֲ�����"></a>���¼��ֲ�����</h4><p>url�д�/_update��������post����doc������Ҫ�޸ĵ��ֶ�����</p>
+<p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_update</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"doc"</span>: &#123;</span><br><span class="line">        <span class="string">"desc"</span> : <span class="string">"�����Ǹ��������"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="z���j��е�ĳ���ֶ�"><a href="#z���j��е�ĳ���ֶ�" class="headerlink" title="ȥ���ĵ��е�ĳ���ֶ�"></a>ȥ���ĵ��е�ĳ���ֶ�</h4><p>��Ҫ��ÿ���ĵ���ȡ������Ȼ��ȥ����Ҫ���ֶΣ����µ����ȥ</p>
+<h4 id="version�汾��"><a href="#version�汾��" class="headerlink" title="version�汾��"></a>version�汾��</h4><p>�����ǲ���һ���ĵ����ݵ�ʱ�򣬶�����һ����_version���ֶη��أ���ʾ��ǰ�ĵ����µĴ�������֤������̲߳��Ḳ�ǵ���һ���߳��������޸�</p>
+<p>ʹ�õ�ʱ�������url������ϰ汾�ŵĲ���version=123</p>
+<p>���磺<code>http://192.168.0.144:9200/accounts/person/1?version=10&amp;version_type=external</code>// ʹ���ⲿ�汾��<br><code>http://192.168.0.144:9200/accounts/person/1?version=10</code>// ���ⲿ�汾��</p>
+<p>��ʹ���ڲ��汾�����˵������������ݵ�ʱ�򣬰汾����ԭ�汾�Ų�һ�£��ͻᵼ��д��ʧ��</p>
+<p>��ʹ���ⲿ�汾�����˵������������ݵ�ʱ�򣬴��ݽ�ȥ�İ汾�ű����ݱ����İ汾��С����ȣ����ᵼ��д��ʧ��</p>
+<h4 id="���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�n�����������"><a href="#���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�n�����������" class="headerlink" title="���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�ñ�����������"></a>���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�ñ�����������</h4><p>POST����<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_aliases</span></span><br><span class="line">&#123;  </span><br><span class="line">    <span class="string">"actions"</span>: [  </span><br><span class="line">        &#123; <span class="string">"add"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;  </span><br><span class="line">    ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ʹ�õ�ʱ��ʹ�ñ����������Ժ�������ֶ���ɾ�ģ�������Ҫ��Ӱ汾�ţ������Ժ��޸������ֶε�ʱ��ı�ʶ</p>
+<p>ɾ��,�������һ����������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_aliases</span></span><br><span class="line">&#123;  </span><br><span class="line">    <span class="string">"actions"</span>: [  </span><br><span class="line">        &#123; <span class="string">"remove"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;,  </span><br><span class="line">        &#123; <span class="string">"add"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts2"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;  </span><br><span class="line">    ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="�������е��ֶ�����һ��type����-��j��type�����Dz������޸jg�ֻ������"><a href="#�������е��ֶ�����һ��type����-��j��type�����Dz������޸jg�ֻ������" class="headerlink" title="�������е��ֶ�����һ��type����,��ǰ��type�����ǲ������޸ĵģ�ֻ������"></a>�������е��ֶ�����һ��type����,��ǰ��type�����ǲ������޸ĵģ�ֻ������</h4><p>PUT����<br><a href="http://192.168.0.144:9200/accounts_v1/person/_mapping" target="_blank" rel="noopener">http://192.168.0.144:9200/accounts_v1/person/_mapping</a><br>{<br>    “person”: {<br>        “properties”: {<br>            “created”: {<br>                “type”: “multi_field”,<br>                “fields”: {<br>                    “created”: {“type”: “date”},<br>                    “date”: {“type”: “string”}<br>                }<br>            }<br>        }<br>    }<br>}<br>����”No handler for type [multi_field] declared on field [created]”</p>
+<p>��������</p>
+<h3 id="Java����ElasticSearch"><a href="#Java����ElasticSearch" class="headerlink" title="Java����ElasticSearch"></a>Java����ElasticSearch</h3><p>����Rest jar��<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;rest&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;5.5.3&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="�������Ӳ����Ե���"><a href="#�������Ӳ����Ե���" class="headerlink" title="�������Ӳ����Ե���"></a>�������Ӳ����Ե���</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.http.Header;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpHost;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.message.BasicHeader;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.nio.entity.NStringEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.util.EntityUtils;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.Response;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.RestClient;</span><br><span class="line"><span class="keyword">import</span> org.junit.After;</span><br><span class="line"><span class="keyword">import</span> org.junit.Before;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientTest</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> RestClient restClient;</span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        restClient = RestClient.builder(</span><br><span class="line">                <span class="keyword">new</span> HttpHost(<span class="string">"192.168.0.144"</span>, <span class="number">9200</span>, <span class="string">"http"</span>),</span><br><span class="line">                <span class="keyword">new</span> HttpHost(<span class="string">"192.168.0.247"</span>, <span class="number">9200</span>, <span class="string">"http"</span>))</span><br><span class="line">                .setDefaultHeaders(<span class="keyword">new</span> Header[]&#123;<span class="keyword">new</span> BasicHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/json; charset=utf8"</span>)&#125;).build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@After</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            restClient.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGet</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Response response = restClient.performRequest(<span class="string">"GET"</span>, <span class="string">"/"</span>, Collections.singletonMap(<span class="string">"pretty"</span>, <span class="string">"true"</span>));</span><br><span class="line">        System.out.println(EntityUtils.toString(response.getEntity()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>����������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"evaluate-platform1"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"-Med_v-XQ-u-jkGZn19gBQ"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"6.4.2"</span>,</span><br><span class="line">    <span class="string">"build_flavor"</span> : <span class="string">"default"</span>,</span><br><span class="line">    <span class="string">"build_type"</span> : <span class="string">"tar"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"04711c2"</span>,</span><br><span class="line">    <span class="string">"build_date"</span> : <span class="string">"2018-09-26T13:34:09.098244Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="keyword">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"7.4.0"</span>,</span><br><span class="line">    <span class="string">"minimum_wire_compatibility_version"</span> : <span class="string">"5.6.0"</span>,</span><br><span class="line">    <span class="string">"minimum_index_compatibility_version"</span> : <span class="string">"5.0.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="��֤ĳ���j�-�����Ƿ����"><a href="#��֤ĳ���j�-�����Ƿ����" class="headerlink" title="��֤ĳ���ĵ�/�����Ƿ����"></a>��֤ĳ���ĵ�/�����Ƿ����</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHead</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	<span class="comment">//Response response = restClient.performRequest("HEAD","/accounts",Collections.&lt;String,String&gt;emptyMap());</span></span><br><span class="line">	Response response = restClient.performRequest(<span class="string">"HEAD"</span>, <span class="string">"/accounts/person/111"</span>, Collections.&lt;String, String&gt;emptyMap());</span><br><span class="line">	System.out.println(response.getStatusLine().getReasonPhrase().equals(<span class="string">"OK"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>����������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="ɾ��ָ��ɸѡ�������j�����"><a href="#ɾ��ָ��ɸѡ�������j�����" class="headerlink" title="ɾ��ָ��ɸѡ�������ĵ�����"></a>ɾ��ָ��ɸѡ�������ĵ�����</h4><p>���ݲ�ѯ����ɾ������<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">	sb.append(<span class="string">"&#123;\"query\": &#123;\"match\" : &#123;\"user_name\" : \"wangwu\"&#125;&#125;&#125;"</span>);</span><br><span class="line">	HttpEntity entity = <span class="keyword">new</span> NStringEntity(sb.toString());</span><br><span class="line">	Response response = restClient.performRequest(<span class="string">"POST"</span>, <span class="string">"/my_accounts/person/_delete_by_query?pretty"</span>, Collections.emptyMap(), entity);</span><br><span class="line">	System.out.println(EntityUtils.toString(response.getEntity()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>���ؽ�����£�<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">20</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"total"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"deleted"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"batches"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"version_conflicts"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"noops"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"retries"</span> : &#123;</span><br><span class="line">    <span class="string">"bulk"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"search"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"throttled_millis"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"requests_per_second"</span> : -<span class="number">1.0</span>,</span><br><span class="line">  <span class="string">"throttled_until_millis"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"failures"</span> : [ ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>求鼓励，求支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/webzfbgetmsgimg.jpg" alt="menggl 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/11/2018-01-11Linux下的常用命令/" rel="next" title="Linux下的常用命令">
+                <i class="fa fa-chevron-left"></i> Linux下的常用命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/12/2018-01-12集合排序源码解读及常用排序/" rel="prev" title="集合排序源码解读及常用排序">
+                集合排序源码解读及常用排序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">menggl</p>
+              <p class="site-description motion-element" itemprop="description">以身为棋，胜天半子</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#��װElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">��װElasticSearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch��ز�������"><span class="nav-number">2.</span> <span class="nav-text">elasticsearch��ز�������</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#����ܱ���"><span class="nav-number">3.</span> <span class="nav-text">����ܱ���</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#�쳣����һ"><span class="nav-number">3.1.</span> <span class="nav-text">�쳣����һ</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#��һ���쳣���l�����������̫С"><span class="nav-number">3.1.1.</span> <span class="nav-text">��һ���쳣���ļ�����������̫С</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#�ڶ����쳣"><span class="nav-number">3.1.2.</span> <span class="nav-text">�ڶ����쳣</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#�������쳣-�u������߳������޸�"><span class="nav-number">3.1.3.</span> <span class="nav-text">�������쳣 �û������߳������޸�</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#���ĸ��쳣"><span class="nav-number">3.1.4.</span> <span class="nav-text">���ĸ��쳣</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ֱ��ʹ��"><span class="nav-number">3.1.5.</span> <span class="nav-text">ֱ��ʹ��</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�쳣�����"><span class="nav-number">3.2.</span> <span class="nav-text">�쳣�����</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#��ʱ����m��"><span class="nav-number">3.3.</span> <span class="nav-text">��ʱ����ɱ��!</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElasticSearch-Head��װ"><span class="nav-number">4.</span> <span class="nav-text">ElasticSearch Head��װ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#�������ɾ����ѯ�Y���"><span class="nav-number">5.</span> <span class="nav-text">�������ɾ����ѯ�Ȳ���</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#��������"><span class="nav-number">5.1.</span> <span class="nav-text">��������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�ִ���"><span class="nav-number">5.2.</span> <span class="nav-text">�ִ���</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#���IK�ִ���"><span class="nav-number">5.3.</span> <span class="nav-text">���IK�ִ���</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�鿴��A����״̬"><span class="nav-number">5.4.</span> <span class="nav-text">�鿴��Ⱥ����״̬</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�������"><span class="nav-number">5.5.</span> <span class="nav-text">�������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ɾ������"><span class="nav-number">5.6.</span> <span class="nav-text">ɾ������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�������������"><span class="nav-number">5.7.</span> <span class="nav-text">�������������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�޸�����������"><span class="nav-number">5.8.</span> <span class="nav-text">�޸�����������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#��������index��type�����ݽu"><span class="nav-number">5.9.</span> <span class="nav-text">��������index��type�����ݽṹ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�������е�����"><span class="nav-number">5.10.</span> <span class="nav-text">�������е�����</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�����������"><span class="nav-number">5.11.</span> <span class="nav-text">�����������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#����޸��j�ʱ�I汾�l���"><span class="nav-number">5.12.</span> <span class="nav-text">����޸��ĵ�ʱ�İ汾�ſ���</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#�ڲ��汾��"><span class="nav-number">5.12.1.</span> <span class="nav-text">�ڲ��汾��</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#�ⲿ�汾����"><span class="nav-number">5.12.2.</span> <span class="nav-text">�ⲿ�汾����</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#����id��1����Ϣ"><span class="nav-number">5.13.</span> <span class="nav-text">����id��1����Ϣ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#������ѯ"><span class="nav-number">5.14.</span> <span class="nav-text">������ѯ</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#��ѯ�j��Ƿ����"><span class="nav-number">5.14.1.</span> <span class="nav-text">��ѯ�ĵ��Ƿ����</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#��ѯtype��������"><span class="nav-number">5.14.2.</span> <span class="nav-text">��ѯtype��������</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#�����ֶ��ϲ�ѯ"><span class="nav-number">5.14.3.</span> <span class="nav-text">�����ֶ��ϲ�ѯ</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#����ֶ��ϲ�ѯ"><span class="nav-number">5.14.4.</span> <span class="nav-text">����ֶ��ϲ�ѯ</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�����������ƺ��ֶ�����"><span class="nav-number">5.15.</span> <span class="nav-text">�����������ƺ��ֶ�����</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#����Ҫ����Ԫ������Ϣ"><span class="nav-number">5.16.</span> <span class="nav-text">����Ҫ����Ԫ������Ϣ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#��Χ��ѯ"><span class="nav-number">5.17.</span> <span class="nav-text">��Χ��ѯ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#���Ҷ����ȷֵ"><span class="nav-number">5.18.</span> <span class="nav-text">���Ҷ����ȷֵ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AND��ѯ"><span class="nav-number">5.19.</span> <span class="nav-text">AND��ѯ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OR��ѯ"><span class="nav-number">5.20.</span> <span class="nav-text">OR��ѯ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#���¼��ֲ�����"><span class="nav-number">5.21.</span> <span class="nav-text">���¼��ֲ�����</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#z���j��е�ĳ���ֶ�"><span class="nav-number">5.22.</span> <span class="nav-text">ȥ���ĵ��е�ĳ���ֶ�</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#version�汾��"><span class="nav-number">5.23.</span> <span class="nav-text">version�汾��</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�n�����������"><span class="nav-number">5.24.</span> <span class="nav-text">���������ͬ��ʣ����������Ժ�����������Ҳ������ʹ�ñ�����������</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#�������е��ֶ�����һ��type����-��j��type�����Dz������޸jg�ֻ������"><span class="nav-number">5.25.</span> <span class="nav-text">�������е��ֶ�����һ��type����,��ǰ��type�����ǲ������޸ĵģ�ֻ������</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java����ElasticSearch"><span class="nav-number">6.</span> <span class="nav-text">Java����ElasticSearch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#�������Ӳ����Ե���"><span class="nav-number">6.1.</span> <span class="nav-text">�������Ӳ����Ե���</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#��֤ĳ���j�-�����Ƿ����"><span class="nav-number">6.2.</span> <span class="nav-text">��֤ĳ���ĵ�/�����Ƿ����</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ɾ��ָ��ɸѡ�������j�����"><span class="nav-number">6.3.</span> <span class="nav-text">ɾ��ָ��ɸѡ�������ĵ�����</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">menggl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
