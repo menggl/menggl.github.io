@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elasticsearch,搜索引擎," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="安装ElasticSearch 下载安装包 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  解压安装包  运行启动脚本123elasticsearch-6.4.2/bin/elasticsearch// 后台启动elasticsearch-6.4.2/bin/elast">
+<meta name="keywords" content="elasticsearch,搜索引擎">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch技术整理">
+<meta property="og:url" content="http://menggl.github.io/2018/10/30/2018-10-30ElasticSearch技术整理/index.html">
+<meta property="og:site_name" content="枫树林">
+<meta property="og:description" content="安装ElasticSearch 下载安装包 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  解压安装包  运行启动脚本123elasticsearch-6.4.2/bin/elasticsearch// 后台启动elasticsearch-6.4.2/bin/elast">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://menggl.github.io/2018/10/30/2018-10-30ElasticSearch技术整理/elasticsearch-head集群监控.png">
+<meta property="og:updated_time" content="2018-11-06T01:37:59.919Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch技术整理">
+<meta name="twitter:description" content="安装ElasticSearch 下载安装包 1wget &quot;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz&quot;  解压安装包  运行启动脚本123elasticsearch-6.4.2/bin/elasticsearch// 后台启动elasticsearch-6.4.2/bin/elast">
+<meta name="twitter:image" content="http://menggl.github.io/2018/10/30/2018-10-30ElasticSearch技术整理/elasticsearch-head集群监控.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://menggl.github.io/2018/10/30/2018-10-30ElasticSearch技术整理/"/>
+
+
+
+
+
+  <title>ElasticSearch技术整理 | 枫树林</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">枫树林</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/10/30/2018-10-30ElasticSearch技术整理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="menggl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="枫树林">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch技术整理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-30T12:39:04+08:00">
+                2018-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/整理/" itemprop="url" rel="index">
+                    <span itemprop="name">整理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="安装ElasticSearch"><a href="#安装ElasticSearch" class="headerlink" title="安装ElasticSearch"></a>安装ElasticSearch</h3><ol>
+<li><p>下载安装包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget <span class="string">"https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.tar.gz"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压安装包</p>
+</li>
+<li>运行启动脚本<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-<span class="number">6.4</span>.2/bin/elasticsearch</span><br><span class="line"><span class="comment">// 后台启动</span></span><br><span class="line">elasticsearch-<span class="number">6.4</span>.2/bin/elasticsearch -d</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>启动时如果是root用户，请切换到其它用户下面再进行启动</p>
+<ol start="4">
+<li>启动成功后查看<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@DaKeTomcat bin]# curl localhost:9200</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"Xb4f3KL"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"_-Q26WbATGe7NJ-XTLVImQ"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"6.4.2"</span>,</span><br><span class="line">    <span class="string">"build_flavor"</span> : <span class="string">"default"</span>,</span><br><span class="line">    <span class="string">"build_type"</span> : <span class="string">"tar"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"04711c2"</span>,</span><br><span class="line">    <span class="string">"build_date"</span> : <span class="string">"2018-09-26T13:34:09.098244Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="keyword">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"7.4.0"</span>,</span><br><span class="line">    <span class="string">"minimum_wire_compatibility_version"</span> : <span class="string">"5.6.0"</span>,</span><br><span class="line">    <span class="string">"minimum_index_compatibility_version"</span> : <span class="string">"5.0.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="elasticsearch相关参数配置"><a href="#elasticsearch相关参数配置" class="headerlink" title="elasticsearch相关参数配置"></a>elasticsearch相关参数配置</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"># 对外暴露的host，0.0.0.0时暴露给全网</span><br><span class="line">network.host: <span class="number">192.168</span>.0.144</span><br><span class="line"># 集群中的节点名称，同一集群中每个节点的名称应该不一致，起到区分节点和辨认节点的目的</span><br><span class="line">node.name: evaluate-platform1</span><br><span class="line"></span><br><span class="line"># 是否可以称为主节点</span><br><span class="line">node.master: <span class="keyword">true</span></span><br><span class="line"># 是否可以称为数据节点</span><br><span class="line">node.data: <span class="keyword">true</span></span><br><span class="line"># 主节点选举的时候最少的主节点个数，为了防止脑裂，最好设置成总结点数/2+1个</span><br><span class="line">discovery.zen.minimum_master_nodes: <span class="number">1</span></span><br><span class="line"># 集群的IP集合，可指定端口，默认为9300，如["192.168.1.101","192.168.1.102"]，此处也可以写为hostname的形式，注意分布式集群</span><br><span class="line">discovery.zen.ping.unicast.hosts: [<span class="string">"192.168.0.142:9300"</span>, <span class="string">"192.168.0.247:9300"</span>]</span><br><span class="line"># 集群中的名称，建议修改，因为低版本多播模式下的同一网段下相同的集群名称会自动加入同一集群中，如果是生产环境这样容易造成数据混乱</span><br><span class="line">cluster.name: jzg-evaluate-platform-test</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 对外暴露的端口号</span><br><span class="line">http.port: <span class="number">9200</span></span><br><span class="line"># 默认的数据路径</span><br><span class="line">path.data: /usr/local/elasticsearch/data</span><br><span class="line"># 默认的日志路径</span><br><span class="line">path.logs: /usr/local/elasticsearch/logs</span><br><span class="line"># 是否可以称为预处理节点（主要是针对海量请求的时候的负载均衡），也可以认为是client节点，如果分组聚合操作多的话，这类型节点可以多创建一些</span><br><span class="line">node.ingest: <span class="keyword">false</span></span><br><span class="line"># 当前数据目录可以被多少个节点共享</span><br><span class="line">node.max_local_storage_nodes: <span class="number">1</span></span><br><span class="line"># 启动时的内存锁，选项是true或false，用来确保用户在es-jvm中设置的ES_HEAP_SIZE参数内存可以使用一半以上而又不溢出</span><br><span class="line">bootstrap.memory_lock: <span class="keyword">true</span></span><br><span class="line"># 允许跨域访问</span><br><span class="line">http.cors.enabled: <span class="keyword">true</span></span><br><span class="line">http.cors.allow-origin: <span class="string">"*"</span></span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Add custom attributes to the node:</span><br><span class="line">#</span><br><span class="line">#node.attr.rack: r1</span><br><span class="line">#</span><br><span class="line">#</span><br><span class="line"># Make sure that the heap size is set to about half the memory available</span><br><span class="line"># on the system and that the owner of the process is allowed to use this</span><br><span class="line"># limit.</span><br><span class="line">#</span><br><span class="line"># Elasticsearch performs poorly when the system is swapping the memory.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Network -----------------------------------</span><br><span class="line">#</span><br><span class="line"># For more information, consult the network module documentation.</span><br><span class="line">#</span><br><span class="line"># --------------------------------- Discovery ----------------------------------</span><br><span class="line"># 主节点选举超时时间设置</span><br><span class="line">#discovery.zen.ping_timeout</span><br><span class="line">#</span><br><span class="line"># For more information, consult the zen discovery module documentation.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Gateway -----------------------------------</span><br><span class="line"># 网关控制在N个节点启动之后才恢复集群中的数据，建议设置为集群节点数量的一半以上</span><br><span class="line">#gateway.recover_after_nodes: 3</span><br><span class="line">#</span><br><span class="line"># For more information, consult the gateway module documentation.</span><br><span class="line">#</span><br><span class="line"># ---------------------------------- Various -----------------------------------</span><br><span class="line">#选项为true和false，删除索引时是否需要显式名称</span><br><span class="line">#action.destructive_requires_name: true</span><br><span class="line"># 关闭自动发现节点</span><br><span class="line"># 单播模式安全，也高效，但是缺点就是如果新增加了一个新的机器的话，就需要每个节点上都进行配置才能生效</span><br><span class="line">#discovery.zen.ping.multicast.enabled</span><br></pre></td></tr></table></figure>
+<p>如果在粘贴以上配置代码的时候，发现所有的配置项前面自动填充了#注释符</p>
+<p>在根目录下，创建文件.vimrc<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.vimrc</span><br><span class="line"># 写入下面的配置后，保存即可</span><br><span class="line">set paste</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动可能报错"><a href="#启动可能报错" class="headerlink" title="启动可能报错"></a>启动可能报错</h3><h4 id="异常错误一"><a href="#异常错误一" class="headerlink" title="异常错误一"></a>异常错误一</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>]: max file descriptors [<span class="number">4096</span>] <span class="keyword">for</span> elasticsearch process is too low, increase to at least [<span class="number">65536</span>]</span><br><span class="line">[<span class="number">2</span>]: memory locking requested <span class="keyword">for</span> elasticsearch process but memory is not locked</span><br><span class="line">[<span class="number">3</span>]: max number of threads [<span class="number">3885</span>] <span class="keyword">for</span> user [es] is too low, increase to at least [<span class="number">4096</span>]</span><br><span class="line">[<span class="number">4</span>]: max virtual memory areas vm.max_map_count [<span class="number">65530</span>] is too low, increase to at least [<span class="number">262144</span>]</span><br></pre></td></tr></table></figure>
+<h5 id="第一个异常，文件描述符限制太小"><a href="#第一个异常，文件描述符限制太小" class="headerlink" title="第一个异常，文件描述符限制太小"></a>第一个异常，文件描述符限制太小</h5><ol>
+<li>切换到root用户</li>
+<li><p>查看硬件限制</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Hn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看unix版本（ulimit -a）,2.6版本的内核默认是在/etc/security/limits.d/90-nproc.conf的配置会覆盖/etc/security/limits.conf的配置</span></span><br><span class="line">vi /etc/security/limits.conf</span><br><span class="line"><span class="comment">// 添加下面的配置,分别设置elasticsearch这个用户，软件、硬件最大打开文件数限制</span></span><br><span class="line">[用户名] soft nofile <span class="number">65536</span></span><br><span class="line">[用户名] hard nofile <span class="number">65536</span></span><br><span class="line">或者</span><br><span class="line">[用户名] - nofile <span class="number">65536</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>登陆elasticsearch用户再次查看硬件限制<code>ulimit -Hn</code>，发现从4096变成65536了，查看进程数限制<code>ulimit -u</code>，变成了4096</p>
+</li>
+</ol>
+<h5 id="第二个异常"><a href="#第二个异常" class="headerlink" title="第二个异常"></a>第二个异常</h5><p>修改/etc/security/limits.conf，设置memlock不限制<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/security/limits.conf </span><br><span class="line"># 添加下面的配置</span><br><span class="line">[用户名]  -  memlock  unlimited</span><br></pre></td></tr></table></figure></p>
+<h5 id="第三个异常-用户创建线程数量修改"><a href="#第三个异常-用户创建线程数量修改" class="headerlink" title="第三个异常 用户创建线程数量修改"></a>第三个异常 用户创建线程数量修改</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/security/limits.d/<span class="number">90</span>-nproc.conf</span><br><span class="line"><span class="comment">// 添加下面的配置，修改用户创建的进程数限制</span></span><br><span class="line">[用户名] soft nproc <span class="number">4096</span></span><br><span class="line">[用户名] hard nproc <span class="number">4096</span></span><br><span class="line">或者</span><br><span class="line">[用户名] - nproc <span class="number">4096</span></span><br></pre></td></tr></table></figure>
+<h5 id="第四个异常"><a href="#第四个异常" class="headerlink" title="第四个异常"></a>第四个异常</h5><p>进程可以拥有的VMA（虚拟内存区域）的数量。</p>
+<p>虚拟内存区域是一个连续的虚拟地址空间区域。在进程的生命周期中，每当程序尝试在内存中映射文件，链接到共享内存，分配堆空间的时候，这些区域都将被创建。</p>
+<p>调优这个值将限制进程拥有的VMA的数量。限制一个进程拥有的MVA的数量有可能导致应用程序出错，因为当进程达到了VMA的数量上限，但又只能少量的内存给其它的内核进程使用，操作系统会抛出内存不足的错误。</p>
+<p>如果你的操作系统在NORMAL区域，仅占用少量的内存，那么调低这个值可以帮助释放内存给内核用</p>
+<ol>
+<li>使用下面的命令修改VMA的数量<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w vm.max_map_count=<span class="number">262144</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>查看配置是否生效<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -a|grep vm.max_map_count</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>或者修改配置文件<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysctl.conf</span><br><span class="line"><span class="comment">//添加下面的配置</span></span><br><span class="line">vm.max_map_count = <span class="number">655360</span></span><br><span class="line"><span class="comment">// 最后执行刷新，使配置生效</span></span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="直接使用"><a href="#直接使用" class="headerlink" title="直接使用"></a>直接使用</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo -e "\nelastic         -       nofile          65538" &gt;&gt; /etc/security/limits.conf   #对应解决第一条问题</span><br><span class="line">echo -e "\nelastic         -       memlock         unlimited" &gt;&gt; /etc/security/limits.conf   #对应解决第二条问题</span><br><span class="line">echo -e "\nelastic         -       nproc         2048" &gt;&gt; /etc/security/limits.d/90-nproc.conf   #对应解决第三条问题</span><br><span class="line">echo -e "\nvm.max_map_count=262144" &gt;&gt; /etc/sysctl.conf &amp;&amp; sysctl -p &amp;&amp; sysctl -w vm.max_map_count=262144 #对应解决第四条问题</span><br></pre></td></tr></table></figure>
+<p>使用sudo报错<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">es 不在 sudoers 文件中。此事将被报告。</span><br></pre></td></tr></table></figure></p>
+<p>切换回root用户<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sudoers</span><br><span class="line">在</span><br><span class="line">root    ALL=(ALL)       ALL  </span><br><span class="line">下面添加下面的配置，NOPASSWD表示在sudo操作的时候不用输入密码</span><br><span class="line">User_Alias SYSADMINS = elasticsearch,app</span><br><span class="line">SYSADMINS       ALL=(ALL)       NOPASSWD: ALL</span><br><span class="line">#es      ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure></p>
+<h4 id="异常错误二"><a href="#异常错误二" class="headerlink" title="异常错误二"></a>异常错误二</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> <span class="number">2018</span>-<span class="number">10</span>-<span class="number">31</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">54</span>,<span class="number">531</span> main ERROR No Log4j <span class="number">2</span> configuration file found. <span class="function">Using <span class="keyword">default</span> <span class="title">configuration</span> <span class="params">(logging only errors to the console)</span>, or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https:<span class="comment">//logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2</span></span></span><br><span class="line"><span class="function">SettingsException[Failed to load settings from [elasticsearch.yml]]</span>; nested: ParsingException[Failed to parse object: expecting token of type [START_OBJECT] but found [VALUE_STRING]];</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromStream(Settings.java:<span class="number">1192</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromPath(Settings.java:<span class="number">1165</span>)</span><br><span class="line">	at org.elasticsearch.node.InternalSettingsPreparer.prepareEnvironment(InternalSettingsPreparer.java:<span class="number">100</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.createEnv(EnvironmentAwareCommand.java:<span class="number">95</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:<span class="number">86</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.main(Command.java:<span class="number">90</span>)</span><br><span class="line">	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:<span class="number">93</span>)</span><br><span class="line">	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:<span class="number">86</span>)</span><br><span class="line">Caused by: ParsingException[Failed to parse object: expecting token of type [START_OBJECT] but found [VALUE_STRING]]</span><br><span class="line">	at org.elasticsearch.common.xcontent.XContentParserUtils.ensureExpectedToken(XContentParserUtils.java:<span class="number">78</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings.fromXContent(Settings.java:<span class="number">672</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings.access$<span class="number">500</span>(Settings.java:<span class="number">84</span>)</span><br><span class="line">	at org.elasticsearch.common.settings.Settings$Builder.loadFromStream(Settings.java:<span class="number">1188</span>)</span><br></pre></td></tr></table></figure>
+<p>这是由于elasticsearch.yml配置文件的格式有问题</p>
+<p>尽量确保冒号前面没有空格，冒号后面只有一个空格</p>
+<h4 id="启动时报已杀死"><a href="#启动时报已杀死" class="headerlink" title="启动时报已杀死!"></a>启动时报<code>已杀死!</code></h4><p>内存不足，需要在./bin/elasticsearch中配置上<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ES_JAVA_OPTS=<span class="string">"-Xms1g -Xmx1g"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="ElasticSearch-Head安装"><a href="#ElasticSearch-Head安装" class="headerlink" title="ElasticSearch Head安装"></a>ElasticSearch Head安装</h3><p>自从6.x版本之后，head不能作为一个插件安装使用了</p>
+<ol>
+<li><p>获取安装包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//github.com/mobz/elasticsearch-head/archive/master.zip</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压master.zip</p>
+</li>
+<li>进入head插件目录elasticsearch-head-master<br>这里需要安装node环境<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/node</span><br><span class="line">cd /usr/local/node</span><br><span class="line">wget https:<span class="comment">//npm.taobao.org/mirrors/node/latest-v9.x/node-v9.0.0-linux-x64.tar.gz</span></span><br><span class="line">tar -zxf node-v9.0.0-linux-x64.tar.gz</span><br><span class="line"># 创建软连接</span><br><span class="line">ln -s /usr/local/node/node-v9.0.0-linux-x64/bin/npm /usr/local/bin/npm</span><br><span class="line">ln -s /usr/local/node/node-v9.0.0-linux-x64/bin/node /usr/local/bin/node</span><br><span class="line"># 查看npm版本号</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>安装完node，就可以使用npm安装elasticsearch-head了</p>
+<p>执行下面的安装命令<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br><span class="line"># install 执行失败了，使用下面的命令</span><br><span class="line"># npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
+<p>npm install的时候报错如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! errno <span class="number">1</span></span><br><span class="line">npm ERR! phantomjs-prebuilt@<span class="number">2.1</span>.16 install: `node install.js`</span><br><span class="line">npm ERR! Exit status <span class="number">1</span></span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! Failed at the phantomjs-prebuilt@<span class="number">2.1</span>.16 install script.</span><br><span class="line">npm ERR! This is probably not a problem with npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of <span class="keyword">this</span> run can be found in:</span><br><span class="line">npm ERR!     /root/.npm/_logs/<span class="number">2018</span>-<span class="number">11</span>-<span class="number">01</span>T02_21_15_504Z-debug.log</span><br></pre></td></tr></table></figure></p>
+<p>好像没啥影响</p>
+<p>继续启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm run start</span><br><span class="line"># 后台启动</span><br><span class="line">nohup npm start &amp;</span><br></pre></td></tr></table></figure></p>
+<ol start="4">
+<li>访问<a href="http://localhost:9100" target="_blank" rel="noopener">http://localhost:9100</a></li>
+</ol>
+<p>发现连接不上9200，需要设置跨域</p>
+<p>在elasticsearch.yml中添加下面的配置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.cors.enabled: <span class="keyword">true</span></span><br><span class="line">http.cors.allow-origin: <span class="string">"*"</span></span><br></pre></td></tr></table></figure></p>
+<p>重启elasticsearch之后就可以访问了<br><img src="/2018/10/30/2018-10-30ElasticSearch技术整理/elasticsearch-head集群监控.png"></p>
+<h3 id="索引添加删除查询等操作"><a href="#索引添加删除查询等操作" class="headerlink" title="索引添加删除查询等操作"></a>索引添加删除查询等操作</h3><p>一个index只允许有一个type</p>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><ul>
+<li>text 非结构化的字符串，比如短信等，查询时使用的默认的分词器查询，默认的text字段是不能分组及排序的，要是想实现分组及排序，开启该字段的fielddata=true，性能会很差</li>
+<li>keyword 结构化的字符，比如手机号。该字段的查询是值等查询，不使用分词查询，默认情况下是可以分组和排序的</li>
+<li>number类型，有long，integer，short，byte，double，float，half_float，scaled_float几种类型</li>
+<li>date，时间类型，可设置多种时间格式，使用示例”format”: “yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis”</li>
+<li>boolean false的值有false, “false”, “off”, “no”, “0”, “” (empty string), 0, 0.0，true的值有：其它值都是true值</li>
+<li>复杂数据类型值数组类型，数组类型不用专门指定type，例如</li>
+</ul>
+<p>字符型数组: [ “one”, “two” ]</p>
+<p>整型数组：[ 1, 2 ]</p>
+<p>数组型数组：[ 1, [ 2, 3 ]] 等价于[ 1, 2, 3 ]</p>
+<p>对象数组：[ { “name”: “Mary”, “age”: 12 }, { “name”: “John”, “age”: 10 }]</p>
+<ul>
+<li>复杂数据类型之对象类型，<em>object</em>  用于单个json对象</li>
+<li>复杂数据类型之嵌套类型，<em>nested</em> 用于json数组</li>
+<li>地理位置类型，_geo_point_ 用于经纬度坐标</li>
+<li>地理形状类型，_geo_shape_ 用于类似于多边形的复杂形状</li>
+<li>特定类型之ipv4， _ip_  用于ipv4类型</li>
+<li>特定类型之Completion类型，<em>completion</em> 提供自动补全建议</li>
+<li>特定类型之token count类型，_token_count_ 用于统计做了标记的字段的index数目，该值会一直增加，不会因为过滤条件而减少</li>
+<li>特定类型之mapper-murmur3，通过插件，可以通过<em>murmur3</em>来计算index的hash值</li>
+<li>特定类型之附件类型，采用插件mapper-attachments，可支持<em>attachments</em>索引，例如Microsoft Office格式，Open Document格式，ePub，Html等</li>
+</ul>
+<h4 id="分词器"><a href="#分词器" class="headerlink" title="分词器"></a>分词器</h4><ol>
+<li>standard分词器<br>英文的处理能力等同于StopAnalyzer。支持中文采用的方法是单字拆分，它会将词汇单元转成小写形式，并去除掉停用词和标点符号</li>
+<li>simple分词器<br>功能强于WhiteSpaceAnalyzer，首先会通过非字母字符来分隔文本信息，然后将词汇单元转成小写形式，该分词器会去除掉数字类型的字符</li>
+<li>WhiteSpace分词器<br>仅仅是去除空格，对字符没有转成小写，不支持中文，并且不会对生成的词汇单元进行其它规范化处理</li>
+<li>Stop分词器<br>StopAnalyzer功能强于SimpleAnalyzer分词器，在SimpleAnalyzer基础上增加了去除英文中的常用单词（如the，a），也可以根据自己的需要添加常用词，不支持中文</li>
+<li>keyword分词器<br>KeywordAnalyzer分词器会将整个输入当做一个单独的词汇单元，方便特殊类型的文本进行索引和检索，针对邮政编码，地址等文本信息使用关键词分词器进行索引项建立非常方便和合适</li>
+<li>language分词器<br>一个用于解析特殊语言文本的分析器的集合，但是没有中文</li>
+<li></li>
+</ol>
+<h4 id="添加IK分词器"><a href="#添加IK分词器" class="headerlink" title="添加IK分词器"></a>添加IK分词器</h4><p>ik分词器的github地址<code>https://github.com/medcl/elasticsearch-analysis-ik</code></p>
+<p>发现上面的github中的版本太老旧了，报如下错误信息，改为使用这个地址中的安装包<code>https://github.com/medcl/elasticsearch-analysis-ik/releases</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.IllegalArgumentException: Plugin [analysis-ik] was built <span class="keyword">for</span> Elasticsearch version <span class="number">6.3</span>.0 but version <span class="number">6.4</span>.2 is running</span><br><span class="line">	at org.elasticsearch.plugins.PluginsService.verifyCompatibility(PluginsService.java:<span class="number">339</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.loadPluginInfo(InstallPluginCommand.java:<span class="number">717</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.installPlugin(InstallPluginCommand.java:<span class="number">792</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.install(InstallPluginCommand.java:<span class="number">775</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.execute(InstallPluginCommand.java:<span class="number">231</span>)</span><br><span class="line">	at org.elasticsearch.plugins.InstallPluginCommand.execute(InstallPluginCommand.java:<span class="number">216</span>)</span><br><span class="line">	at org.elasticsearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:<span class="number">86</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.MultiCommand.execute(MultiCommand.java:<span class="number">77</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:<span class="number">124</span>)</span><br><span class="line">	at org.elasticsearch.cli.Command.main(Command.java:<span class="number">90</span>)</span><br><span class="line">	at org.elasticsearch.plugins.PluginCli.main(PluginCli.java:<span class="number">47</span>)</span><br></pre></td></tr></table></figure></p>
+<p>运行下面的安装命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/elasticsearch-plugin install https:<span class="comment">//github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.4.2/elasticsearch-analysis-ik-6.4.2.zip</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="查看集群健康状态"><a href="#查看集群健康状态" class="headerlink" title="查看集群健康状态"></a>查看集群健康状态</h4><p>GET<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cluster/health?pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>返回信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>status状态值：</p>
+<ul>
+<li>green  表示主分片和复制分片都已经可以工作了</li>
+<li>yellow 表示主分片已经可以工作了，但是复制分片还没有全部可用    </li>
+<li>red    表示主分片不可用，需要恢复完才可继续使用</li>
+</ul>
+<p>可以对具体的索引（index库）进行健康查询</p>
+<p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cluster/health/customer,customer2?pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>返回结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"red"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">true</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以附加参数显式更具体的内容<br>level=indices, shards, cluster</p>
+<ul>
+<li>level=indices返回结果</li>
+</ul>
+<p>GET <a href="http://192.168.0.144:9200/_cluster/health?level=indices&amp;pretty" target="_blank" rel="noopener">http://192.168.0.144:9200/_cluster/health?level=indices&amp;pretty</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="string">"indices"</span>: &#123;</span><br><span class="line">    <span class="string">"accounts2"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"accounts"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>level=shards返回结果如下</li>
+</ul>
+<p>GET <a href="http://192.168.0.144:9200/_cluster/health?level=shards&amp;pretty" target="_blank" rel="noopener">http://192.168.0.144:9200/_cluster/health?level=shards&amp;pretty</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span>: <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"number_of_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"number_of_data_nodes"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"active_primary_shards"</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="string">"active_shards"</span>: <span class="number">16</span>,</span><br><span class="line">  <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"delayed_unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_pending_tasks"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"number_of_in_flight_fetch"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"task_max_waiting_in_queue_millis"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">"active_shards_percent_as_number"</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="string">"indices"</span>: &#123;</span><br><span class="line">    <span class="string">"accounts2"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"shards"</span>: &#123;</span><br><span class="line">        <span class="string">"0"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"1"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"2"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"accounts"</span>: &#123;</span><br><span class="line">      <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">      <span class="string">"number_of_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"number_of_replicas"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"active_primary_shards"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="string">"active_shards"</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unassigned_shards"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"shards"</span>: &#123;</span><br><span class="line">        <span class="string">"0"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"1"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"2"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"3"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"4"</span>: &#123;</span><br><span class="line">          <span class="string">"status"</span>: <span class="string">"green"</span>,</span><br><span class="line">          <span class="string">"primary_active"</span>: <span class="keyword">true</span>,</span><br><span class="line">          <span class="string">"active_shards"</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="string">"relocating_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"initializing_shards"</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">"unassigned_shards"</span>: <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="添加索引"><a href="#添加索引" class="headerlink" title="添加索引"></a>添加索引</h4><p>PUT请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/customer</span></span><br></pre></td></tr></table></figure></p>
+<p>返回信息<br>{“acknowledged”:true,”shards_acknowledged”:true,”index”:”customer”}</p>
+<h4 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h4><p>DELETE请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/customer</span></span><br></pre></td></tr></table></figure></p>
+<p>返回信息<br>{“acknowledged”:true}</p>
+<h4 id="添加索引及类型"><a href="#添加索引及类型" class="headerlink" title="添加索引及类型"></a>添加索引及类型</h4><p>PUT请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"mappings"</span>: &#123;</span><br><span class="line">		<span class="string">"person"</span>: &#123;</span><br><span class="line">			<span class="string">"properties"</span>: &#123;</span><br><span class="line">				<span class="string">"user_name"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">					<span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span>,</span><br><span class="line">					<span class="string">"search_analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="string">"balance"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"double"</span></span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="string">"desc"</span>: &#123;</span><br><span class="line">					<span class="string">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">					<span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span>,</span><br><span class="line">					<span class="string">"search_analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"settings"</span> : &#123;</span><br><span class="line">		<span class="string">"number_of_shards"</span> : <span class="number">3</span>,</span><br><span class="line">		<span class="string">"number_of_replicas"</span> : <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中number_of_shards表示当前索引的分片数量，默认分片数量是5<br>number_of_replicas表示当前所有分片的副本分片数量，默认是1</p>
+<h4 id="修改索引的配置"><a href="#修改索引的配置" class="headerlink" title="修改索引的配置"></a>修改索引的配置</h4><p>PUT请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_settings</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">"number_of_replicas"</span> : <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以修改复制分片的数量，但是不能修改主分片的数量</p>
+<h4 id="查找索引index或type的数据结构"><a href="#查找索引index或type的数据结构" class="headerlink" title="查找索引index或type的数据结构"></a>查找索引index或type的数据结构</h4><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 索引下的所有type结构</span></span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_mapping     </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 某个type数据结构</span></span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/_mapping/person </span></span><br><span class="line">或</span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts2/person/_mapping</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="查找所有的索引"><a href="#查找所有的索引" class="headerlink" title="查找所有的索引"></a>查找所有的索引</h4><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_cat/indices?v&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="添加索引数据"><a href="#添加索引数据" class="headerlink" title="添加索引数据"></a>添加索引数据</h4><p>PUT请求<br>//添加id是1的数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>:<span class="string">"张三"</span>,</span><br><span class="line">	<span class="string">"balance"</span>:<span class="number">100.0</span>,</span><br><span class="line">	<span class="string">"desc"</span>:<span class="string">"张三是个外国人"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"accounts"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"person"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"result"</span> : <span class="string">"created"</span>,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"_seq_no"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"_primary_term"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意：最好让elasticsearch自己创建id，因为我们不知道是创建了一个文档还是修改了一个id相同的文档</p>
+<p>如果想新增一条数据，而不是修改指定id的数据，需要在url后面加上/_create或者加上参数op_type=create</p>
+<p>下面是demo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_create?pretty&amp;pretty</span></span><br><span class="line">或者</span><br><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty&amp;op_type=create</span></span><br></pre></td></tr></table></figure></p>
+<p>如果返回的状态码是409，表示已经有一条id是1的数据，如果返回码是201，表示插入数据成功</p>
+<h4 id="添加修改文档时的版本号控制"><a href="#添加修改文档时的版本号控制" class="headerlink" title="添加修改文档时的版本号控制"></a>添加修改文档时的版本号控制</h4><h5 id="内部版本号"><a href="#内部版本号" class="headerlink" title="内部版本号"></a>内部版本号</h5><p>当修改某条数据时，我们不允许其它线程或进程对其修改，使用乐观锁形式实现，具体实现方式是在请求url后面加上版本号version=1</p>
+<p>PUT请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?version=1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>: <span class="string">"张三"</span>,</span><br><span class="line">	<span class="string">"balance"</span>: <span class="number">100</span>,</span><br><span class="line">	<span class="string">"desc"</span>: <span class="string">"张三是个外国人1"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果版本号与预期版本号一致，则返回状态码是200，如果不一致，则返回状态码是409</p>
+<h5 id="外部版本控制"><a href="#外部版本控制" class="headerlink" title="外部版本控制"></a>外部版本控制</h5><p>我们可以使用外部版本控制权限，如果在数据库层面已经将版本权限控制好了，要同步到elasticsearch里面，则需要使用外部版本号来控制多个线程从数据库往elasticsearch同步时的冲突问题</p>
+<p>PUT请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?version=10&amp;version_type=external</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"user_name"</span>: <span class="string">"张三"</span>,</span><br><span class="line">	<span class="string">"balance"</span>: <span class="number">100</span>,</span><br><span class="line">	<span class="string">"desc"</span>: <span class="string">"张三是个外国人2"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果指定的外部版本号不大于当前的版本号，就会执行失败，返回409错误码，如果小于当前指定的版本号，就会返回200错误码</p>
+<h4 id="查找id是1的信息"><a href="#查找id是1的信息" class="headerlink" title="查找id是1的信息"></a>查找id是1的信息</h4><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1?pretty&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>返回信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"accounts"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"person"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"found"</span> : <span class="keyword">true</span>,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"user_name"</span> : <span class="string">"张三"</span>,</span><br><span class="line">    <span class="string">"balance"</span> : <span class="number">100.0</span>,</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"张三是个外国人"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h4><h5 id="查询文档是否存在"><a href="#查询文档是否存在" class="headerlink" title="查询文档是否存在"></a>查询文档是否存在</h5><p>如果你对文档的具体数据不感兴趣，只需要知道文档是否存在，那么就使用HEAD请求就可以了，如果文档存在，返回的http code就是200，如果文档不存在，就返回错误码404</p>
+<p>HEAD请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="查询type所有数据"><a href="#查询type所有数据" class="headerlink" title="查询type所有数据"></a>查询type所有数据</h5><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="单个字段上查询"><a href="#单个字段上查询" class="headerlink" title="单个字段上查询"></a>单个字段上查询</h5><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?q=user_name:张三&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>或者</p>
+<p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">		<span class="string">"match"</span> : &#123;</span><br><span class="line">			<span class="string">"user_name"</span> : <span class="string">"张三"</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="多个字段上查询"><a href="#多个字段上查询" class="headerlink" title="多个字段上查询"></a>多个字段上查询</h5><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?q=中国&amp;pretty</span></span><br></pre></td></tr></table></figure></p>
+<p>或者<br>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"multi_match"</span> : &#123;</span><br><span class="line">            <span class="string">"query"</span> : <span class="string">"中国"</span>,</span><br><span class="line">            <span class="string">"fields"</span> : []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回信息：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span>: <span class="number">6</span>,</span><br><span class="line">  <span class="string">"timed_out"</span>: <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"_shards"</span>: &#123;</span><br><span class="line">    <span class="string">"total"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span>: &#123;</span><br><span class="line">    <span class="string">"total"</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">"max_score"</span>: <span class="number">0.5753642</span>,</span><br><span class="line">    <span class="string">"hits"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span>: <span class="string">"accounts"</span>,</span><br><span class="line">        <span class="string">"_type"</span>: <span class="string">"person"</span>,</span><br><span class="line">        <span class="string">"_id"</span>: <span class="string">"_search&amp;pretty"</span>,</span><br><span class="line">        <span class="string">"_score"</span>: <span class="number">0.5753642</span>,</span><br><span class="line">        <span class="string">"_source"</span>: &#123;</span><br><span class="line">          <span class="string">"query"</span>: &#123;</span><br><span class="line">            <span class="string">"multi_match"</span>: &#123;</span><br><span class="line">              <span class="string">"query"</span>: <span class="string">"中国"</span>,</span><br><span class="line">              <span class="string">"fields"</span>: []</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span>: <span class="string">"accounts"</span>,</span><br><span class="line">        <span class="string">"_type"</span>: <span class="string">"person"</span>,</span><br><span class="line">        <span class="string">"_id"</span>: <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span>: <span class="number">0.2876821</span>,</span><br><span class="line">        <span class="string">"_source"</span>: &#123;</span><br><span class="line">          <span class="string">"user_name"</span>: <span class="string">"李四"</span>,</span><br><span class="line">          <span class="string">"balance"</span>: <span class="number">110</span>,</span><br><span class="line">          <span class="string">"desc"</span>: <span class="string">"李四是个中国人"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>multi_match 是match的作为在多个字段运行相同操作的一个命令，fields指定哪些字段（如果指定字段为空数组，表示查询所有字段），query指定要匹配查找的字符串</li>
+</ul>
+<h4 id="返回数量限制和字段限制"><a href="#返回数量限制和字段限制" class="headerlink" title="返回数量限制和字段限制"></a>返回数量限制和字段限制</h4><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search?_source=user_name,balance</span></span><br></pre></td></tr></table></figure></p>
+<p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">		<span class="string">"match"</span> : &#123;</span><br><span class="line">			<span class="string">"desc"</span> : <span class="string">"中国"</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"size"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">"from"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">"_source"</span>: [ <span class="string">"user_name"</span> , <span class="string">"balance"</span> ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>size，返回条数<br>from，从第几个开始返回<br>_source，返回信息的字段</p>
+<h4 id="不想要其它元数据信息"><a href="#不想要其它元数据信息" class="headerlink" title="不想要其它元数据信息"></a>不想要其它元数据信息</h4><p>GET请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_source</span></span><br></pre></td></tr></table></figure></p>
+<p>POST请求</p>
+<p>_source是可以被禁用的，不过禁用之后有些功能不能再使用</p>
+<ul>
+<li>update api:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-update.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-update.html</a></li>
+<li><u>highlighting</u>：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3/search-request-highlighting.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/2.3/search-request-highlighting.html</a></li>
+<li>索引重建、修改mapping以及分词、索引升级</li>
+<li>debug查询或者聚合语句</li>
+<li>索引自动修复</li>
+</ul>
+<h4 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h4><p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"filter"</span>: [&#123;</span><br><span class="line">				<span class="string">"range"</span>: &#123;</span><br><span class="line">					<span class="string">"balance"</span>: &#123;</span><br><span class="line">						<span class="string">"gte"</span>:  <span class="number">110</span>,</span><br><span class="line">						<span class="string">"lt"</span>:   <span class="number">200</span></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="查找多个精确值"><a href="#查找多个精确值" class="headerlink" title="查找多个精确值"></a>查找多个精确值</h4><p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"filter"</span>: [&#123;</span><br><span class="line">				<span class="string">"terms"</span>: &#123;</span><br><span class="line">					<span class="string">"balance"</span>: [<span class="number">100</span>,<span class="number">110</span>]</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="AND查询"><a href="#AND查询" class="headerlink" title="AND查询"></a>AND查询</h4><p>POST 请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"bool"</span>: &#123;</span><br><span class="line">			<span class="string">"must"</span>: [</span><br><span class="line">				<span class="comment">// &#123;"terms": &#123;"balance": [100,110]&#125;&#125;</span></span><br><span class="line">				&#123;<span class="string">"match"</span>: &#123;<span class="string">"desc"</span>:<span class="string">"中国"</span>&#125;&#125;,</span><br><span class="line">				&#123;<span class="string">"match"</span>: &#123;<span class="string">"user_name"</span>: <span class="string">"李四"</span>&#125;&#125;</span><br><span class="line">			]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="OR查询"><a href="#OR查询" class="headerlink" title="OR查询"></a>OR查询</h4><p>两个关键字中间加一个空格，就表示or查询</p>
+<p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/_search</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"query"</span>: &#123;</span><br><span class="line">        <span class="string">"match"</span> : &#123;</span><br><span class="line">            <span class="string">"desc"</span> : <span class="string">"中国 李四"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="更新及局部更新"><a href="#更新及局部更新" class="headerlink" title="更新及局部更新"></a>更新及局部更新</h4><p>url中带/_update，并且再post参数doc中设置要修改的字段数据</p>
+<p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/accounts/person/1/_update</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"doc"</span>: &#123;</span><br><span class="line">        <span class="string">"desc"</span> : <span class="string">"张三是个外国人吗"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="去掉文档中的某个字段"><a href="#去掉文档中的某个字段" class="headerlink" title="去掉文档中的某个字段"></a>去掉文档中的某个字段</h4><p>需要将每个文档读取出来，然后去掉不需要的字段，重新导入进去</p>
+<h4 id="version版本号"><a href="#version版本号" class="headerlink" title="version版本号"></a>version版本号</h4><p>当我们插入一条文档数据的时候，都会有一个叫_version的字段返回，表示当前文档更新的次数，保证程序的线程不会覆盖掉另一个线程所做的修改</p>
+<p>使用的时候就是在url后面加上版本号的参数version=123</p>
+<p>例如：<code>http://192.168.0.144:9200/accounts/person/1?version=10&amp;version_type=external</code>// 使用外部版本号<br><code>http://192.168.0.144:9200/accounts/person/1?version=10</code>// 非外部版本号</p>
+<p>对使用内部版本编号来说，如果更新数据的时候，版本号与原版本号不一致，就会导致写入失败</p>
+<p>对使用外部版本编号来说，如果更新数据的时候，传递进去的版本号比数据本来的版本号小或相等，都会导致写入失败</p>
+<h4 id="给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据"><a href="#给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据" class="headerlink" title="给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据"></a>给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据</h4><p>POST请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_aliases</span></span><br><span class="line">&#123;  </span><br><span class="line">    <span class="string">"actions"</span>: [  </span><br><span class="line">        &#123; <span class="string">"add"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;  </span><br><span class="line">    ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用的时候都使用别名，方便以后的数据字段增删改，索引都要添加版本号，方便以后修改索引字段的时候的标识</p>
+<p>删除,并添加另一个索引别名<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.0.144:9200/_aliases</span></span><br><span class="line">&#123;  </span><br><span class="line">    <span class="string">"actions"</span>: [  </span><br><span class="line">        &#123; <span class="string">"remove"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;,  </span><br><span class="line">        &#123; <span class="string">"add"</span>: &#123;  </span><br><span class="line">            <span class="string">"alias"</span>: <span class="string">"my_accounts2"</span>,  </span><br><span class="line">            <span class="string">"index"</span>: <span class="string">"accounts"</span>  </span><br><span class="line">        &#125;&#125;  </span><br><span class="line">    ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="给索引中的字段新增一个type类型-以前的type类型是不可以修改的，只能新增"><a href="#给索引中的字段新增一个type类型-以前的type类型是不可以修改的，只能新增" class="headerlink" title="给索引中的字段新增一个type类型,以前的type类型是不可以修改的，只能新增"></a>给索引中的字段新增一个type类型,以前的type类型是不可以修改的，只能新增</h4><p>PUT请求<br><a href="http://192.168.0.144:9200/accounts_v1/person/_mapping" target="_blank" rel="noopener">http://192.168.0.144:9200/accounts_v1/person/_mapping</a><br>{<br>    “person”: {<br>        “properties”: {<br>            “created”: {<br>                “type”: “multi_field”,<br>                “fields”: {<br>                    “created”: {“type”: “date”},<br>                    “date”: {“type”: “string”}<br>                }<br>            }<br>        }<br>    }<br>}<br>报错：”No handler for type [multi_field] declared on field [created]”</p>
+<p>好像不能用</p>
+<h3 id="Java调用ElasticSearch"><a href="#Java调用ElasticSearch" class="headerlink" title="Java调用ElasticSearch"></a>Java调用ElasticSearch</h3><p>导入Rest jar包<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;rest&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;5.5.3&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="建立连接并尝试调用"><a href="#建立连接并尝试调用" class="headerlink" title="建立连接并尝试调用"></a>建立连接并尝试调用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.http.Header;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpHost;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.message.BasicHeader;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.nio.entity.NStringEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.util.EntityUtils;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.Response;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.RestClient;</span><br><span class="line"><span class="keyword">import</span> org.junit.After;</span><br><span class="line"><span class="keyword">import</span> org.junit.Before;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientTest</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> RestClient restClient;</span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        restClient = RestClient.builder(</span><br><span class="line">                <span class="keyword">new</span> HttpHost(<span class="string">"192.168.0.144"</span>, <span class="number">9200</span>, <span class="string">"http"</span>),</span><br><span class="line">                <span class="keyword">new</span> HttpHost(<span class="string">"192.168.0.247"</span>, <span class="number">9200</span>, <span class="string">"http"</span>))</span><br><span class="line">                .setDefaultHeaders(<span class="keyword">new</span> Header[]&#123;<span class="keyword">new</span> BasicHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/json; charset=utf8"</span>)&#125;).build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@After</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            restClient.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGet</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Response response = restClient.performRequest(<span class="string">"GET"</span>, <span class="string">"/"</span>, Collections.singletonMap(<span class="string">"pretty"</span>, <span class="string">"true"</span>));</span><br><span class="line">        System.out.println(EntityUtils.toString(response.getEntity()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"evaluate-platform1"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"jzg-evaluate-platform-test"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"-Med_v-XQ-u-jkGZn19gBQ"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"6.4.2"</span>,</span><br><span class="line">    <span class="string">"build_flavor"</span> : <span class="string">"default"</span>,</span><br><span class="line">    <span class="string">"build_type"</span> : <span class="string">"tar"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"04711c2"</span>,</span><br><span class="line">    <span class="string">"build_date"</span> : <span class="string">"2018-09-26T13:34:09.098244Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="keyword">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"7.4.0"</span>,</span><br><span class="line">    <span class="string">"minimum_wire_compatibility_version"</span> : <span class="string">"5.6.0"</span>,</span><br><span class="line">    <span class="string">"minimum_index_compatibility_version"</span> : <span class="string">"5.0.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="验证某个文档-索引是否存在"><a href="#验证某个文档-索引是否存在" class="headerlink" title="验证某个文档/索引是否存在"></a>验证某个文档/索引是否存在</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHead</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	<span class="comment">//Response response = restClient.performRequest("HEAD","/accounts",Collections.&lt;String,String&gt;emptyMap());</span></span><br><span class="line">	Response response = restClient.performRequest(<span class="string">"HEAD"</span>, <span class="string">"/accounts/person/111"</span>, Collections.&lt;String, String&gt;emptyMap());</span><br><span class="line">	System.out.println(response.getStatusLine().getReasonPhrase().equals(<span class="string">"OK"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="删除指定筛选条件的文档数据"><a href="#删除指定筛选条件的文档数据" class="headerlink" title="删除指定筛选条件的文档数据"></a>删除指定筛选条件的文档数据</h4><p>根据查询条件删除数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">	sb.append(<span class="string">"&#123;\"query\": &#123;\"match\" : &#123;\"user_name\" : \"wangwu\"&#125;&#125;&#125;"</span>);</span><br><span class="line">	HttpEntity entity = <span class="keyword">new</span> NStringEntity(sb.toString());</span><br><span class="line">	Response response = restClient.performRequest(<span class="string">"POST"</span>, <span class="string">"/my_accounts/person/_delete_by_query?pretty"</span>, Collections.emptyMap(), entity);</span><br><span class="line">	System.out.println(EntityUtils.toString(response.getEntity()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">20</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">"total"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"deleted"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"batches"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"version_conflicts"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"noops"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"retries"</span> : &#123;</span><br><span class="line">    <span class="string">"bulk"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"search"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"throttled_millis"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"requests_per_second"</span> : -<span class="number">1.0</span>,</span><br><span class="line">  <span class="string">"throttled_until_millis"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"failures"</span> : [ ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>求鼓励，求支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/webzfbgetmsgimg.jpg" alt="menggl 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+          
+            <a href="/tags/搜索引擎/" rel="tag"># 搜索引擎</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/29/2018-10-29服务启动异常整理/" rel="next" title="服务启动异常整理">
+                <i class="fa fa-chevron-left"></i> 服务启动异常整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">menggl</p>
+              <p class="site-description motion-element" itemprop="description">以身为棋，胜天半子</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">86</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">安装ElasticSearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch相关参数配置"><span class="nav-number">2.</span> <span class="nav-text">elasticsearch相关参数配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动可能报错"><span class="nav-number">3.</span> <span class="nav-text">启动可能报错</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#异常错误一"><span class="nav-number">3.1.</span> <span class="nav-text">异常错误一</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一个异常，文件描述符限制太小"><span class="nav-number">3.1.1.</span> <span class="nav-text">第一个异常，文件描述符限制太小</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二个异常"><span class="nav-number">3.1.2.</span> <span class="nav-text">第二个异常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三个异常-用户创建线程数量修改"><span class="nav-number">3.1.3.</span> <span class="nav-text">第三个异常 用户创建线程数量修改</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第四个异常"><span class="nav-number">3.1.4.</span> <span class="nav-text">第四个异常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#直接使用"><span class="nav-number">3.1.5.</span> <span class="nav-text">直接使用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常错误二"><span class="nav-number">3.2.</span> <span class="nav-text">异常错误二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动时报已杀死"><span class="nav-number">3.3.</span> <span class="nav-text">启动时报已杀死!</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ElasticSearch-Head安装"><span class="nav-number">4.</span> <span class="nav-text">ElasticSearch Head安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引添加删除查询等操作"><span class="nav-number">5.</span> <span class="nav-text">索引添加删除查询等操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据类型"><span class="nav-number">5.1.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分词器"><span class="nav-number">5.2.</span> <span class="nav-text">分词器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加IK分词器"><span class="nav-number">5.3.</span> <span class="nav-text">添加IK分词器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看集群健康状态"><span class="nav-number">5.4.</span> <span class="nav-text">查看集群健康状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加索引"><span class="nav-number">5.5.</span> <span class="nav-text">添加索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除索引"><span class="nav-number">5.6.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加索引及类型"><span class="nav-number">5.7.</span> <span class="nav-text">添加索引及类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改索引的配置"><span class="nav-number">5.8.</span> <span class="nav-text">修改索引的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找索引index或type的数据结构"><span class="nav-number">5.9.</span> <span class="nav-text">查找索引index或type的数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找所有的索引"><span class="nav-number">5.10.</span> <span class="nav-text">查找所有的索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加索引数据"><span class="nav-number">5.11.</span> <span class="nav-text">添加索引数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加修改文档时的版本号控制"><span class="nav-number">5.12.</span> <span class="nav-text">添加修改文档时的版本号控制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#内部版本号"><span class="nav-number">5.12.1.</span> <span class="nav-text">内部版本号</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#外部版本控制"><span class="nav-number">5.12.2.</span> <span class="nav-text">外部版本控制</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找id是1的信息"><span class="nav-number">5.13.</span> <span class="nav-text">查找id是1的信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本查询"><span class="nav-number">5.14.</span> <span class="nav-text">基本查询</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#查询文档是否存在"><span class="nav-number">5.14.1.</span> <span class="nav-text">查询文档是否存在</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查询type所有数据"><span class="nav-number">5.14.2.</span> <span class="nav-text">查询type所有数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#单个字段上查询"><span class="nav-number">5.14.3.</span> <span class="nav-text">单个字段上查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#多个字段上查询"><span class="nav-number">5.14.4.</span> <span class="nav-text">多个字段上查询</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#返回数量限制和字段限制"><span class="nav-number">5.15.</span> <span class="nav-text">返回数量限制和字段限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不想要其它元数据信息"><span class="nav-number">5.16.</span> <span class="nav-text">不想要其它元数据信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#范围查询"><span class="nav-number">5.17.</span> <span class="nav-text">范围查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找多个精确值"><span class="nav-number">5.18.</span> <span class="nav-text">查找多个精确值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AND查询"><span class="nav-number">5.19.</span> <span class="nav-text">AND查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OR查询"><span class="nav-number">5.20.</span> <span class="nav-text">OR查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新及局部更新"><span class="nav-number">5.21.</span> <span class="nav-text">更新及局部更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#去掉文档中的某个字段"><span class="nav-number">5.22.</span> <span class="nav-text">去掉文档中的某个字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#version版本号"><span class="nav-number">5.23.</span> <span class="nav-text">version版本号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据"><span class="nav-number">5.24.</span> <span class="nav-text">给索引添加同义词（别名），以后生产环境上也尽量都使用别名访问数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#给索引中的字段新增一个type类型-以前的type类型是不可以修改的，只能新增"><span class="nav-number">5.25.</span> <span class="nav-text">给索引中的字段新增一个type类型,以前的type类型是不可以修改的，只能新增</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java调用ElasticSearch"><span class="nav-number">6.</span> <span class="nav-text">Java调用ElasticSearch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#建立连接并尝试调用"><span class="nav-number">6.1.</span> <span class="nav-text">建立连接并尝试调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#验证某个文档-索引是否存在"><span class="nav-number">6.2.</span> <span class="nav-text">验证某个文档/索引是否存在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除指定筛选条件的文档数据"><span class="nav-number">6.3.</span> <span class="nav-text">删除指定筛选条件的文档数据</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">menggl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
