@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次虚拟机内存泄漏问题跟踪及解决">
 <meta property="og:url" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/index.html">
-<meta property="og:site_name" content="枫树林">
+<meta property="og:site_name" content="HEXO">
 <meta property="og:description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。  使用jmap查看哪个对象占用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/tomcat版本.png">
@@ -132,7 +132,7 @@
 
 
 
-  <title>记一次虚拟机内存泄漏问题跟踪及解决 | 枫树林</title>
+  <title>记一次虚拟机内存泄漏问题跟踪及解决 | HEXO</title>
   
 
 
@@ -162,7 +162,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">枫树林</span>
+        <span class="site-title">HEXO</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -282,7 +282,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="枫树林">
+      <meta itemprop="name" content="HEXO">
     </span>
 
     
@@ -509,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -531,7 +531,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">86</span>
+                  <span class="site-state-item-count">87</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
