@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="redis,分布式锁," />
+  <meta name="keywords" content="分布式锁,redis," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="redis实现分布式锁redis分布式锁是通过setNx，getset原子性操作实现的 基本流程是：  使用setNx命令给给定的锁Key（比如要给OrderNo=1234加锁，key值就为lock_1234）设置值（System.currentTimeMillis()+UUID） 如果设置成功了，就表明加锁成功 如果设置失败了，就表明有其它线程在占用该锁，获取占用锁线程设置的值（System.c">
-<meta name="keywords" content="redis,分布式锁">
+<meta name="keywords" content="分布式锁,redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis实现分布式锁">
 <meta property="og:url" content="http://menggl.github.io/2018/05/17/2018-05-17redis实现分布式锁/index.html">
@@ -417,9 +417,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
-          
             <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
           
         </div>
       

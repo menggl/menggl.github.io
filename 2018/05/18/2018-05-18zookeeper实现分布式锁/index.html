@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="分布式锁,zookeeper,curator," />
+  <meta name="keywords" content="zookeeper,分布式锁,curator," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="使用zookeeper实现分布式锁可以完美解决Redis实现分布式锁带来的弊端 基本流程：  往zookeeper中的某个永久节点上创建一个临时节点 判断创建的临时节点是否是最小的节点 如果是最小的节点，说明当前节点拿到了锁 如果不是最小节点，监听当前节点的上一个节点，如果上一个节点被删除，触发当前节点的线程去获取锁  下面是zookeeper实现分布式锁的具体代码逻辑 1234567891011">
-<meta name="keywords" content="分布式锁,zookeeper,curator">
+<meta name="keywords" content="zookeeper,分布式锁,curator">
 <meta property="og:type" content="article">
 <meta property="og:title" content="zookeeper实现分布式锁和热备及dubbo加解锁服务">
 <meta property="og:url" content="http://menggl.github.io/2018/05/18/2018-05-18zookeeper实现分布式锁/index.html">
@@ -406,9 +406,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
-          
             <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+            <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
           
             <a href="/tags/curator/" rel="tag"># curator</a>
           
