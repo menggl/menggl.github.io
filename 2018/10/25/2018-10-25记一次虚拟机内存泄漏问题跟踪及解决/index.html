@@ -79,23 +79,24 @@
 
 
 
-<meta name="description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。  使用jmap查看哪个对象占用">
+<meta name="description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本  使用jstat命令查看虚拟机内存的运行状况  从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对">
 <meta name="keywords" content="dubbo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次虚拟机内存泄漏问题跟踪及解决">
 <meta property="og:url" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/index.html">
 <meta property="og:site_name" content="HEXO">
-<meta property="og:description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。  使用jmap查看哪个对象占用">
+<meta property="og:description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本  使用jstat命令查看虚拟机内存的运行状况  从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/tomcat版本.png">
+<meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/内存泄漏.png">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/对象占用内存字节大小.png">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/内存泄漏对象.png">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/内存不再泄漏.png">
 <meta property="og:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/Finalizer守护线程.png">
-<meta property="og:updated_time" content="2018-10-26T01:36:56.130Z">
+<meta property="og:updated_time" content="2019-02-11T02:01:18.504Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次虚拟机内存泄漏问题跟踪及解决">
-<meta name="twitter:description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。  使用jmap查看哪个对象占用">
+<meta name="twitter:description" content="在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤 java及tomcat版本  使用jstat命令查看虚拟机内存的运行状况  从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对">
 <meta name="twitter:image" content="http://menggl.github.io/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/tomcat版本.png">
 
 
@@ -361,9 +362,14 @@
 
       
         <p>在最近的一次线上部署项目中，发现有一个部署的tomcat内存一直在增长，第一感觉就是内存泄漏了，然后各种查看虚拟机的运行状态，终于将问题解决了，下面记录一下我解决的方法和步骤</p>
-<p>java及tomcat版本<br><img src="/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/tomcat版本.png" title="} 1. 使用jstat命令查看虚拟机内存的运行状况 {% asset_img 内存泄漏.png"><br>从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。</p>
-<ol start="2">
-<li>使用jmap查看哪个对象占用空间最多<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -histo [进程ID] &gt; <span class="class"><span class="keyword">class</span>.<span class="title">txt</span></span></span><br></pre></td></tr></table></figure>
+<p>java及tomcat版本<br><img src="/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/tomcat版本.png"></p>
+<ol>
+<li><p>使用jstat命令查看虚拟机内存的运行状况</p>
+<img src="/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/内存泄漏.png">
+<p>从图上我们发现，eden区一直在稳定的增长，增长到100M的时候就会发生YGC，S0,S0中的对象就行复制拷贝，YGC之后M中的值也在变化，说明有对象保存在常量池中。</p>
+</li>
+<li><p>使用jmap查看哪个对象占用空间最多</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -histo [进程ID] &gt; <span class="class"><span class="keyword">class</span>.<span class="title">txt</span></span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <img src="/2018/10/25/2018-10-25记一次虚拟机内存泄漏问题跟踪及解决/对象占用内存字节大小.png">
@@ -509,7 +515,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -531,7 +537,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-count">89</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -568,7 +574,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

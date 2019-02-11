@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="mvc:default-servlet-handler/��������web����ĵ��ù����У����Ƕ����ҵ���Ӧ��servlet��Ȼ���ٴ�servlet�л�ȡ������ ���ھ�̬��Դ���ݣ����ǲ�ϣ������spring��dispatcherServlet����Ϊ�����servlet�����Ҳ����Ӧ��*.js��RequestMappi">
+<meta name="description" content="mvc:default-servlet-handler/的作用在web服务的调用过程中，我们都会找到对应的servlet，然后再从servlet中获取到数据 对于静态资源数据，我们不希望它走spring的dispatcherServlet，因为从这个servlet中是找不多对应的*.js等RequestMapping对应的请求Controller的 那么我们可以通过下面的三种方法将将静态资源访问从">
 <meta name="keywords" content="Spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring�����ܽ�">
+<meta property="og:title" content="Spring技术总结">
 <meta property="og:url" content="http://menggl.github.io/2018/02/24/2018-02-24Spring技术总结/index.html">
 <meta property="og:site_name" content="HEXO">
-<meta property="og:description" content="mvc:default-servlet-handler/��������web����ĵ��ù����У����Ƕ����ҵ���Ӧ��servlet��Ȼ���ٴ�servlet�л�ȡ������ ���ھ�̬��Դ���ݣ����ǲ�ϣ������spring��dispatcherServlet����Ϊ�����servlet�����Ҳ����Ӧ��*.js��RequestMappi">
+<meta property="og:description" content="mvc:default-servlet-handler/的作用在web服务的调用过程中，我们都会找到对应的servlet，然后再从servlet中获取到数据 对于静态资源数据，我们不希望它走spring的dispatcherServlet，因为从这个servlet中是找不多对应的*.js等RequestMapping对应的请求Controller的 那么我们可以通过下面的三种方法将将静态资源访问从">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-30T03:55:17.478Z">
+<meta property="og:updated_time" content="2018-11-22T06:08:30.806Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring�����ܽ�">
-<meta name="twitter:description" content="mvc:default-servlet-handler/��������web����ĵ��ù����У����Ƕ����ҵ���Ӧ��servlet��Ȼ���ٴ�servlet�л�ȡ������ ���ھ�̬��Դ���ݣ����ǲ�ϣ������spring��dispatcherServlet����Ϊ�����servlet�����Ҳ����Ӧ��*.js��RequestMappi">
+<meta name="twitter:title" content="Spring技术总结">
+<meta name="twitter:description" content="mvc:default-servlet-handler/的作用在web服务的调用过程中，我们都会找到对应的servlet，然后再从servlet中获取到数据 对于静态资源数据，我们不希望它走spring的dispatcherServlet，因为从这个servlet中是找不多对应的*.js等RequestMapping对应的请求Controller的 那么我们可以通过下面的三种方法将将静态资源访问从">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Spring�����ܽ� | HEXO</title>
+  <title>Spring技术总结 | HEXO</title>
   
 
 
@@ -284,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring�����ܽ�</h1>
+          <h1 class="post-title" itemprop="name headline">Spring技术总结</h1>
         
 
         <div class="post-meta">
@@ -319,8 +319,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/�ܽ�/" itemprop="url" rel="index">
-                    <span itemprop="name">�ܽ�</span>
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
                   </a>
                 </span>
 
@@ -354,39 +354,39 @@
       
 
       
-        <h3 id="mvc-default-servlet-handler-������"><a href="#mvc-default-servlet-handler-������" class="headerlink" title="mvc:default-servlet-handler/������"></a><a href="mvc:default-servlet-handler/" target="_blank" rel="noopener">mvc:default-servlet-handler/</a>������</h3><p>��web����ĵ��ù����У����Ƕ����ҵ���Ӧ��servlet��Ȼ���ٴ�servlet�л�ȡ������</p>
-<p>���ھ�̬��Դ���ݣ����ǲ�ϣ������spring��dispatcherServlet����Ϊ�����servlet�����Ҳ����Ӧ��*.js��RequestMapping��Ӧ������Controller��</p>
-<p>��ô���ǿ���ͨ����������ַ���������̬��Դ���ʴ�spring��dispatcherServlet���޳�����</p>
+        <h3 id="mvc-default-servlet-handler-的作用"><a href="#mvc-default-servlet-handler-的作用" class="headerlink" title="mvc:default-servlet-handler/的作用"></a><a href="mvc:default-servlet-handler/" target="_blank" rel="noopener">mvc:default-servlet-handler/</a>的作用</h3><p>在web服务的调用过程中，我们都会找到对应的servlet，然后再从servlet中获取到数据</p>
+<p>对于静态资源数据，我们不希望它走spring的dispatcherServlet，因为从这个servlet中是找不多对应的*.js等RequestMapping对应的请求Controller的</p>
+<p>那么我们可以通过下面的三种方法将将静态资源访问从spring的dispatcherServlet中剔除出来</p>
 <ol>
-<li>����tomcat��defaultServlet������̬�ļ�<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;     </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;    </span><br><span class="line">    &lt;url-pattern&gt;*.jpg&lt;/url-pattern&gt;       </span><br><span class="line">&lt;/servlet-mapping&gt;      </span><br><span class="line">&lt;servlet-mapping&gt;         </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;      </span><br><span class="line">    &lt;url-pattern&gt;*.js&lt;/url-pattern&gt;      </span><br><span class="line">&lt;/servlet-mapping&gt;      </span><br><span class="line">&lt;servlet-mapping&gt;          </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;         </span><br><span class="line">    &lt;url-pattern&gt;*.css&lt;/url-pattern&gt;        </span><br><span class="line">&lt;/servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+<li>激活tomcat的defaultServlet来处理静态文件<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;     </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;    </span><br><span class="line">    &lt;url-pattern&gt;*.jpg&lt;/url-pattern&gt;       </span><br><span class="line">&lt;/servlet-mapping&gt;      </span><br><span class="line">&lt;servlet-mapping&gt;         </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;      </span><br><span class="line">    &lt;url-pattern&gt;*.js&lt;/url-pattern&gt;      </span><br><span class="line">&lt;/servlet-mapping&gt;      </span><br><span class="line">&lt;servlet-mapping&gt;          </span><br><span class="line">    &lt;servlet-name&gt;default&lt;/servlet-name&gt;         </span><br><span class="line">    &lt;url-pattern&gt;*.css&lt;/url-pattern&gt;        </span><br><span class="line">&lt;/servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>��DispatcherServlet����ǰ���������ľ�̬��Դ���ʶ�Ӧ��servletΪ����Ĭ�ϵ�defaultServlet�������Ϳ�����defaultServlet�����أ��Ͳ������Spring��</p>
-<p>ע�⣺</p>
+<p>在DispatcherServlet配置前面添加上面的静态资源访问对应的servlet为容器默认的defaultServlet，这样就可以让defaultServlet先拦截，就不会进入Spring了</p>
+<p>注意：</p>
 <ul>
-<li>Tomcat, Jetty, JBoss, and GlassFish  Ĭ�� Servlet������ – “default”</li>
-<li>Google App Engine Ĭ�� Servlet������ – “_ah_default”</li>
-<li>Resin Ĭ�� Servlet������ – “resin-file”</li>
-<li>WebLogic Ĭ�� Servlet������  – “FileServlet”</li>
-<li>WebSphere  Ĭ�� Servlet������ – “SimpleFileServlet” </li>
+<li>Tomcat, Jetty, JBoss, and GlassFish  默认 Servlet的名字 – “default”</li>
+<li>Google App Engine 默认 Servlet的名字 – “_ah_default”</li>
+<li>Resin 默认 Servlet的名字 – “resin-file”</li>
+<li>WebLogic 默认 Servlet的名字  – “FileServlet”</li>
+<li>WebSphere  默认 Servlet的名字 – “SimpleFileServlet” </li>
 </ul>
 <ol start="2">
-<li>��spring3.0.4�Ժ�汾�ṩ��mvc:resources</li>
+<li>在spring3.0.4以后版本提供了mvc:resources</li>
 </ol>
-<p>ʹ�÷���<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- �Ծ�̬��Դ�ķ������� --&gt;</span><br><span class="line">&lt;mvc:resources mapping=<span class="string">"/images/**"</span> location=<span class="string">"/images/"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
-<p>�����ӳ�䵽ResourceHttpRequestHandler�н��д���</p>
-<p>location����ָ����̬��Դ��λ�ã�������WebApp��Ŀ¼�£�jar�����棬�����Ϳ��԰Ѿ�̬�ļ�ѹ����jar����ȥ<br>cache-period ����ʹ��̬��Դ����web cache</p>
-<p>�����������Ĵ��󣬿�����û������&lt;mvc:annotation-driven /&gt;��ԭ��<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WARNING: No mapping found <span class="keyword">for</span> HTTP request with URI [/mvc/user/findUser/lisi/<span class="number">770</span>] in DispatcherServlet with name <span class="string">'springMVC'</span></span><br></pre></td></tr></table></figure></p>
-<p>ʹ��mvc:resources���ã������õ�mapping����URI���浽SimpleUrlHandlerMapping�е�urlMap�У�keyΪ���õ�mapping��valueΪResourceHttpRequestHandler</p>
-<p>�����ͰѶԾ�̬��Դ�ķ��ʴ�HandlerMappingת����ResourceHttpRequestHandler��ȥ�ˣ����Ծ�֧����classĿ¼��jar��Ŀ¼�ϵľ�̬��Դ����</p>
-<p>���⣬��Ҫ��SimpleUrlHandlerMapping����defaultHandler����Ϊ��̬��Դ��handler����Ĭ�ϵ�defaultHandler��defaultHandler����ResouceHttpRequestHandler���޸���defaultHandler���޷�����̬��Դ������</p>
+<p>使用方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 对静态资源的访问配置 --&gt;</span><br><span class="line">&lt;mvc:resources mapping=<span class="string">"/images/**"</span> location=<span class="string">"/images/"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个会映射到ResourceHttpRequestHandler中进行处理</p>
+<p>location可以指定静态资源的位置，可以是WebApp根目录下，jar包里面，这样就可以把静态文件压缩到jar包中去<br>cache-period 可以使静态资源进行web cache</p>
+<p>如果出现下面的错误，可能是没有配置&lt;mvc:annotation-driven /&gt;的原因<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WARNING: No mapping found <span class="keyword">for</span> HTTP request with URI [/mvc/user/findUser/lisi/<span class="number">770</span>] in DispatcherServlet with name <span class="string">'springMVC'</span></span><br></pre></td></tr></table></figure></p>
+<p>使用mvc:resources配置，把配置的mapping请求URI保存到SimpleUrlHandlerMapping中的urlMap中，key为配置的mapping，value为ResourceHttpRequestHandler</p>
+<p>这样就把对静态资源的访问从HandlerMapping转到了ResourceHttpRequestHandler中去了，所以就支持了class目录和jar包目录上的静态资源访问</p>
+<p>另外，不要对SimpleUrlHandlerMapping设置defaultHandler，因为静态资源的handler就是默认的defaultHandler，defaultHandler就是ResouceHttpRequestHandler，修改了defaultHandler就无法处理静态资源请求了</p>
 <ol start="3">
-<li>ʹ��<a href="mvc:default-servlet-handler/" target="_blank" rel="noopener">mvc:default-servlet-handler/</a></li>
+<li>使用<a href="mvc:default-servlet-handler/" target="_blank" rel="noopener">mvc:default-servlet-handler/</a></li>
 </ol>
-<p>���������<code>/**</code> ����ע�ᵽSimpleUrlHandlerMapping�е�urlMap�У��ѶԾ�̬�ļ���������HandlerMappingת��org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler��������</p>
-<p>�����DefaultServletHttpRequestHandlerʹ�õľ��Ǹ��������Լ�Ĭ�ϵ�Servlet</p>
-<p>���ServletHandler��ִ��˳�����£�<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Spring��Action����                        DefaultAnnotationHandlerMapping                           order=<span class="number">0</span></span><br><span class="line">mvc:resources��Դ����                     SimpleUrlHandlerMapping(ResourceHttpRequestHandler)       order=<span class="number">2147483646</span></span><br><span class="line">mvc:<span class="keyword">default</span>-servlet-handler��̬��Դ����   SimpleUrlHandlerMapping(DefaultServletHttpRequestHandler) order=<span class="number">2147483646</span></span><br></pre></td></tr></table></figure></p>
-<p>spring����ִ��orderֵС�ġ�����λabc.png��Դ�ļ���ʱ�򣬻���ͨ��DefaultAnnotationHandlerMapping���Ҵ��������϶��Ҳ�������ȥSimpleUrlHandlerMapping���ң�����֮ǰ���õ�ʱ�����õ���<code>/**</code>�������Ϳ϶��ܹ��ҵ������̬��Դ�ļ���</p>
+<p>这样将会把<code>/**</code> 请求注册到SimpleUrlHandlerMapping中的urlMap中，把对静态文件的请求由HandlerMapping转到org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler处理并返回</p>
+<p>而这个DefaultServletHttpRequestHandler使用的就是各个容器自己默认的Servlet</p>
+<p>多个ServletHandler的执行顺序如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Spring的Action请求                        DefaultAnnotationHandlerMapping                           order=<span class="number">0</span></span><br><span class="line">mvc:resources资源请求                     SimpleUrlHandlerMapping(ResourceHttpRequestHandler)       order=<span class="number">2147483646</span></span><br><span class="line">mvc:<span class="keyword">default</span>-servlet-handler静态资源请求   SimpleUrlHandlerMapping(DefaultServletHttpRequestHandler) order=<span class="number">2147483646</span></span><br></pre></td></tr></table></figure></p>
+<p>spring会先执行order值小的。当方位abc.png资源文件的时候，会先通过DefaultAnnotationHandlerMapping来找处理器，肯定找不到，再去SimpleUrlHandlerMapping中找，由于之前配置的时候配置的是<code>/**</code>，这样就肯定能够找到这个静态资源文件了</p>
 
       
     </div>
@@ -526,7 +526,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -548,7 +548,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-count">89</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -581,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-default-servlet-handler-������"><span class="nav-number">1.</span> <span class="nav-text">mvc:default-servlet-handler/������</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-default-servlet-handler-的作用"><span class="nav-number">1.</span> <span class="nav-text">mvc:default-servlet-handler/的作用</span></a></li></ol></div>
             
 
           </div>
@@ -601,7 +601,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
