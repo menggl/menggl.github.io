@@ -88,7 +88,8 @@
 <meta property="og:description" content="mysql返回更新成功条数设置mysql的连接参数：?useAffectedRows=true Mysql安装登陆官网，下载mysql安装包123https://dev.mysql.com/downloads/// 下载安装包MySQL Community Server wget &quot;https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-8.0.13-li">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2018/01/15/2018-01-15Mysql技术整理/查看线程运行情况.png">
-<meta property="og:updated_time" content="2018-11-21T11:19:13.828Z">
+<meta property="og:image" content="http://menggl.github.io/2018/01/15/2018-01-15Mysql技术整理/mysql登录无校验.png">
+<meta property="og:updated_time" content="2019-02-12T11:03:24.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mysql技术整理">
 <meta name="twitter:description" content="mysql返回更新成功条数设置mysql的连接参数：?useAffectedRows=true Mysql安装登陆官网，下载mysql安装包123https://dev.mysql.com/downloads/// 下载安装包MySQL Community Server wget &quot;https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-8.0.13-li">
@@ -395,6 +396,28 @@
 <li>ALL 全表扫描</li>
 </ul>
 <h4 id="使用profiles查看"><a href="#使用profiles查看" class="headerlink" title="使用profiles查看"></a>使用profiles查看</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show profiles</span><br><span class="line">show profile <span class="keyword">for</span> query query_id</span><br></pre></td></tr></table></figure>
+<h3 id="查看mysql的版本号"><a href="#查看mysql的版本号" class="headerlink" title="查看mysql的版本号"></a>查看mysql的版本号</h3><p>使用下面的命令：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --version</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动和停止mysql服务"><a href="#启动和停止mysql服务" class="headerlink" title="启动和停止mysql服务"></a>启动和停止mysql服务</h3><h4 id="停止服务"><a href="#停止服务" class="headerlink" title="停止服务"></a>停止服务</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql stop</span><br></pre></td></tr></table></figure>
+<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql stop</span><br></pre></td></tr></table></figure>
+<h3 id="Mysql忘记密码"><a href="#Mysql忘记密码" class="headerlink" title="Mysql忘记密码"></a>Mysql忘记密码</h3><ol>
+<li>需要修改my.cnf配置文件</li>
+</ol>
+<p>在[mysqld]下面追加两个配置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">skip-grant-tables</span><br><span class="line">skip-networking</span><br></pre></td></tr></table></figure></p>
+<p>如下图所示：<br><img src="/2018/01/15/2018-01-15Mysql技术整理/mysql登录无校验.png"></p>
+<ol start="2">
+<li>重启mysql服务，使用下面的命令</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql restart --defaults-file=/etc/mysql/my.cnf</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>直接使用mysql命令进入mysql命令终端</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msyql  然后直接回车</span><br></pre></td></tr></table></figure>
+<p>执行刷新语句<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush privileges</span><br></pre></td></tr></table></figure></p>
+<p>修改用户对应的密码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">'root'</span>@<span class="string">'localhost'</span> identified by <span class="string">'123'</span>;</span><br></pre></td></tr></table></figure></p>
+<ol start="4">
+<li>将skip-grant-tables和skip-networking配置注释掉，重启服务</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql restart --defaults-file=/etc/mysql/my.cnf</span><br></pre></td></tr></table></figure>
 <p>参考资料</p>
 <p><a href="https://juejin.im/post/59d83f1651882545eb54fc7e" target="_blank" rel="noopener">https://juejin.im/post/59d83f1651882545eb54fc7e</a></p>
 
@@ -538,7 +561,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -560,7 +583,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -593,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql返回更新成功条数"><span class="nav-number">1.</span> <span class="nav-text">mysql返回更新成功条数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mysql安装"><span class="nav-number">2.</span> <span class="nav-text">Mysql安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql性能优化"><span class="nav-number">3.</span> <span class="nav-text">mysql性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看系统运行状态"><span class="nav-number">3.1.</span> <span class="nav-text">查看系统运行状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取需要优化的sql语句"><span class="nav-number">3.2.</span> <span class="nav-text">获取需要优化的sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#查看运行的线程"><span class="nav-number">3.2.1.</span> <span class="nav-text">查看运行的线程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#开启慢查询日志"><span class="nav-number">3.2.2.</span> <span class="nav-text">开启慢查询日志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用mysqldumpslow工具对日志进行分析"><span class="nav-number">3.2.3.</span> <span class="nav-text">使用mysqldumpslow工具对日志进行分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析sql语句"><span class="nav-number">4.</span> <span class="nav-text">分析sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用explain查看执行计划"><span class="nav-number">4.1.</span> <span class="nav-text">使用explain查看执行计划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用profiles查看"><span class="nav-number">4.2.</span> <span class="nav-text">使用profiles查看</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql返回更新成功条数"><span class="nav-number">1.</span> <span class="nav-text">mysql返回更新成功条数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mysql安装"><span class="nav-number">2.</span> <span class="nav-text">Mysql安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql性能优化"><span class="nav-number">3.</span> <span class="nav-text">mysql性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看系统运行状态"><span class="nav-number">3.1.</span> <span class="nav-text">查看系统运行状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取需要优化的sql语句"><span class="nav-number">3.2.</span> <span class="nav-text">获取需要优化的sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#查看运行的线程"><span class="nav-number">3.2.1.</span> <span class="nav-text">查看运行的线程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#开启慢查询日志"><span class="nav-number">3.2.2.</span> <span class="nav-text">开启慢查询日志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用mysqldumpslow工具对日志进行分析"><span class="nav-number">3.2.3.</span> <span class="nav-text">使用mysqldumpslow工具对日志进行分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析sql语句"><span class="nav-number">4.</span> <span class="nav-text">分析sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用explain查看执行计划"><span class="nav-number">4.1.</span> <span class="nav-text">使用explain查看执行计划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用profiles查看"><span class="nav-number">4.2.</span> <span class="nav-text">使用profiles查看</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看mysql的版本号"><span class="nav-number">5.</span> <span class="nav-text">查看mysql的版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动和停止mysql服务"><span class="nav-number">6.</span> <span class="nav-text">启动和停止mysql服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#停止服务"><span class="nav-number">6.1.</span> <span class="nav-text">停止服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动服务"><span class="nav-number">6.2.</span> <span class="nav-text">启动服务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mysql忘记密码"><span class="nav-number">7.</span> <span class="nav-text">Mysql忘记密码</span></a></li></ol></div>
             
 
           </div>

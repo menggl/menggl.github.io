@@ -82,7 +82,7 @@
 <meta name="description" content="下载安装包安装hexo，首先要安装node环境 安装node环境下载windows的node安装包地址：https://nodejs.org/en/  ，选择LTS下载安装包  之后就是双击安装包进行安装，注意，选择安装内容的时候，选择【Add To Path】  安装完成之后可以进入命令行查看是否安装成功，输入如下命令：1node -v 之后我们就可以进行安装hexo了 安装hexo环境更换np">
 <meta name="keywords" content="node,hexo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简单安装node及hexo">
+<meta property="og:title" content="安装Node及Hexo">
 <meta property="og:url" content="http://menggl.github.io/2019/02/11/2019-02-11安装node及hexo/index.html">
 <meta property="og:site_name" content="HEXO">
 <meta property="og:description" content="下载安装包安装hexo，首先要安装node环境 安装node环境下载windows的node安装包地址：https://nodejs.org/en/  ，选择LTS下载安装包  之后就是双击安装包进行安装，注意，选择安装内容的时候，选择【Add To Path】  安装完成之后可以进入命令行查看是否安装成功，输入如下命令：1node -v 之后我们就可以进行安装hexo了 安装hexo环境更换np">
@@ -91,9 +91,9 @@
 <meta property="og:image" content="http://menggl.github.io/2019/02/11/2019-02-11安装node及hexo/安装node步骤1.png">
 <meta property="og:image" content="http://menggl.github.io/2019/02/11/2019-02-11安装node及hexo/查看当前的镜像地址.png">
 <meta property="og:image" content="http://menggl.github.io/2019/02/11/2019-02-11安装node及hexo/设置完之后查看镜像地址.png">
-<meta property="og:updated_time" content="2019-02-11T02:17:03.068Z">
+<meta property="og:updated_time" content="2019-02-11T02:48:06.791Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简单安装node及hexo">
+<meta name="twitter:title" content="安装Node及Hexo">
 <meta name="twitter:description" content="下载安装包安装hexo，首先要安装node环境 安装node环境下载windows的node安装包地址：https://nodejs.org/en/  ，选择LTS下载安装包  之后就是双击安装包进行安装，注意，选择安装内容的时候，选择【Add To Path】  安装完成之后可以进入命令行查看是否安装成功，输入如下命令：1node -v 之后我们就可以进行安装hexo了 安装hexo环境更换np">
 <meta name="twitter:image" content="http://menggl.github.io/2019/02/11/2019-02-11安装node及hexo/下载node安装装包.png">
 
@@ -131,7 +131,7 @@
 
 
 
-  <title>简单安装node及hexo | HEXO</title>
+  <title>安装Node及Hexo | HEXO</title>
   
 
 
@@ -289,7 +289,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">简单安装node及hexo</h1>
+          <h1 class="post-title" itemprop="name headline">安装Node及Hexo</h1>
         
 
         <div class="post-meta">
@@ -376,7 +376,13 @@
 <img src="/2019/02/11/2019-02-11安装node及hexo/查看当前的镜像地址.png">
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 临时设置成淘宝镜像地址</span></span><br><span class="line">npm --registry https:<span class="comment">//registry.npm.taobao.org install express</span></span><br><span class="line"><span class="comment">// 永久设置成淘宝镜像地址</span></span><br><span class="line">npm config set registry https:<span class="comment">//registry.npm.taobao.org</span></span><br></pre></td></tr></table></figure>
 <p>设置完成之后再查看镜像地址，变成了如下配置<br><img src="/2019/02/11/2019-02-11安装node及hexo/设置完之后查看镜像地址.png"></p>
-<p>开始安装hexo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo</span><br></pre></td></tr></table></figure></p>
+<p>安装hexo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 安装hexo</span></span><br><span class="line">npm install hexo -g</span><br></pre></td></tr></table></figure></p>
+<p>升级hexo<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 升级hexo</span></span><br><span class="line">npm update hexo -g</span><br></pre></td></tr></table></figure></p>
+<h4 id="hexo配置git地址"><a href="#hexo配置git地址" class="headerlink" title="hexo配置git地址"></a>hexo配置git地址</h4><p>在根目录里面有个themes文件夹，里面有个_config.yml文件，这个配置文件叫主题配置文件</p>
+<p>而在根目录下面，也有一个_config.yml文件，这个配置文件叫站点配置文件，在文件末尾，修改配置如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">type: git</span><br><span class="line">repo: 这里填入你之前在GitHub上创建仓库的完整路径，记得加上 .git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure></p>
+<h4 id="安装git部署插件"><a href="#安装git部署插件" class="headerlink" title="安装git部署插件"></a>安装git部署插件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>参考博客：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/26625249" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/26625249</a></p>
 
       
     </div>
@@ -514,7 +520,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -536,7 +542,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -569,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载安装包"><span class="nav-number">1.</span> <span class="nav-text">下载安装包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装node环境"><span class="nav-number">1.1.</span> <span class="nav-text">安装node环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装hexo环境"><span class="nav-number">1.2.</span> <span class="nav-text">安装hexo环境</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#淘宝npm"><span class="nav-number">1.2.1.</span> <span class="nav-text">淘宝npm</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cnpmjs"><span class="nav-number">1.2.2.</span> <span class="nav-text">cnpmjs</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载安装包"><span class="nav-number">1.</span> <span class="nav-text">下载安装包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装node环境"><span class="nav-number">1.1.</span> <span class="nav-text">安装node环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装hexo环境"><span class="nav-number">1.2.</span> <span class="nav-text">安装hexo环境</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#淘宝npm"><span class="nav-number">1.2.1.</span> <span class="nav-text">淘宝npm</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cnpmjs"><span class="nav-number">1.2.2.</span> <span class="nav-text">cnpmjs</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hexo配置git地址"><span class="nav-number">1.3.</span> <span class="nav-text">hexo配置git地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装git部署插件"><span class="nav-number">1.4.</span> <span class="nav-text">安装git部署插件</span></a></li></ol></li></ol></div>
             
 
           </div>
