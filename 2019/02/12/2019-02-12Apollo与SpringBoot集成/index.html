@@ -83,14 +83,16 @@
 <meta name="keywords" content="Apollo,SpringBoot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apollo与SpringBoot集成">
-<meta property="og:url" content="http://menggl.github.io/2018/03/20/2019-02-12Apollo与SpringBoot集成/index.html">
+<meta property="og:url" content="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/index.html">
 <meta property="og:site_name" content="HEXO">
 <meta property="og:description" content="背景在项目开发中，我们经常会遇到这么一种问题，就是开发、测试、线上环境连接的数据库、redis等参数配置都是不一样的，当我们在开发环境把项目开发完成之后，就需要将代码放到测试或者线上环境，由于不同环境的参数是不一样的，我们还得将配置文件修改一遍，这样很麻烦，现在出现一个可以动态配置不同环境参数变量的工具，apollo，可以很方便的就解决了我们遇到的难题。 Apollo是由携程框架部门研发的分布式配">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-12T10:57:51.171Z">
+<meta property="og:image" content="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/登录apollo管理后台界面.png">
+<meta property="og:updated_time" content="2019-02-13T11:20:47.826Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apollo与SpringBoot集成">
 <meta name="twitter:description" content="背景在项目开发中，我们经常会遇到这么一种问题，就是开发、测试、线上环境连接的数据库、redis等参数配置都是不一样的，当我们在开发环境把项目开发完成之后，就需要将代码放到测试或者线上环境，由于不同环境的参数是不一样的，我们还得将配置文件修改一遍，这样很麻烦，现在出现一个可以动态配置不同环境参数变量的工具，apollo，可以很方便的就解决了我们遇到的难题。 Apollo是由携程框架部门研发的分布式配">
+<meta name="twitter:image" content="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/登录apollo管理后台界面.png">
 
 
 
@@ -120,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="http://menggl.github.io/2018/03/20/2019-02-12Apollo与SpringBoot集成/"/>
+  <link rel="canonical" href="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/"/>
 
 
 
@@ -267,7 +269,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2018/03/20/2019-02-12Apollo与SpringBoot集成/">
+    <link itemprop="mainEntityOfPage" href="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="menggl">
@@ -296,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T12:39:04+08:00">
-                2018-03-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-12T12:39:04+08:00">
+                2019-02-12
               </time>
             
 
@@ -375,6 +377,38 @@
 <h5 id="启动apollo服务"><a href="#启动apollo服务" class="headerlink" title="启动apollo服务"></a>启动apollo服务</h5><p>由于apollo会在本地启动三个服务，分别会使用到8070,8080,8090三个端口，所以需要看看这三个端口是否被占用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lsof -i:<span class="number">8070</span></span><br><span class="line">lsof -i:<span class="number">8080</span></span><br><span class="line">lsof -i:<span class="number">8090</span></span><br></pre></td></tr></table></figure></p>
 <p>执行脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./demo.sh start</span><br></pre></td></tr></table></figure></p>
 <p>会出现下面的日志信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">==== starting service ====</span><br><span class="line">Service logging file is ./service/apollo-service.log</span><br><span class="line">Started [<span class="number">25980</span>]</span><br><span class="line">Waiting <span class="keyword">for</span> config service startup........</span><br><span class="line">Config service started. You may visit http:<span class="comment">//localhost:8080 for service status now!</span></span><br><span class="line">Waiting <span class="keyword">for</span> admin service startup...</span><br><span class="line">Admin service started</span><br><span class="line">==== starting portal ====</span><br><span class="line">Portal logging file is ./portal/apollo-portal.log</span><br><span class="line">Started [<span class="number">26217</span>]</span><br><span class="line">Waiting <span class="keyword">for</span> portal startup........</span><br><span class="line">Portal started. You can visit http:<span class="comment">//localhost:8070 now!</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="登录apollo"><a href="#登录apollo" class="headerlink" title="登录apollo"></a>登录apollo</h5><p>初始密码是apollo/admin</p>
+<h5 id="配置apollo"><a href="#配置apollo" class="headerlink" title="配置apollo"></a>配置apollo</h5><p>进入管理界面，如下图所示<br><img src="/2019/02/12/2019-02-12Apollo与SpringBoot集成/登录apollo管理后台界面.png"></p>
+<p>点击SampleApp进入AppId是SampleApp的管理界面</p>
+<h4 id="分布式环境下Apollo服务搭建"><a href="#分布式环境下Apollo服务搭建" class="headerlink" title="分布式环境下Apollo服务搭建"></a>分布式环境下Apollo服务搭建</h4><h4 id="Apollo客户端配置"><a href="#Apollo客户端配置" class="headerlink" title="Apollo客户端配置"></a>Apollo客户端配置</h4><h5 id="添加apollo-client对应的jar包"><a href="#添加apollo-client对应的jar包" class="headerlink" title="添加apollo-client对应的jar包"></a>添加apollo-client对应的jar包</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;com.ctrip.framework.apollo&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;apollo-client&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;1.1.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="在pom-xml中添加如下配置"><a href="#在pom-xml中添加如下配置" class="headerlink" title="在pom.xml中添加如下配置"></a>在pom.xml中添加如下配置</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;profiles&gt;</span><br><span class="line">	&lt;profile&gt;</span><br><span class="line">		&lt;id&gt;local&lt;/id&gt;</span><br><span class="line">		&lt;properties&gt;</span><br><span class="line">			&lt;!-- 分布式部署的时候，apollo-configservice和apollo-adminservice需要把自己的ip和端口号注册到Meta Server中，也就是apollo-configservice中 --&gt;</span><br><span class="line">			&lt;!-- Apollo客户端和Protal会从Meta Server获取所有会用到服务的Ip和端口号，然后就直接去访问所需服务。注意，服务的Ip和端口号必须能让Portal和客户端访问 --&gt;</span><br><span class="line">			&lt;apollo.meta&gt;http:<span class="comment">//localhost:8080&lt;/apollo.meta&gt;</span></span><br><span class="line">			&lt;apollo.appId&gt;template_portal&lt;/apollo.appId&gt;</span><br><span class="line">			&lt;apollo.cacheDir&gt;D:\apollo\data&lt;/apollo.cacheDir&gt;</span><br><span class="line">		&lt;/properties&gt;</span><br><span class="line">	&lt;/profile&gt;</span><br><span class="line">	&lt;profile&gt;</span><br><span class="line">		&lt;id&gt;dev&lt;/id&gt;</span><br><span class="line">		&lt;properties&gt;</span><br><span class="line">			&lt;apollo.meta&gt;http:<span class="comment">//ip:8080&lt;/apollo.meta&gt;</span></span><br><span class="line">			&lt;apollo.appId&gt;template_portal&lt;/apollo.appId&gt;</span><br><span class="line">			&lt;apollo.cacheDir&gt;D:\apollo\data&lt;/apollo.cacheDir&gt;</span><br><span class="line">		&lt;/properties&gt;</span><br><span class="line">		&lt;!-- 默认激活开发环境的参数配置，要想使用其它环境的参数配置，需要在mvn <span class="keyword">package</span>的时候指定 -Puat 或者 -Ppro --&gt;</span><br><span class="line">		&lt;activation&gt;</span><br><span class="line">			&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;</span><br><span class="line">		&lt;/activation&gt;</span><br><span class="line">	&lt;/profile&gt;</span><br><span class="line">	&lt;profile&gt;</span><br><span class="line">		&lt;id&gt;uat&lt;/id&gt;</span><br><span class="line">		&lt;properties&gt;</span><br><span class="line">			&lt;apollo.meta&gt;http:<span class="comment">//ip:8080&lt;/apollo.meta&gt;</span></span><br><span class="line">			&lt;apollo.appId&gt;template_portal&lt;/apollo.appId&gt;</span><br><span class="line">			&lt;apollo.cacheDir&gt;/opt/data/&lt;/apollo.cacheDir&gt;</span><br><span class="line">		&lt;/properties&gt;</span><br><span class="line">	&lt;/profile&gt;</span><br><span class="line">	&lt;profile&gt;</span><br><span class="line">		&lt;id&gt;pro&lt;/id&gt;</span><br><span class="line">		&lt;properties&gt;</span><br><span class="line">			&lt;apollo.meta&gt;http:<span class="comment">//ip1:8080,http://ip2:8080&lt;/apollo.meta&gt;</span></span><br><span class="line">			&lt;apollo.appId&gt;template_portal&lt;/apollo.appId&gt;</span><br><span class="line">			&lt;apollo.cacheDir&gt;/opt/data/&lt;/apollo.cacheDir&gt;</span><br><span class="line">		&lt;/properties&gt;</span><br><span class="line">	&lt;/profile&gt;</span><br><span class="line">&lt;/profiles&gt;</span><br></pre></td></tr></table></figure>
+<p>注意：configService和Meta Server基本上都在一个jvm中，不同环境(开发、测试、线上)对应的configService服务是不一样的，所以配置的meta server地址也是不一样的</p>
+<p>注意：如果configService服务注册到MetaServer服务的IP和端口号是内网地址，我们在外网拉取到内网IP和端口号是访问不通的，这个时候我们可以在启动时配置一下configService服务的外网IP和端口号：-Dapollo.configService=http://外网IP:端口号 ，通过这种方式，我们就可以直接去访问配置的服务拉取配置信息了</p>
+<p>注意：我们在配置了不同的环境下使用不同的配置参数，那么开发环境、仿真环境、线上环境需要在Jenkins启动打包的时候，需要配置上参数-Ppro或者-Puat，如果想使用本地缓存着的配置，使用参数配置：-Denv=Local</p>
+<p>如果在settings.xml中定义profile设置默认激活时的配置如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;activeProfiles&gt;  </span><br><span class="line">    &lt;activeProfile&gt;profileTest1&lt;/activeProfile&gt; </span><br><span class="line">	&lt;activeProfile&gt;profileTest2&lt;/activeProfile&gt;&lt;!-- 后面的参数值会覆盖前面的参数值，如果都配置了某个参数值的话 --&gt;</span><br><span class="line">&lt;/activeProfiles&gt;</span><br></pre></td></tr></table></figure></p>
+<p>关于profile具体配置可以参考博客：<a href="https://elim.iteye.com/blog/1900568" target="_blank" rel="noopener">https://elim.iteye.com/blog/1900568</a></p>
+<h5 id="敏感参数信息加密"><a href="#敏感参数信息加密" class="headerlink" title="敏感参数信息加密"></a>敏感参数信息加密</h5><ol>
+<li>首先需要一个加密用的字符串，salt字符串，最好长一点，比如ED3C9ADB0A53474098F594D0FD561E9E</li>
+</ol>
+<p>单独创建一个配置文件，比如encryptor.properties，这个配置文件是不会放到apollo上进行管理的</p>
+<p>里面的配置内容如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jasypt.encryptor.password=ED3C9ADB0A53474098F594D0FD561E9E</span><br></pre></td></tr></table></figure></p>
+<p>然后配置springboot加载这个配置文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PropertySource</span>(value = &#123;<span class="string">"classpath:prop/encryptor.properties"</span>&#125;, name = <span class="string">"encryptor.properties"</span>, ignoreResourceNotFound = <span class="keyword">false</span>)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebMvcConfigurerInitializer</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurerAdapter</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>导入加密的jar包</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.1.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>jdk7版本的就使用下面的jar包<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.5-java7&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>加需要加密的字符串信息使用下面代码进行加密处理</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	BasicTextEncryptor textEncryptor = <span class="keyword">new</span> BasicTextEncryptor();</span><br><span class="line">	textEncryptor.setPassword(<span class="string">"ED3C9ADB0A53474098F594D0FD561E9E"</span>);</span><br><span class="line">	System.out.println(textEncryptor.encrypt(<span class="string">"$&#123;需要加密的字符串&#125;"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>或者使用jar包进行加密解密操作，jar包路径：D:\installed\maven\local_repository\org\jasypt\jasypt\1.9.2<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 加密</span></span><br><span class="line">java -cp jasypt-<span class="number">1.9</span>.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI password=ED3C9ADB0A53474098F594D0FD561E9E algorithm=PBEWithMD5AndDES input=要加密的字符串</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line">java -cp jasypt-<span class="number">1.9</span>.2.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=ED3C9ADB0A53474098F594D0FD561E9E algorithm=PBEWithMD5AndDES input=要解密的字符串</span><br></pre></td></tr></table></figure></p>
+<p>最后发现用这两种方式加密出来的字符串每次都不一样，但是都是可以使用的。</p>
+<ol start="4">
+<li>修改apollo配置中的关键信息</li>
+</ol>
+<p>如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring.datasource.username=ENC(加密后的字符串)</span><br><span class="line">spring.datasource.password=ENC(加密后的字符串)</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -431,8 +465,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/20/2018-03-20JAVA虚拟机运行时数据区/" rel="next" title="JAVA虚拟机之运行时数据区">
-                <i class="fa fa-chevron-left"></i> JAVA虚拟机之运行时数据区
+              <a href="/2019/02/11/2019-02-11安装node及hexo/" rel="next" title="安装Node及Hexo">
+                <i class="fa fa-chevron-left"></i> 安装Node及Hexo
               </a>
             
           </div>
@@ -440,10 +474,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/07/2018-05-07Interceptor中解决跨域问题/" rel="prev" title="Interceptor中解决跨域问题">
-                Interceptor中解决跨域问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -571,7 +601,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建apollo服务器"><span class="nav-number">2.</span> <span class="nav-text">搭建apollo服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Mysql数据库"><span class="nav-number">2.1.</span> <span class="nav-text">安装Mysql数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装apollo项目"><span class="nav-number">2.2.</span> <span class="nav-text">安装apollo项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#下载quick-start安装包"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载quick start安装包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解压并执行sql文件"><span class="nav-number">2.2.2.</span> <span class="nav-text">解压并执行sql文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置数据库连接信息"><span class="nav-number">2.2.3.</span> <span class="nav-text">配置数据库连接信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动apollo服务"><span class="nav-number">2.2.4.</span> <span class="nav-text">启动apollo服务</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建apollo服务器"><span class="nav-number">2.</span> <span class="nav-text">搭建apollo服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Mysql数据库"><span class="nav-number">2.1.</span> <span class="nav-text">安装Mysql数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装apollo项目"><span class="nav-number">2.2.</span> <span class="nav-text">安装apollo项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#下载quick-start安装包"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载quick start安装包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解压并执行sql文件"><span class="nav-number">2.2.2.</span> <span class="nav-text">解压并执行sql文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置数据库连接信息"><span class="nav-number">2.2.3.</span> <span class="nav-text">配置数据库连接信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动apollo服务"><span class="nav-number">2.2.4.</span> <span class="nav-text">启动apollo服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#登录apollo"><span class="nav-number">2.2.5.</span> <span class="nav-text">登录apollo</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置apollo"><span class="nav-number">2.2.6.</span> <span class="nav-text">配置apollo</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分布式环境下Apollo服务搭建"><span class="nav-number">2.3.</span> <span class="nav-text">分布式环境下Apollo服务搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Apollo客户端配置"><span class="nav-number">2.4.</span> <span class="nav-text">Apollo客户端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#添加apollo-client对应的jar包"><span class="nav-number">2.4.1.</span> <span class="nav-text">添加apollo-client对应的jar包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在pom-xml中添加如下配置"><span class="nav-number">2.4.2.</span> <span class="nav-text">在pom.xml中添加如下配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#敏感参数信息加密"><span class="nav-number">2.4.3.</span> <span class="nav-text">敏感参数信息加密</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
