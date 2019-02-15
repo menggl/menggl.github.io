@@ -88,7 +88,7 @@
 <meta property="og:description" content="背景在项目开发中，我们经常会遇到这么一种问题，就是开发、测试、线上环境连接的数据库、redis等参数配置都是不一样的，当我们在开发环境把项目开发完成之后，就需要将代码放到测试或者线上环境，由于不同环境的参数是不一样的，我们还得将配置文件修改一遍，这样很麻烦，现在出现一个可以动态配置不同环境参数变量的工具，apollo，可以很方便的就解决了我们遇到的难题。 Apollo是由携程框架部门研发的分布式配">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2019/02/12/2019-02-12Apollo与SpringBoot集成/登录apollo管理后台界面.png">
-<meta property="og:updated_time" content="2019-02-13T11:20:47.826Z">
+<meta property="og:updated_time" content="2019-02-14T04:46:59.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apollo与SpringBoot集成">
 <meta name="twitter:description" content="背景在项目开发中，我们经常会遇到这么一种问题，就是开发、测试、线上环境连接的数据库、redis等参数配置都是不一样的，当我们在开发环境把项目开发完成之后，就需要将代码放到测试或者线上环境，由于不同环境的参数是不一样的，我们还得将配置文件修改一遍，这样很麻烦，现在出现一个可以动态配置不同环境参数变量的工具，apollo，可以很方便的就解决了我们遇到的难题。 Apollo是由携程框架部门研发的分布式配">
@@ -385,7 +385,7 @@
 <p>注意：configService和Meta Server基本上都在一个jvm中，不同环境(开发、测试、线上)对应的configService服务是不一样的，所以配置的meta server地址也是不一样的</p>
 <p>注意：如果configService服务注册到MetaServer服务的IP和端口号是内网地址，我们在外网拉取到内网IP和端口号是访问不通的，这个时候我们可以在启动时配置一下configService服务的外网IP和端口号：-Dapollo.configService=http://外网IP:端口号 ，通过这种方式，我们就可以直接去访问配置的服务拉取配置信息了</p>
 <p>注意：我们在配置了不同的环境下使用不同的配置参数，那么开发环境、仿真环境、线上环境需要在Jenkins启动打包的时候，需要配置上参数-Ppro或者-Puat，如果想使用本地缓存着的配置，使用参数配置：-Denv=Local</p>
-<p>如果在settings.xml中定义profile设置默认激活时的配置如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;activeProfiles&gt;  </span><br><span class="line">    &lt;activeProfile&gt;profileTest1&lt;/activeProfile&gt; </span><br><span class="line">	&lt;activeProfile&gt;profileTest2&lt;/activeProfile&gt;&lt;!-- 后面的参数值会覆盖前面的参数值，如果都配置了某个参数值的话 --&gt;</span><br><span class="line">&lt;/activeProfiles&gt;</span><br></pre></td></tr></table></figure></p>
+<p>如果在settings.xml中定义profile设置默认激活时的配置如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;activeProfiles&gt;  </span><br><span class="line">	&lt;activeProfile&gt;profileTest1&lt;/activeProfile&gt; </span><br><span class="line">	&lt;activeProfile&gt;profileTest2&lt;/activeProfile&gt;&lt;!-- 后面的参数值会覆盖前面的参数值，如果都配置了某个参数值的话 --&gt;</span><br><span class="line">&lt;/activeProfiles&gt;</span><br></pre></td></tr></table></figure></p>
 <p>关于profile具体配置可以参考博客：<a href="https://elim.iteye.com/blog/1900568" target="_blank" rel="noopener">https://elim.iteye.com/blog/1900568</a></p>
 <h5 id="敏感参数信息加密"><a href="#敏感参数信息加密" class="headerlink" title="敏感参数信息加密"></a>敏感参数信息加密</h5><ol>
 <li>首先需要一个加密用的字符串，salt字符串，最好长一点，比如ED3C9ADB0A53474098F594D0FD561E9E</li>
@@ -402,7 +402,7 @@
 <ol start="3">
 <li>加需要加密的字符串信息使用下面代码进行加密处理</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	BasicTextEncryptor textEncryptor = <span class="keyword">new</span> BasicTextEncryptor();</span><br><span class="line">	textEncryptor.setPassword(<span class="string">"ED3C9ADB0A53474098F594D0FD561E9E"</span>);</span><br><span class="line">	System.out.println(textEncryptor.encrypt(<span class="string">"$&#123;需要加密的字符串&#125;"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	BasicTextEncryptor textEncryptor = <span class="keyword">new</span> BasicTextEncryptor();</span><br><span class="line">	textEncryptor.setPassword(<span class="string">"ED3C9ADB0A53474098F594D0FD561E9E"</span>);</span><br><span class="line">	System.out.println(<span class="string">"加密后："</span>+textEncryptor.encrypt(<span class="string">"$&#123;需要加密的字符串&#125;"</span>));</span><br><span class="line">	System.out.println(<span class="string">"解密后："</span>+textEncryptor.decrypt(<span class="string">"$&#123;需要解密的字符串&#125;"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>或者使用jar包进行加密解密操作，jar包路径：D:\installed\maven\local_repository\org\jasypt\jasypt\1.9.2<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 加密</span></span><br><span class="line">java -cp jasypt-<span class="number">1.9</span>.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI password=ED3C9ADB0A53474098F594D0FD561E9E algorithm=PBEWithMD5AndDES input=要加密的字符串</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line">java -cp jasypt-<span class="number">1.9</span>.2.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=ED3C9ADB0A53474098F594D0FD561E9E algorithm=PBEWithMD5AndDES input=要解密的字符串</span><br></pre></td></tr></table></figure></p>
 <p>最后发现用这两种方式加密出来的字符串每次都不一样，但是都是可以使用的。</p>
 <ol start="4">
@@ -475,6 +475,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/02/15/2019-02-15XShell脚本自动登录/" rel="prev" title="XShell脚本自动登录">
+                XShell脚本自动登录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -546,7 +550,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -568,7 +572,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">91</span>
+                  <span class="site-state-item-count">94</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
