@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Jstat/Jps执行时报进程不存在问题解决]]></title>
+    <url>%2F2019%2F02%2F19%2F2019-02-19Jstat%E5%91%BD%E4%BB%A4%E6%8A%A5%E8%BF%9B%E7%A8%8B%E5%8F%B7%E4%B8%8D%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%2F</url>
+    <content type="text"><![CDATA[背景在项目上下后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下： 问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什么没有生成呢？ 继续查找原因，发现tomcat启动的时候是使用systemctl命令启动的，接下来查看对应的/usr/lib/systemd/system/***.service文件，发现PrivateTmp参数配置的是true，当PrivateTmp=true服务启动的时候会在/tmp目录下生成类似systemd-private-**************************-tomcat/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是jstat或者jps使用的不是这个文件，这样就会导致pid not found问题 解决方案，修改/usr/lib/systemd/system/***.service1234567891011Type=forkingPIDFile=/var/run/tomcat.pidExecStart=/opt/tomcat/apache-tomcat-8.5.32/bin/catalina.sh startExecReload=/bin/kill -s HUP $MAINPIDExecStop=/bin/kill -s QUIT $MAINPIDPrivateTmp=true #将这里的true改成falseUser=tomcatGroup=tomcat [Install]WantedBy=multi-user.target 在将PrivateTmp设置成false之后，执行reload命令1sudo systemctl daemon-reload 重新启动tomcat1systemctl restart tomcat 就可以愉快的使用jps、jstat等jdk自带工具了]]></content>
+      <categories>
+        <category>整理</category>
+      </categories>
+      <tags>
+        <tag>Jstat</tag>
+        <tag>Jps</tag>
+        <tag>systemctl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[VirtualBox安装虚拟机]]></title>
+    <url>%2F2019%2F02%2F18%2F2019-02-18VirtualBox%E5%AE%89%E8%A3%85%E8%99%9A%E6%8B%9F%E6%9C%BA%2F</url>
+    <content type="text"><![CDATA[背景在项目开发中，我们经常会碰到这样一种情况，想要验证某个东西必须在linux或者其它环境下，但是又没有多余的测试机供我们随意调试，那么最好的办法是我们在自己的电脑上安装一个虚拟机，然后就可以进行随心所欲的操作了。 下面我们讲解怎么在windows中安装VirtualBox虚拟机 安装VirtualBox下载安装包下载地址：https://www.virtualbox.org/wiki/Downloads 运行安装包，然后就是点击下一步，下一步。。 下载扩展包用于捕捉鼠标和键盘用 下载完成后双击运行即可 下载linux镜像下载地址：https://mirrors.tuna.tsinghua.edu.cn/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso 新建虚拟机选择好Linux操作系统，这一点很重要，选择错误会出现各种各样的问题。 在设置-&gt; 存储 -&gt; 控制器 IDE -&gt; 分配光驱，选择刚才下载下来的ios文件路径 点击启动按钮，启动安装Linux虚拟机]]></content>
+      <categories>
+        <category>整理</category>
+      </categories>
+      <tags>
+        <tag>VirtualBox</tag>
+        <tag>虚拟机</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[XShell脚本自动登录]]></title>
     <url>%2F2019%2F02%2F15%2F2019-02-15XShell%E8%84%9A%E6%9C%AC%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%2F</url>
     <content type="text"><![CDATA[背景我们在企业中做项目开发的时候，经常会遇到使用跳板机进行线上服务器的登录，如果有很多不同的线上服务器需要登录，我们每次登录的时候都要将对应的服务器名称记下来，然后输入，再然后跳转到指定目录下，感觉这样操作特别麻烦，每次都是同样的操作，为什么不能写个脚本让它自动登录跳转呢。 xshell工具就支持这个功能，使用等待和发送规则或者使用执行脚本，都可以完成自动登录的功能。 我们今天主要讲怎么使用vbs脚本实现自动登录 使用vbs脚本登录 新建一个脚本test.vbs，将以下内容保存到该文件中 1234567891011121314Sub main xsh.Screen.Synchronous = True 'xsh.Screen.WaitForString "Opt" 这个方法是真难用，不建议使用WaitForString方法 ' 等待服务器返回值 300毫秒 如果上一个命令需要执行较长的时间，这里的值就建议设置大一点 xsh.Session.Sleep 300 xsh.Screen.Send "$&#123;需要执行的命令1&#125;" &amp; VbCr ' 等待服务器返回值 1500毫秒 如果上一个命令需要执行较长的时间，这里的值就建议设置大一点 xsh.Session.Sleep 1500 xsh.Screen.Send "$&#123;需要执行的命令2&#125;" &amp; VbCrEnd Sub 设置会话属性 -&gt; 选中”连接会话时运行脚本” -&gt; 选中上面刚编辑好的test.vbs 更多关于Xshell脚本的教程，请参考： http://www.xshellcn.com/zhishi/xsh-screen.html http://www.xshellcn.com/zhishi/xsh-session.html]]></content>
       <categories>
-        <category>总结</category>
+        <category>整理</category>
       </categories>
       <tags>
         <tag>XShell</tag>
