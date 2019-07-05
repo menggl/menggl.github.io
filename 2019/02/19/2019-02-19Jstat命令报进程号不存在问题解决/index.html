@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="背景在项目上下后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
+<meta name="description" content="背景在项目上线后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
 <meta name="keywords" content="Jstat,Jps,systemctl">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jstat&#x2F;Jps执行时报进程不存在问题解决">
 <meta property="og:url" content="http://menggl.github.io/2019/02/19/2019-02-19Jstat命令报进程号不存在问题解决/index.html">
 <meta property="og:site_name" content="HEXO">
-<meta property="og:description" content="背景在项目上下后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
+<meta property="og:description" content="背景在项目上线后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://menggl.github.io/2019/02/19/2019-02-19Jstat命令报进程号不存在问题解决/PID找不到.png">
-<meta property="og:updated_time" content="2019-02-19T11:32:59.155Z">
+<meta property="og:updated_time" content="2019-06-04T02:21:52.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jstat&#x2F;Jps执行时报进程不存在问题解决">
-<meta name="twitter:description" content="背景在项目上下后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
+<meta name="twitter:description" content="背景在项目上线后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：  问题解决经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到/tmp/hsperfdata_${系统用户名}/${java进程号}这个文件，但是进入到/tmp/hsperfdata_${系统用户名}目录下发现这个进程文件不存在，那么这个进程文件为什">
 <meta name="twitter:image" content="http://menggl.github.io/2019/02/19/2019-02-19Jstat命令报进程号不存在问题解决/PID找不到.png">
 
 
@@ -356,7 +356,7 @@
       
 
       
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在项目上下后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：</p>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在项目上线后，我们通常都需要查看jvm的运行状况，但是使用jps或者jstat命令的时候有时候会发现报进程编号找不到的问题，如下：</p>
 <img src="/2019/02/19/2019-02-19Jstat命令报进程号不存在问题解决/PID找不到.png">
 <h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>经过在网上一番查找，jps或者jstat等jdk自带的命令会使用到<code>/tmp/hsperfdata_${系统用户名}/${java进程号}</code>这个文件，但是进入到<code>/tmp/hsperfdata_${系统用户名}</code>目录下发现这个进程文件不存在，那么这个进程文件为什么没有生成呢？</p>
 <p>继续查找原因，发现tomcat启动的时候是使用systemctl命令启动的，接下来查看对应的<code>/usr/lib/systemd/system/***.service</code>文件，发现PrivateTmp参数配置的是true，当PrivateTmp=true服务启动的时候会在/tmp目录下生成类似<code>systemd-private-**************************-tomcat/tmp/hsperfdata_${系统用户名}/${java进程号}</code>这个文件，但是jstat或者jps使用的不是这个文件，这样就会导致pid not found问题</p>
@@ -507,7 +507,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -518,7 +518,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -529,7 +529,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">103</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
